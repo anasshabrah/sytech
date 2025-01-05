@@ -6,7 +6,6 @@ import AboutMe from "@/components/AboutMe";
 import Services from "@/components/Services";
 import Attainments from "@/components/Attainments";
 import Experience from "@/components/Experience";
-import Contact from "@/components/Contact";
 import { useEffect, useState } from "react";
 import Blogs from "@/components/Blogs";
 
@@ -68,8 +67,6 @@ export default function Home() {
             {/* <!-- experience --> */}
             <Experience />
 
-            {/* <!-- contact --> */}
-            <Contact />
           </div>
         </div>
       </main>

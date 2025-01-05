@@ -102,11 +102,11 @@ const Navigation = ({
               <span>09</span> <span className="text">testimonials</span>{" "}
             </Link>
           </li> */}
-          <li onClick={() => setNavOpen(false)} className="nav-link">
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#contact">
               <span>06</span> <span className="text">حاكينا</span>{" "}
             </Link>
-          </li>
+          </li> */}
         </ul>
         <div className="contact">
           <Link href="mailto:info@syriatech.co">info@syriatech.co</Link>

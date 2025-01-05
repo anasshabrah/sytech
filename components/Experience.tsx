@@ -298,19 +298,6 @@ const Experience: React.FC = () => {
         </div>
       </form>
 
-      {/* Navigation Link to Next Section */}
-      <div className="col-12 mt-5">
-        <Link
-          href="#projects"
-          className="d-flex gap-4 align-items-center next-chapter"
-        >
-          <span className="page">6/6</span>
-          <span className="next">القسم التالي</span>
-          <span className="icon">
-            <i className="ph ph-arrow-elbow-right-down"></i>
-          </span>
-        </Link>
-      </div>
     </section>
   );
 };
