@@ -1,42 +1,43 @@
-import blog1 from "@/public/images/blog-1.png";
-import blog2 from "@/public/images/blog-2.png";
-import blog3 from "@/public/images/blog-3.png";
-import blog4 from "@/public/images/blog-4.png";
-export const blogData = [
+// app/public/blogdata.ts
+import { Blog } from "@/app/types";
+import heroImage from "@/public/images/hero.png"; // Adjust the path as necessary
+
+export const blogData: Blog[] = [
   {
     id: 1,
-    title: "Lessons Learned from 07 Years in the Industry",
-    date: "April 14, 2024",
-    time: "3 Min Read",
-    desc: "In the realm of technology blogging, captivating your audience goes beyond just the written word. Incorporating and provide a dynamic...",
-    tags: ["Code", "Guides", "Tech"],
-    image: blog1,
+    title: "Understanding TypeScript in Next.js",
+    date: "2024-04-20",
+    time: "8 min",
+    desc: "An in-depth look at integrating TypeScript with Next.js for better type safety and developer experience.",
+    tags: ["TypeScript", "Next.js", "JavaScript"],
+    image: heroImage, // Ensure this is correctly imported as StaticImageData
+    author: "Jenny Wilson",
+    tableOfContents: [
+      { id: "1", title: "Introduction" },
+      { id: "2", title: "Setting Up TypeScript" },
+      { id: "3", title: "Benefits of Type Safety" },
+      { id: "4", title: "Conclusion" },
+    ],
+    sections: {
+      understanding: {
+        title: "Understanding TypeScript",
+        content: "Content for understanding TypeScript...",
+      },
+      crafting: {
+        title: "Crafting with TypeScript",
+        content: "Content for crafting with TypeScript...",
+      },
+      showcasing: {
+        title: "Showcasing Projects",
+        content: "Content for showcasing projects...",
+      },
+      conclusion: {
+        title: "Conclusion",
+        content: "Final thoughts on TypeScript in Next.js...",
+      },
+    },
+    quote: "TypeScript adds type safety to JavaScript, enhancing developer productivity.",
+    additionalContent: "Additional resources and links.",
   },
-  {
-    id: 2,
-    title: "Balancing Creativity and Usability in Web Design",
-    date: "April 14, 2024",
-    time: "3 Min Read",
-    desc: "In the realm of technology blogging, captivating your audience goes beyond just the written word. Incorporating and provide a dynamic...",
-    tags: ["Code", "Guides", "Tech"],
-    image: blog2,
-  },
-  {
-    id: 3,
-    title: "Balancing Creativity and Usability in Web Design",
-    date: "April 14, 2024",
-    time: "3 Min Read",
-    desc: "In the realm of technology blogging, captivating your audience goes beyond just the written word. Incorporating and provide a dynamic...",
-    tags: ["Code", "Guides", "Tech"],
-    image: blog3,
-  },
-  {
-    id: 4,
-    title: "Balancing Creativity and Usability in Web Design",
-    date: "April 14, 2024",
-    time: "3 Min Read",
-    desc: "In the realm of technology blogging, captivating your audience goes beyond just the written word. Incorporating and provide a dynamic...",
-    tags: ["Code", "Guides", "Tech"],
-    image: blog4,
-  },
+  // Add more blog objects as needed
 ];

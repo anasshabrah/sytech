@@ -11,6 +11,8 @@ import Link from "next/link";
 import { formatString } from "@/utils/formatString";
 import { useState } from "react";
 import AnimateHeight from "react-animate-height";
+import { Blog } from "@/app/types"; // Import the Blog interface
+
 const topics = [
   {
     id: 1,
@@ -43,6 +45,7 @@ const topics = [
     articles: ["Deploying Web Applications: A Guide", "Introduction to Continuous Deployment", "Deploying with Git and GitHub", "Best Practices for Secure Deployment", "Automating Deployments with CI/CD"],
   },
 ];
+
 const AllBlogs = () => {
   const [opened, setOpened] = useState<null | number>(1);
   return (
@@ -76,16 +79,16 @@ const AllBlogs = () => {
                   <span className="fw-medium">Follow Me</span>
                   <div className="d-flex gap-3">
                     <a href="#">
-                      <Image src={fb} alt="" />
+                      <Image src={fb} alt="Facebook" />
                     </a>
                     <a href="#">
-                      <Image src={tt} alt="" />
+                      <Image src={tt} alt="Twitter" />
                     </a>
                     <a href="#">
-                      <Image src={x} alt="" />
+                      <Image src={x} alt="X (formerly Twitter)" />
                     </a>
                     <a href="#">
-                      <Image src={sp} alt="" />
+                      <Image src={sp} alt="Spotify" />
                     </a>
                   </div>
                 </div>
@@ -98,7 +101,7 @@ const AllBlogs = () => {
                     <span></span>
                     <span></span>
                   </div>
-                  <Image className="img-fluid rounded-circle hero-img" src={hero} alt="" />
+                  <Image className="img-fluid rounded-circle hero-img" src={hero} alt="Hero Image" />
                   <div className="waves-bottom">
                     <span></span>
                     <span></span>
@@ -166,7 +169,7 @@ const AllBlogs = () => {
                             <i className="ph ph-arrow-right"></i>
                           </div>
                         </div>
-                        <AnimateHeight height={opened == id ? "auto" : 0} key={id}>
+                        <AnimateHeight height={opened === id ? "auto" : 0} key={id}>
                           <div className="list">
                             <div className="list-inner">
                               {articles.map((item) => (
@@ -183,10 +186,10 @@ const AllBlogs = () => {
                 </div>
               </div>
               <div className="col-md-8 col-xxl-9 d-flex flex-column gap-4">
-                {blogData.map(({ date, desc, id, image, tags, time, title }) => (
+                {blogData.map(({ date, desc, id, image, tags, time, title }: Blog) => (
                   <Link key={id} href={`/blogs/${formatString(title)}`} className="blog-card">
                     <div className="overflow-hidden rounded-4 img-wrapper">
-                      <Image src={image} className="img-fluid" alt="" />
+                      <Image src={image} className="img-fluid" alt={title} />
                     </div>
                     <div>
                       <h4 className="fw-medium mb-3">{title}</h4>
@@ -198,12 +201,12 @@ const AllBlogs = () => {
                         --
                         <div className="d-flex gap-2 align-items-center fs-5">
                           <i className="ph ph-clock"></i>
-                          <p> {time}</p>
+                          <p>{time}</p>
                         </div>
                       </div>
                       <p className="details">{desc}</p>
                       <div className="d-flex align-items-center gap-3">
-                        {tags.map((tag) => (
+                        {tags.map((tag: string) => (
                           <div key={tag} className="d-flex align-items-center gap-2">
                             <span className="fs-3">•</span>
                             <p>{tag}</p>

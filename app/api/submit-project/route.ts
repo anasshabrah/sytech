@@ -3,16 +3,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { IncomingForm, Fields, Files, File as FormidableFile } from "formidable";
 import { promises as fs } from "fs";
-import Postmark from "postmark";
+import { ServerClient } from "postmark";
 
-// Disable Next.js's default body parser to handle multipart forms
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-// Define an interface for the expected form fields
 interface ProjectFormFields {
   fullName?: string;
   email?: string;
@@ -21,13 +13,11 @@ interface ProjectFormFields {
   website?: string;
 }
 
-// Define an interface for the response
 interface SubmitProjectResponse {
   success: boolean;
   message?: string;
 }
 
-// Helper function to parse incoming form using formidable
 const parseForm = async (req: NextRequest): Promise<{ fields: Fields; files: Files }> => {
   const form = new IncomingForm();
 
@@ -44,14 +34,11 @@ const parseForm = async (req: NextRequest): Promise<{ fields: Fields; files: Fil
 
 export async function POST(req: NextRequest): Promise<NextResponse<SubmitProjectResponse>> {
   try {
-    // 1) Parse the incoming form data
     const { fields, files } = await parseForm(req);
 
-    // 2) Type-cast 'fields' to your custom form interface
     const projectFields = fields as ProjectFormFields;
     const { fullName, email, phone, linkedin, website } = projectFields;
 
-    // 3) Validate required fields
     if (!fullName || !email || !phone || !linkedin || !website) {
       return NextResponse.json(
         { success: false, message: "يرجى ملء جميع الحقول المطلوبة." },
@@ -59,8 +46,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    // 4) Safely extract the pitch deck file (could be array or single File)
-    const pitchDeckCandidate = files.pitchDeck; // FormidableFile | FormidableFile[] | undefined
+    const pitchDeckCandidate = files.pitchDeck;
     let pitchDeckFile: FormidableFile | undefined;
 
     if (Array.isArray(pitchDeckCandidate)) {
@@ -69,7 +55,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       pitchDeckFile = pitchDeckCandidate;
     }
 
-    // Check if file exists
     if (!pitchDeckFile) {
       return NextResponse.json(
         { success: false, message: "لم يتم تحميل ملف عرض المشروع." },
@@ -77,7 +62,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    // 5) Validate the file type and size
     const allowedMimeTypes = ["application/pdf"];
     if (!allowedMimeTypes.includes(pitchDeckFile.mimetype || "")) {
       return NextResponse.json(
@@ -86,7 +70,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    const maxFileSize = 5 * 1024 * 1024;
     if ((pitchDeckFile.size || 0) > maxFileSize) {
       return NextResponse.json(
         { success: false, message: "حجم الملف كبير جداً. الحد الأقصى هو 5MB." },
@@ -94,11 +78,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    // 6) Read the file asynchronously
     const fileBuffer = await fs.readFile(pitchDeckFile.filepath);
     const base64File = fileBuffer.toString("base64");
 
-    // 7) Initialize the Postmark client
     const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
     if (!postmarkToken) {
       console.error("POSTMARK_SERVER_TOKEN is not defined in environment variables.");
@@ -108,10 +90,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    const client = new Postmark.ServerClient(postmarkToken);
+    const client = new ServerClient(postmarkToken);
 
-    // 8) Send email with Postmark
-    const sendResult = await client.sendEmailWithAttachment({
+    const sendResult = await client.sendEmail({
       From: "info@syriatech.co",
       To: "info@syriatech.co",
       Subject: "تقديم عرض مشروع جديد",
@@ -134,11 +115,11 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
           Name: pitchDeckFile.originalFilename || "pitch-deck.pdf",
           Content: base64File,
           ContentType: pitchDeckFile.mimetype || "application/pdf",
+          ContentID: "pitch-deck"
         },
       ],
     });
 
-    // 9) Handle success/failure
     if (sendResult.Message === "OK") {
       return NextResponse.json({ success: true });
     } else {
@@ -157,7 +138,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
   }
 }
 
-// Utility function to sanitize input to prevent XSS attacks
 const sanitize = (input: string): string => {
   return input
     .replace(/&/g, "&amp;")
