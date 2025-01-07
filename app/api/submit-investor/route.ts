@@ -1,7 +1,7 @@
 // app/api/submit-investor/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { ServerClient } from "postmark";
+import { ServerClient, PostmarkError } from "postmark";
 
 // Specify runtime environment
 export const runtime = "nodejs";
@@ -30,7 +30,7 @@ const sanitize = (input: string): string => {
 };
 
 // POST handler for the API route
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvestorResponse>> {
   try {
     // Ensure the request has the correct Content-Type
     const contentType = req.headers.get("Content-Type") || "";
@@ -97,6 +97,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         رقم الهاتف: ${sanitize(investorPhone)}
         مبلغ الاستثمار المتوقع: ${sanitize(investmentAmount)}
       `,
+      // Optional: Specify MessageStream if required by your Postmark account
+      MessageStream: "outbound",
     });
 
     // Check if the email was sent successfully
@@ -122,7 +124,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Handle Postmark errors specifically
-    if (error.name === "PostmarkError") {
+    if (error instanceof PostmarkError) {
       return NextResponse.json(
         { success: false, message: "Postmark service error." },
         { status: 500 }
