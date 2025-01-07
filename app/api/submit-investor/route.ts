@@ -129,6 +129,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // Catch-all for other errors
     return NextResponse.json(
       { success: false, message: "حدث خطأ أثناء معالجة الطلب." },
       { status: 500 }
