@@ -1,3 +1,5 @@
+// app/api/submit-investor/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
 
@@ -33,6 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Ensure the request has the correct Content-Type
     const contentType = req.headers.get("Content-Type") || "";
     if (!contentType.includes("application/json")) {
+      console.warn("Invalid Content-Type:", contentType);
       return NextResponse.json(
         { success: false, message: "Invalid Content-Type. Expected application/json." },
         { status: 400 }
@@ -48,6 +51,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Validate required fields
     if (!investorName || !investorEmail || !investorPhone || !investmentAmount) {
+      console.warn("Missing required fields:", investorFields);
       return NextResponse.json(
         { success: false, message: "يرجى ملء جميع الحقول المطلوبة." },
         { status: 400 }
@@ -57,6 +61,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Optional: Additional validation (e.g., email format)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(investorEmail)) {
+      console.warn("Invalid email format:", investorEmail);
       return NextResponse.json(
         { success: false, message: "البريد الإلكتروني غير صالح." },
         { status: 400 }
@@ -96,6 +101,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     // Check if the email was sent successfully
     if (sendResult.Message === "OK") {
+      console.log("Email sent successfully:", sendResult);
       return NextResponse.json({ success: true });
     } else {
       console.error("Postmark send email failed:", sendResult.Message);
@@ -106,6 +112,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
   } catch (error: any) {
     console.error("Error in submit-investor API:", error);
+
     // Handle JSON parsing errors separately
     if (error instanceof SyntaxError) {
       return NextResponse.json(
@@ -113,6 +120,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         { status: 400 }
       );
     }
+
+    // Handle Postmark errors specifically
+    if (error.name === "PostmarkError") {
+      return NextResponse.json(
+        { success: false, message: "Postmark service error." },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, message: "حدث خطأ أثناء معالجة الطلب." },
       { status: 500 }

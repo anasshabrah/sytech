@@ -111,6 +111,8 @@ const Attainments: React.FC = () => {
       // Check if the response has JSON content
       const contentType = response.headers.get("Content-Type");
       if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Invalid Content-Type:", contentType, "Response body:", text);
         throw new Error("Server responded with invalid content type.");
       }
 
@@ -136,7 +138,7 @@ const Attainments: React.FC = () => {
           error: data.message || "حدث خطأ غير متوقع.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Form submission error:", error);
       setStatus({
         loading: false,
