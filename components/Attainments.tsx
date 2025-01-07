@@ -1,5 +1,3 @@
-// components/Attainments.tsx
-
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
@@ -110,6 +108,12 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      // Check if the response has JSON content
+      const contentType = response.headers.get("Content-Type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server responded with invalid content type.");
+      }
+
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -137,7 +141,10 @@ const Attainments: React.FC = () => {
       setStatus({
         loading: false,
         success: null,
-        error: "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+        error:
+          error instanceof Error
+            ? error.message
+            : "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
       });
     }
   };
