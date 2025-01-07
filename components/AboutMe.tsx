@@ -14,10 +14,6 @@ const AboutMe = () => {
           </p>
           <div className="row about-contact">
             <div className="col-sm-4 about-contact-item">
-              <p>الايميل</p>
-              <Link href="mailto:info@syriatech.co">info@syriatech.co</Link>
-            </div>
-            <div className="col-sm-4 about-contact-item">
               <p>العنوان</p>
               <span>حماه، سوريا</span>
             </div>

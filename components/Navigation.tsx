@@ -108,9 +108,6 @@ const Navigation = ({
             </Link>
           </li> */}
         </ul>
-        <div className="contact">
-          <Link href="mailto:info@syriatech.co">info@syriatech.co</Link>
-        </div>
       </nav>
       <div onClick={() => setNavOpen(false)} className="nav-overlay d-xl-none"></div>
     </>

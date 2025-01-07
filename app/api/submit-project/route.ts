@@ -70,10 +70,10 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
       );
     }
 
-    const maxFileSize = 5 * 1024 * 1024;
+    const maxFileSize = 10 * 1024 * 1024;
     if ((pitchDeckFile.size || 0) > maxFileSize) {
       return NextResponse.json(
-        { success: false, message: "حجم الملف كبير جداً. الحد الأقصى هو 5MB." },
+        { success: false, message: "حجم الملف كبير جداً. الحد الأقصى هو 10MB." },
         { status: 400 }
       );
     }
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitProject
 
     const sendResult = await client.sendEmail({
       From: "info@syriatech.co",
-      To: "info@syriatech.co",
+      To: "habrahllc@gmail.com",
       Subject: "تقديم عرض مشروع جديد",
       HtmlBody: `
         <p><strong>الاسم الكامل:</strong> ${sanitize(fullName)}</p>

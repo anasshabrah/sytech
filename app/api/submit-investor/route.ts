@@ -65,7 +65,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
     // Send email using Postmark
     const sendResult = await client.sendEmail({
       From: "info@syriatech.co", // Replace with your verified sender
-      To: "info@syriatech.co",   // Replace with your recipient
+      To: "habrahllc@gmail.com",   // Replace with your recipient
       Subject: "تقديم مستثمر جديد",
       HtmlBody: `
         <p><strong>اسم المستثمر:</strong> ${sanitize(investorName)}</p>
