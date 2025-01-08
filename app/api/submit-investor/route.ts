@@ -1,7 +1,7 @@
 // app/api/submit-investor/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { ServerClient } from "postmark";
+import { ServerClient, ClientResponse } from "postmark";
 
 // Specify runtime environment
 export const runtime = "nodejs";
@@ -43,10 +43,25 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
     }
 
     // Parse the incoming JSON data
-    const body = await req.json();
+    let body: any;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.warn("JSON parsing error:", parseError);
+      return NextResponse.json(
+        { success: false, message: "Invalid JSON format." },
+        { status: 400 }
+      );
+    }
 
     // Extract and sanitize form fields
-    const investorFields = body as InvestorFormFields;
+    const investorFields: InvestorFormFields = {
+      investorName: sanitize(body.investorName || ""),
+      investorEmail: sanitize(body.investorEmail || ""),
+      investorPhone: sanitize(body.investorPhone || ""),
+      investmentAmount: sanitize(body.investmentAmount || ""),
+    };
+
     const { investorName, investorEmail, investorPhone, investmentAmount } = investorFields;
 
     // Validate required fields
@@ -81,30 +96,39 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
     const client = new ServerClient(postmarkToken);
 
     // Send email using Postmark
-    const sendResult = await client.sendEmail({
-      From: "info@syriatech.co", // Ensure this email is verified in Postmark
-      To: "habrahllc@gmail.com",  // Replace with your recipient
-      Subject: "تقديم مستثمر جديد",
-      HtmlBody: `
-        <p><strong>اسم المستثمر:</strong> ${sanitize(investorName)}</p>
-        <p><strong>البريد الإلكتروني:</strong> ${sanitize(investorEmail)}</p>
-        <p><strong>رقم الهاتف:</strong> ${sanitize(investorPhone)}</p>
-        <p><strong>مبلغ الاستثمار المتوقع:</strong> ${sanitize(investmentAmount)}</p>
-      `,
-      TextBody: `
-        اسم المستثمر: ${sanitize(investorName)}
-        البريد الإلكتروني: ${sanitize(investorEmail)}
-        رقم الهاتف: ${sanitize(investorPhone)}
-        مبلغ الاستثمار المتوقع: ${sanitize(investmentAmount)}
-      `,
-      // Optional: Specify MessageStream if required by your Postmark account
-      MessageStream: "outbound",
-    });
+    let sendResult: ClientResponse;
+    try {
+      sendResult = await client.sendEmail({
+        From: "info@syriatech.co", // Ensure this email is verified in Postmark
+        To: "habrahllc@gmail.com",  // Replace with your recipient
+        Subject: "تقديم مستثمر جديد",
+        HtmlBody: `
+          <p><strong>اسم المستثمر:</strong> ${investorName}</p>
+          <p><strong>البريد الإلكتروني:</strong> ${investorEmail}</p>
+          <p><strong>رقم الهاتف:</strong> ${investorPhone}</p>
+          <p><strong>مبلغ الاستثمار المتوقع:</strong> ${investmentAmount}</p>
+        `,
+        TextBody: `
+          اسم المستثمر: ${investorName}
+          البريد الإلكتروني: ${investorEmail}
+          رقم الهاتف: ${investorPhone}
+          مبلغ الاستثمار المتوقع: ${investmentAmount}
+        `,
+        // Optional: Specify MessageStream if required by your Postmark account
+        MessageStream: "outbound",
+      });
+    } catch (postmarkError: any) {
+      console.error("Postmark sendEmail error:", postmarkError);
+      return NextResponse.json(
+        { success: false, message: "فشل في إرسال البريد الإلكتروني. يرجى المحاولة لاحقًا." },
+        { status: 500 }
+      );
+    }
 
     // Check if the email was sent successfully
     if (sendResult.Message === "OK") {
       console.log("Email sent successfully:", sendResult);
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true }, { status: 200 });
     } else {
       console.error("Postmark send email failed:", sendResult.Message);
       return NextResponse.json(
@@ -113,25 +137,9 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
       );
     }
   } catch (error: any) {
-    console.error("Error in submit-investor API:", error);
+    console.error("Unexpected error in submit-investor API:", error);
 
-    // Handle Postmark-specific errors by inspecting error properties
-    if (error && error.message && error.message.includes("Postmark")) {
-      return NextResponse.json(
-        { success: false, message: "Postmark service error." },
-        { status: 500 }
-      );
-    }
-
-    // Handle JSON parsing errors separately
-    if (error instanceof SyntaxError) {
-      return NextResponse.json(
-        { success: false, message: "Invalid JSON format." },
-        { status: 400 }
-      );
-    }
-
-    // Catch-all for other errors
+    // Catch-all for any unexpected errors
     return NextResponse.json(
       { success: false, message: "حدث خطأ أثناء معالجة الطلب." },
       { status: 500 }

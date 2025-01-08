@@ -1,3 +1,5 @@
+// components/Attainments.tsx
+
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
@@ -108,15 +110,19 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      // Log response headers and status for debugging
+      console.log("Response Status:", response.status);
+      console.log("Response Headers:", response.headers);
+
       // Check if the response has JSON content
-      const contentType = response.headers.get("Content-Type");
-      if (!contentType || !contentType.includes("application/json")) {
+      const contentType = response.headers.get("Content-Type") || "";
+      if (!contentType.includes("application/json")) {
         const text = await response.text();
         console.error("Invalid Content-Type:", contentType, "Response body:", text);
         throw new Error("Server responded with invalid content type.");
       }
 
-      const data = await response.json();
+      const data: SubmitInvestorResponse = await response.json();
 
       if (response.ok && data.success) {
         setStatus({
