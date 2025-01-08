@@ -39,7 +39,7 @@ export interface BlogDetailsPageProps {
   };
 }
 
-export interface SubmitInvestorResponse { // <-- Shared Interface
+export interface SubmitInvestorResponse {
   success: boolean;
   message?: string;
 }
