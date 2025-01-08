@@ -49,8 +49,7 @@ import "@/public/scss/styles.scss";
 
 export const metadata: Metadata = {
   title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
-  description:
-    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  description: "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
 };
 
 type LayoutType = {
@@ -67,7 +66,6 @@ export default function RootLayout({ children }: LayoutType) {
     <html lang="ar" dir="rtl">
       <body className={readexPro.className}>
         <Bootstrap>
-          {/* Register global GSAP animations (if needed) */}
           <GSAPAnimations />
           {children}
         </Bootstrap>
@@ -94,63 +92,54 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const savedColor = localStorage.getItem("color");
-    if (savedColor) {
-      document.documentElement.style.setProperty("--primary", savedColor);
-    }
-    const savedDir = localStorage.getItem("dir");
-    if (savedDir) {
-      document.documentElement.dir = savedDir;
-    }
     setLoading(false);
   }, []);
 
   if (loading) {
     return (
-      <div className="loader-container w-100  d-flex align-items-center justify-content-center">
-        <div className="loader"></div>;
+      <div className="loader-container w-100 d-flex align-items-center justify-content-center">
+        <div className="loader"></div>
       </div>
     );
   }
+
   return (
     <>
       <Header navOpen={navOpen} setNavOpen={setNavOpen} />
-
-      {/* <!-- navigation --> */}
       <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
-
-      {/* <!-- shape bg --> */}
       <svg className="bg-gradiant" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
-        <path fill="#9b5de5" className="out-top" d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z" />
-        <path fill="#f15bb5" className="in-top" d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z" />
-        <path fill="#00bbf9" className="out-bottom" d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z" />
-        <path fill="#00f5d4" className="in-bottom" d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z" />
+        <path
+          fill="#9b5de5"
+          className="out-top"
+          d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z"
+        />
+        <path
+          fill="#f15bb5"
+          className="in-top"
+          d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z"
+        />
+        <path
+          fill="#00bbf9"
+          className="out-bottom"
+          d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z"
+        />
+        <path
+          fill="#00f5d4"
+          className="in-bottom"
+          d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z"
+        />
       </svg>
-
-      {/* <!-- main content --> */}
       <main className="container-fluid">
         <div className="row gx-xxl-6">
           <div className="col col-xl-9" data-bs-spy="scroll" data-bs-target="#navigation">
-            {/* <!-- hero --> */}
-
             <Hero />
-
-            {/* <!-- about me --> */}
             <AboutMe />
-
-            {/* <!-- services --> */}
             <Services />
-
-            {/* <!-- attainments --> */}
             <Attainments />
-
-            {/* <!-- experience --> */}
             <Experience />
-
           </div>
         </div>
       </main>
-      {/* <!-- color switcher --> */}
     </>
   );
 }
@@ -317,7 +306,7 @@ export async function POST(
     }
 
     // Initialize Postmark client
-    const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
+    const postmarkToken = "4eeccc42-3da5-48d0-a4e4-de7b92528e70";
     if (!postmarkToken) {
       console.error(
         "POSTMARK_SERVER_TOKEN is not defined in environment variables."
@@ -1116,13 +1105,11 @@ export default AboutMe;
 
 --- C:\Users\hanos\sytech\components\Attainments.tsx ---
 "use client";
-
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
 import SectionTitle from "./SectionTitle";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SubmitInvestorResponse } from "@/app/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -1131,6 +1118,11 @@ interface FormData {
   investorEmail: string;
   investorPhone: string;
   investmentAmount: string;
+}
+
+interface SubmitInvestorResponse {
+  success: boolean;
+  message?: string;
 }
 
 interface Status {
@@ -1156,7 +1148,6 @@ const Attainments: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Fade in for each .attainments-form-group on scroll
     const formGroups = gsap.utils.toArray<HTMLElement>(".attainments-form-group");
     gsap.fromTo(
       formGroups,
@@ -1170,39 +1161,28 @@ const Attainments: React.FC = () => {
         scrollTrigger: {
           trigger: ".attainments",
           start: "top 80%",
-          toggleActions: "play none none none",
         },
       }
     );
-
-    // Remove scrollTrigger for the button entirely:
-    // Just do a simple one-time fade in (no scrolling logic).
-    gsap.from(".submit-button", {
-      duration: 1.0,
-      opacity: 0,
-      y: 30,
-      ease: "power2.out",
-    });
-
-    return () => {
-      // Kill only the triggers associated with the form groups
-      // so they don’t cause stale triggers. 
-      ScrollTrigger.getAll().forEach((triggerInstance) => {
-        if (triggerInstance?.trigger?.classList.contains("attainments")) {
-          triggerInstance.kill();
-        }
-      });
-    };
+    gsap.fromTo(
+      ".submit-button",
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.0,
+        ease: "power2.out",
+      }
+    );
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     setStatus({ loading: true, success: null, error: null });
 
     try {
@@ -1214,29 +1194,16 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      console.log("Response Status:", response.status);
-      console.log("Response Headers:", response.headers);
-
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
         const text = await response.text();
-        console.error("Invalid Content-Type:", contentType, "Response body:", text);
-        throw new Error("Server responded with invalid content type.");
+        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
       }
 
       const data: SubmitInvestorResponse = await response.json();
       if (response.ok && data.success) {
-        setStatus({
-          loading: false,
-          success: "تم إرسال بياناتك بنجاح!",
-          error: null,
-        });
-        setFormData({
-          investorName: "",
-          investorEmail: "",
-          investorPhone: "",
-          investmentAmount: "",
-        });
+        setStatus({ loading: false, success: "تم إرسال بياناتك بنجاح!", error: null });
+        setFormData({ investorName: "", investorEmail: "", investorPhone: "", investmentAmount: "" });
         formRef.current?.reset();
       } else {
         setStatus({
@@ -1245,26 +1212,18 @@ const Attainments: React.FC = () => {
           error: data.message || "حدث خطأ غير متوقع.",
         });
       }
-    } catch (error: any) {
-      console.error("Form submission error:", error);
+    } catch (err: any) {
       setStatus({
         loading: false,
         success: null,
-        error:
-          error instanceof Error
-            ? error.message
-            : "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+        error: err.message || "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
       });
     }
   };
 
   return (
-    <section
-      id="attainments"
-      className="attainments section position-relative pb-5 mb-5"
-    >
+    <section id="attainments" className="attainments section position-relative pb-5 mb-5">
       <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
-
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
         <div className="row g-4 g-xl-5">
           <div className="col-sm-6 contact-input attainments-form-group">
@@ -1279,7 +1238,6 @@ const Attainments: React.FC = () => {
               placeholder="الاسم الكريم"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investorEmail">البريد الإلكتروني</label>
             <input
@@ -1292,7 +1250,6 @@ const Attainments: React.FC = () => {
               placeholder="ايميلك بعد إذنك"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investorPhone">رقم الجوال</label>
             <input
@@ -1305,7 +1262,6 @@ const Attainments: React.FC = () => {
               placeholder="لاتنسى مفتاح الدولة"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investmentAmount">مبلغ الاستثمار المتوقع</label>
             <input
@@ -1318,8 +1274,6 @@ const Attainments: React.FC = () => {
               placeholder="حدد المبلغ الأقصى بالدولار"
             />
           </div>
-
-          {/* Feedback Messages */}
           {status.loading && (
             <div className="col-12">
               <p className="message loading">جارٍ الإرسال...</p>
@@ -1335,13 +1289,8 @@ const Attainments: React.FC = () => {
               <p className="message error">{status.error}</p>
             </div>
           )}
-
           <div className="col-12">
-            <button
-              type="submit"
-              disabled={status.loading}
-              className="submit-btn position-relative submit-button"
-            >
+            <button type="submit" disabled={status.loading} className="submit-btn position-relative submit-button">
               <div className="waves-top-md">
                 <span></span>
                 <span></span>
@@ -1359,12 +1308,8 @@ const Attainments: React.FC = () => {
           </div>
         </div>
       </form>
-
       <div className="col-12">
-        <Link
-          href="#next-section"
-          className="d-flex gap-4 align-items-center next-chapter"
-        >
+        <Link href="#next-section" className="d-flex gap-4 align-items-center next-chapter">
           <span className="page">5/6</span>
           <span className="next">القسم التالي</span>
           <span className="icon">
@@ -1811,10 +1756,7 @@ export default DetailsVideo;
 
 
 --- C:\Users\hanos\sytech\components\Experience.tsx ---
-// components/Experience.tsx
-
 "use client";
-
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
 import SectionTitle from "./SectionTitle";
@@ -1830,6 +1772,11 @@ interface FormDataState {
   linkedin: string;
   website: string;
   pitchDeck: File | null;
+}
+
+interface SubmitProjectResponse {
+  success: boolean;
+  message?: string;
 }
 
 interface Status {
@@ -1857,7 +1804,6 @@ const Experience: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Animate input fields in
     const formGroups = gsap.utils.toArray<HTMLElement>(".experience-form-group");
     gsap.fromTo(
       formGroups,
@@ -1871,44 +1817,28 @@ const Experience: React.FC = () => {
         scrollTrigger: {
           trigger: ".experience",
           start: "top 80%",
-          toggleActions: "play none none none",
         },
       }
     );
-
-    // Simplified fade for the button
-    gsap.from(".submit-button", {
-      duration: 1.0,
-      opacity: 0,
-      y: 30,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: ".submit-button",
-        start: "top 95%",
-        toggleActions: "play none none none",
-      },
-    });
-
-    return () => {
-      // Cleanup triggers
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (
-          trigger.trigger &&
-          trigger.trigger.classList &&
-          (trigger.trigger.classList.contains("experience") ||
-            trigger.trigger.classList.contains("submit-button"))
-        ) {
-          trigger.kill();
-        }
-      });
-    };
+    gsap.fromTo(
+      ".submit-button",
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.0,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".submit-button",
+          start: "top 95%",
+        },
+      }
+    );
   }, []);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, type, files, value } = e.target as HTMLInputElement;
-    if (type === "file" && files) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, type, files, value } = e.target;
+    if (type === "file" && files?.length) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -1917,7 +1847,6 @@ const Experience: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     setStatus({ loading: true, success: null, error: null });
 
     try {
@@ -1936,14 +1865,15 @@ const Experience: React.FC = () => {
         body: data,
       });
 
-      const resData = await response.json();
+      const contentType = response.headers.get("Content-Type") || "";
+      if (!contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+      }
 
+      const resData: SubmitProjectResponse = await response.json();
       if (response.ok && resData.success) {
-        setStatus({
-          loading: false,
-          success: "تم إرسال النموذج بنجاح!",
-          error: null,
-        });
+        setStatus({ loading: false, success: "تم إرسال النموذج بنجاح!", error: null });
         setFormData({
           fullName: "",
           email: "",
@@ -1960,32 +1890,19 @@ const Experience: React.FC = () => {
           error: resData.message || "حدث خطأ غير متوقع.",
         });
       }
-    } catch (error) {
-      console.error("Form submission error:", error);
+    } catch (err: any) {
       setStatus({
         loading: false,
         success: null,
-        error: "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+        error: err.message || "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
       });
     }
   };
 
   return (
-    <section
-      id="experience"
-      className="experience section position-relative pb-5 mb-5"
-    >
-      <SectionTitle
-        subtitle="إذا كنت رائد أعمال سوري، حياك الله"
-        title="ابعتلنا مشروعك لندرسه"
-      />
-
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        className="contact-form experience-form-container"
-      >
+    <section id="experience" className="experience section position-relative pb-5 mb-5">
+      <SectionTitle subtitle="إذا كنت رائد أعمال سوري، حياك الله" title="ابعتلنا مشروعك لندرسه" />
+      <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data" className="contact-form experience-form-container">
         <div className="row g-4 g-xl-5">
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="fullName">الاسم الكامل</label>
@@ -1999,7 +1916,6 @@ const Experience: React.FC = () => {
               placeholder="اكتبلي اسمك الكامل"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="email">البريد الالكتروني</label>
             <input
@@ -2012,7 +1928,6 @@ const Experience: React.FC = () => {
               placeholder="اكتبلي إيميلك"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="phone">رقم الجوال</label>
             <input
@@ -2025,7 +1940,6 @@ const Experience: React.FC = () => {
               placeholder="لاتنسى رمز الدولة"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="linkedin">لينكدإن</label>
             <input
@@ -2038,7 +1952,6 @@ const Experience: React.FC = () => {
               placeholder="بدي رابط لينكدإن"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="website">الموقع الالكتروني</label>
             <input
@@ -2051,7 +1964,6 @@ const Experience: React.FC = () => {
               placeholder="ابط الموقع او التطبيق"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="pitchDeck">تحميل عرض المشروع (PDF)</label>
             <input
@@ -2063,7 +1975,6 @@ const Experience: React.FC = () => {
               required
             />
           </div>
-
           {status.loading && (
             <div className="col-12">
               <p className="message loading">جارٍ الإرسال...</p>
@@ -2079,13 +1990,8 @@ const Experience: React.FC = () => {
               <p className="message error">{status.error}</p>
             </div>
           )}
-
           <div className="col-12">
-            <button
-              type="submit"
-              disabled={status.loading}
-              className="submit-btn position-relative submit-button"
-            >
+            <button type="submit" disabled={status.loading} className="submit-btn position-relative submit-button">
               <div className="waves-top-md">
                 <span></span>
                 <span></span>
