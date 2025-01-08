@@ -1,7 +1,8 @@
 // app/api/submit-investor/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { ServerClient, SendResponse } from "postmark";
+import { ServerClient } from "postmark";
+import * as Postmark from "postmark";
 
 // Specify runtime environment
 export const runtime = "nodejs";
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
     const client = new ServerClient(postmarkToken);
 
     // Send email using Postmark
-    let sendResult: SendResponse;
+    let sendResult: Postmark.Response.SendResponse;
     try {
       sendResult = await client.sendEmail({
         From: "info@syriatech.co", // Ensure this email is verified in Postmark
