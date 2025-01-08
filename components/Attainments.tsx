@@ -110,7 +110,7 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      // Log response headers and status for debugging
+      // Log response status and headers for debugging
       console.log("Response Status:", response.status);
       console.log("Response Headers:", response.headers);
 
