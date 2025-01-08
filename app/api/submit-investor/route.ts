@@ -2,7 +2,6 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
-import * as Postmark from "postmark";
 
 // Specify runtime environment
 export const runtime = "nodejs";
@@ -97,34 +96,25 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
     const client = new ServerClient(postmarkToken);
 
     // Send email using Postmark
-    let sendResult: Postmark.Response.SendResponse;
-    try {
-      sendResult = await client.sendEmail({
-        From: "info@syriatech.co", // Ensure this email is verified in Postmark
-        To: "habrahllc@gmail.com",  // Replace with your recipient
-        Subject: "تقديم مستثمر جديد",
-        HtmlBody: `
-          <p><strong>اسم المستثمر:</strong> ${investorName}</p>
-          <p><strong>البريد الإلكتروني:</strong> ${investorEmail}</p>
-          <p><strong>رقم الهاتف:</strong> ${investorPhone}</p>
-          <p><strong>مبلغ الاستثمار المتوقع:</strong> ${investmentAmount}</p>
-        `,
-        TextBody: `
-          اسم المستثمر: ${investorName}
-          البريد الإلكتروني: ${investorEmail}
-          رقم الهاتف: ${investorPhone}
-          مبلغ الاستثمار المتوقع: ${investmentAmount}
-        `,
-        // Optional: Specify MessageStream if required by your Postmark account
-        MessageStream: "outbound",
-      });
-    } catch (postmarkError: any) {
-      console.error("Postmark sendEmail error:", postmarkError);
-      return NextResponse.json(
-        { success: false, message: "فشل في إرسال البريد الإلكتروني. يرجى المحاولة لاحقًا." },
-        { status: 500 }
-      );
-    }
+    const sendResult = await client.sendEmail({
+      From: "info@syriatech.co", // Ensure this email is verified in Postmark
+      To: "habrahllc@gmail.com",  // Replace with your recipient
+      Subject: "تقديم مستثمر جديد",
+      HtmlBody: `
+        <p><strong>اسم المستثمر:</strong> ${investorName}</p>
+        <p><strong>البريد الإلكتروني:</strong> ${investorEmail}</p>
+        <p><strong>رقم الهاتف:</strong> ${investorPhone}</p>
+        <p><strong>مبلغ الاستثمار المتوقع:</strong> ${investmentAmount}</p>
+      `,
+      TextBody: `
+        اسم المستثمر: ${investorName}
+        البريد الإلكتروني: ${investorEmail}
+        رقم الهاتف: ${investorPhone}
+        مبلغ الاستثمار المتوقع: ${investmentAmount}
+      `,
+      // Optional: Specify MessageStream if required by your Postmark account
+      MessageStream: "outbound",
+    });
 
     // Check if the email was sent successfully
     if (sendResult.Message === "OK") {
