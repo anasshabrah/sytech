@@ -1,5 +1,3 @@
-// components/Experience.tsx
-
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
@@ -10,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface FormData {
+interface FormDataState {
   fullName: string;
   email: string;
   phone: string;
@@ -26,7 +24,7 @@ interface Status {
 }
 
 const Experience: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataState>({
     fullName: "",
     email: "",
     phone: "",
@@ -44,6 +42,7 @@ const Experience: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
+    // Animate input fields in
     const formGroups = gsap.utils.toArray<HTMLElement>(".experience-form-group");
     gsap.fromTo(
       formGroups,
@@ -51,37 +50,45 @@ const Experience: React.FC = () => {
       {
         opacity: 1,
         y: 0,
-        stagger: 0.2,
-        duration: 1,
-        ease: "back.out(1.7)",
+        stagger: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: ".experience",
           start: "top 80%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play none none none",
         },
       }
     );
 
+    // Use fromTo() for the button so it doesn't stay hidden
     gsap.fromTo(
       ".submit-button",
-      { opacity: 0, scale: 0 },
+      { opacity: 0, y: 30 },
       {
         opacity: 1,
-        scale: 1,
-        duration: 1,
-        delay: 0.5,
-        ease: "elastic.out(1, 0.3)",
+        y: 0,
+        duration: 1.0,
+        ease: "power2.out",
         scrollTrigger: {
-          trigger: ".experience",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
+          trigger: ".submit-button",
+          start: "top 95%",
+          toggleActions: "play none none none",
         },
       }
     );
 
     return () => {
+      // Cleanup triggers
       ScrollTrigger.getAll().forEach((trigger) => {
-        if (trigger.trigger?.classList.contains("experience")) {
+        if (
+          trigger.trigger &&
+          trigger.trigger.classList &&
+          (
+            trigger.trigger.classList.contains("experience") ||
+            trigger.trigger.classList.contains("submit-button")
+          )
+        ) {
           trigger.kill();
         }
       });
@@ -91,8 +98,7 @@ const Experience: React.FC = () => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value, type, files } = e.target as HTMLInputElement;
-
+    const { name, type, files, value } = e.target as HTMLInputElement;
     if (type === "file" && files) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
@@ -160,13 +166,11 @@ const Experience: React.FC = () => {
       id="experience"
       className="experience section position-relative pb-5 mb-5"
     >
-      {/* Section Title */}
       <SectionTitle
         subtitle="إذا كنت رائد أعمال سوري، حياك الله"
         title="ابعتلنا مشروعك لندرسه"
       />
 
-      {/* Form */}
       <form
         ref={formRef}
         onSubmit={handleSubmit}
@@ -183,7 +187,6 @@ const Experience: React.FC = () => {
               value={formData.fullName}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="اكتبلي اسمك الكامل"
             />
           </div>
@@ -197,7 +200,6 @@ const Experience: React.FC = () => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="اكتبلي إيميلك"
             />
           </div>
@@ -211,7 +213,6 @@ const Experience: React.FC = () => {
               value={formData.phone}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="لاتنسى رمز الدولة"
             />
           </div>
@@ -225,7 +226,6 @@ const Experience: React.FC = () => {
               value={formData.linkedin}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="بدي رابط لينكدإن"
             />
           </div>
@@ -239,7 +239,6 @@ const Experience: React.FC = () => {
               value={formData.website}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="ابط الموقع او التطبيق"
             />
           </div>
@@ -253,11 +252,9 @@ const Experience: React.FC = () => {
               accept="application/pdf"
               onChange={handleChange}
               required
-              className="contact-input"
             />
           </div>
 
-          {/* Feedback Messages */}
           {status.loading && (
             <div className="col-12">
               <p className="message loading">جارٍ الإرسال...</p>
@@ -297,7 +294,6 @@ const Experience: React.FC = () => {
           </div>
         </div>
       </form>
-
     </section>
   );
 };

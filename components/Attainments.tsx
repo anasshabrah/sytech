@@ -1,5 +1,3 @@
-// components/Attainments.tsx
-
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
@@ -7,11 +5,10 @@ import Link from "next/link";
 import SectionTitle from "./SectionTitle";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SubmitInvestorResponse } from "@/app/types"; // <-- Import Shared Interface
+import { SubmitInvestorResponse } from "@/app/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Define the structure of the form data
 interface FormData {
   investorName: string;
   investorEmail: string;
@@ -19,7 +16,6 @@ interface FormData {
   investmentAmount: string;
 }
 
-// Define the structure of the status state
 interface Status {
   loading: boolean;
   success: string | null;
@@ -43,8 +39,7 @@ const Attainments: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // GSAP animations setup...
-    // Example:
+    // Fade in each .attainments-form-group on scroll
     const formGroups = gsap.utils.toArray<HTMLElement>(".attainments-form-group");
     gsap.fromTo(
       formGroups,
@@ -52,47 +47,40 @@ const Attainments: React.FC = () => {
       {
         opacity: 1,
         y: 0,
-        stagger: 0.2,
-        duration: 1,
-        ease: "back.out(1.7)",
+        stagger: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: ".attainments",
           start: "top 80%",
-          toggleActions: "play none none reverse",
+          toggleActions: "play none none none",
         },
       }
     );
 
+    // Use fromTo() for .submit-button so it ends fully visible.
     gsap.fromTo(
       ".submit-button",
-      { opacity: 0, scale: 0 },
+      { opacity: 0, y: 30 },
       {
         opacity: 1,
-        scale: 1,
-        duration: 1,
-        delay: 0.5,
-        ease: "elastic.out(1, 0.3)",
-        scrollTrigger: {
-          trigger: ".attainments",
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
+        y: 0,
+        duration: 1.0,
+        ease: "power2.out",
       }
     );
 
-    // Cleanup specific to this component's ScrollTriggers
     return () => {
+      // Only kill triggers associated with .attainments
       ScrollTrigger.getAll().forEach((triggerInstance) => {
-        if (triggerInstance.trigger?.classList.contains("attainments")) {
+        if (triggerInstance?.trigger?.classList.contains("attainments")) {
           triggerInstance.kill();
         }
       });
     };
   }, []);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -111,11 +99,9 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      // Log response status and headers for debugging
       console.log("Response Status:", response.status);
       console.log("Response Headers:", response.headers);
 
-      // Check if the response has JSON content
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
         const text = await response.text();
@@ -123,8 +109,7 @@ const Attainments: React.FC = () => {
         throw new Error("Server responded with invalid content type.");
       }
 
-      const data: SubmitInvestorResponse = await response.json(); // <-- Now recognized
-
+      const data: SubmitInvestorResponse = await response.json();
       if (response.ok && data.success) {
         setStatus({
           loading: false,
@@ -163,10 +148,8 @@ const Attainments: React.FC = () => {
       id="attainments"
       className="attainments section position-relative pb-5 mb-5"
     >
-      {/* Section Title */}
       <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
 
-      {/* Form */}
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
         <div className="row g-4 g-xl-5">
           <div className="col-sm-6 contact-input attainments-form-group">
@@ -178,7 +161,6 @@ const Attainments: React.FC = () => {
               value={formData.investorName}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="الاسم الكريم"
             />
           </div>
@@ -192,7 +174,6 @@ const Attainments: React.FC = () => {
               value={formData.investorEmail}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="ايميلك بعد إذنك"
             />
           </div>
@@ -206,7 +187,6 @@ const Attainments: React.FC = () => {
               value={formData.investorPhone}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="لاتنسى مفتاح الدولة"
             />
           </div>
@@ -220,7 +200,6 @@ const Attainments: React.FC = () => {
               value={formData.investmentAmount}
               onChange={handleChange}
               required
-              className="contact-input"
               placeholder="حدد المبلغ الأقصى بالدولار"
             />
           </div>
@@ -266,7 +245,6 @@ const Attainments: React.FC = () => {
         </div>
       </form>
 
-      {/* Navigation Link to Next Section */}
       <div className="col-12">
         <Link
           href="#next-section"

@@ -2,12 +2,10 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
-import { SubmitInvestorResponse } from "@/app/types"; // <-- Import Shared Interface
+import { SubmitInvestorResponse } from "@/app/types";
 
-// Specify runtime environment
 export const runtime = "nodejs";
 
-// Define interfaces for request
 interface InvestorFormFields {
   investorName: string;
   investorEmail: string;
@@ -25,15 +23,19 @@ const sanitize = (input: string): string => {
     .replace(/'/g, "&#039;");
 };
 
-// POST handler for the API route
-export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvestorResponse>> {
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<SubmitInvestorResponse>> {
   try {
     // Ensure the request has the correct Content-Type
     const contentType = req.headers.get("Content-Type") || "";
     if (!contentType.includes("application/json")) {
       console.warn("Invalid Content-Type:", contentType);
       return NextResponse.json(
-        { success: false, message: "Invalid Content-Type. Expected application/json." },
+        {
+          success: false,
+          message: "Invalid Content-Type. Expected application/json.",
+        },
         { status: 400 }
       );
     }
@@ -58,7 +60,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
       investmentAmount: sanitize(body.investmentAmount || ""),
     };
 
-    const { investorName, investorEmail, investorPhone, investmentAmount } = investorFields;
+    const { investorName, investorEmail, investorPhone, investmentAmount } =
+      investorFields;
 
     // Validate required fields
     if (!investorName || !investorEmail || !investorPhone || !investmentAmount) {
@@ -69,7 +72,7 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
       );
     }
 
-    // Optional: Additional validation (e.g., email format)
+    // Email format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(investorEmail)) {
       console.warn("Invalid email format:", investorEmail);
@@ -79,10 +82,39 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
       );
     }
 
+    // Phone format check (7-14 digits, optional +)
+    const phoneRegex = /^\+?\d{7,14}$/;
+    if (!phoneRegex.test(investorPhone)) {
+      console.warn("Invalid phone format:", investorPhone);
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "رقم الهاتف غير صالح. يجب أن يتألف من 7-14 رقم، مع السماح بعلامة + اختيارياً.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Investment amount check
+    const investmentNum = parseFloat(investmentAmount);
+    if (isNaN(investmentNum) || investmentNum < 100) {
+      console.warn("Invalid investment amount:", investmentAmount);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "مبلغ الاستثمار غير صالح (الحد الأدنى 100 دولار).",
+        },
+        { status: 400 }
+      );
+    }
+
     // Initialize Postmark client
     const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
     if (!postmarkToken) {
-      console.error("POSTMARK_SERVER_TOKEN is not defined in environment variables.");
+      console.error(
+        "POSTMARK_SERVER_TOKEN is not defined in environment variables."
+      );
       return NextResponse.json(
         { success: false, message: "Internal Server Error." },
         { status: 500 }
@@ -93,8 +125,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
 
     // Send email using Postmark
     const sendResult = await client.sendEmail({
-      From: "info@syriatech.co", // Ensure this email is verified in Postmark
-      To: "habrahllc@gmail.com",  // Replace with your recipient
+      From: "info@syriatech.co",
+      To: "habrahllc@gmail.com",
       Subject: "تقديم مستثمر جديد",
       HtmlBody: `
         <p><strong>اسم المستثمر:</strong> ${investorName}</p>
@@ -108,7 +140,6 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
         رقم الهاتف: ${investorPhone}
         مبلغ الاستثمار المتوقع: ${investmentAmount}
       `,
-      // Optional: Specify MessageStream if required by your Postmark account
       MessageStream: "outbound",
     });
 

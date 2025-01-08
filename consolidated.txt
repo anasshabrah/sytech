@@ -1,0 +1,3849 @@
+--- C:\Users\hanos\sytech\declarations.d.ts ---
+// declarations.d.ts
+declare module 'react-outside-click-handler' {
+  import * as React from 'react';
+
+  interface OutsideClickHandlerProps {
+    onOutsideClick: (event: MouseEvent | TouchEvent) => void;
+    disabled?: boolean;
+    children: React.ReactNode;
+  }
+
+  export default class OutsideClickHandler extends React.Component<OutsideClickHandlerProps> {}
+}
+
+declare module 'react-modal-video' {
+  import * as React from 'react';
+
+  interface ReactModalVideoProps {
+    channel?: 'youtube' | 'vimeo' | 'custom';
+    isOpen: boolean;
+    videoId: string;
+    autoplay?: boolean;
+    onClose: () => void;
+    // Add any additional props you use
+  }
+
+  export default class ModalVideo extends React.Component<ReactModalVideoProps> {}
+}
+
+
+--- C:\Users\hanos\sytech\next-env.d.ts ---
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.
+
+
+--- C:\Users\hanos\sytech\shuffle.d.ts ---
+declare module "shuffle-letters";
+
+
+--- C:\Users\hanos\sytech\app\layout.tsx ---
+import type { Metadata } from "next";
+import { Readex_Pro } from "next/font/google";
+import Bootstrap from "@/components/Bootstrap";
+import GSAPAnimations from "@/components/GSAPAnimations";
+import "@/public/scss/styles.scss";
+
+export const metadata: Metadata = {
+  title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
+  description:
+    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+};
+
+type LayoutType = {
+  children: React.ReactNode;
+};
+
+const readexPro = Readex_Pro({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "arabic"],
+});
+
+export default function RootLayout({ children }: LayoutType) {
+  return (
+    <html lang="ar" dir="rtl">
+      <body className={readexPro.className}>
+        <Bootstrap>
+          {/* Register global GSAP animations (if needed) */}
+          <GSAPAnimations />
+          {children}
+        </Bootstrap>
+      </body>
+    </html>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\app\page.tsx ---
+"use client";
+import Header from "@/components/Header";
+import Navigation from "@/components/Navigation";
+import Hero from "@/components/Hero";
+import AboutMe from "@/components/AboutMe";
+import Services from "@/components/Services";
+import Attainments from "@/components/Attainments";
+import Experience from "@/components/Experience";
+import { useEffect, useState } from "react";
+import Blogs from "@/components/Blogs";
+
+export default function Home() {
+  const [navOpen, setNavOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const savedColor = localStorage.getItem("color");
+    if (savedColor) {
+      document.documentElement.style.setProperty("--primary", savedColor);
+    }
+    const savedDir = localStorage.getItem("dir");
+    if (savedDir) {
+      document.documentElement.dir = savedDir;
+    }
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loader-container w-100  d-flex align-items-center justify-content-center">
+        <div className="loader"></div>;
+      </div>
+    );
+  }
+  return (
+    <>
+      <Header navOpen={navOpen} setNavOpen={setNavOpen} />
+
+      {/* <!-- navigation --> */}
+      <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
+
+      {/* <!-- shape bg --> */}
+      <svg className="bg-gradiant" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
+        <path fill="#9b5de5" className="out-top" d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z" />
+        <path fill="#f15bb5" className="in-top" d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z" />
+        <path fill="#00bbf9" className="out-bottom" d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z" />
+        <path fill="#00f5d4" className="in-bottom" d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z" />
+      </svg>
+
+      {/* <!-- main content --> */}
+      <main className="container-fluid">
+        <div className="row gx-xxl-6">
+          <div className="col col-xl-9" data-bs-spy="scroll" data-bs-target="#navigation">
+            {/* <!-- hero --> */}
+
+            <Hero />
+
+            {/* <!-- about me --> */}
+            <AboutMe />
+
+            {/* <!-- services --> */}
+            <Services />
+
+            {/* <!-- attainments --> */}
+            <Attainments />
+
+            {/* <!-- experience --> */}
+            <Experience />
+
+          </div>
+        </div>
+      </main>
+      {/* <!-- color switcher --> */}
+    </>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\app\types.ts ---
+// app/types.ts
+import { StaticImageData } from 'next/image';
+
+export interface TableOfContentsItem {
+  id: string;
+  title: string;
+}
+
+export interface BlogSection {
+  title: string;
+  content: string;
+}
+
+export interface BlogSections {
+  understanding: BlogSection;
+  crafting: BlogSection;
+  showcasing: BlogSection;
+  conclusion: BlogSection;
+}
+
+export interface Blog {
+  id: number;
+  title: string;
+  date: string;
+  time: string;
+  desc: string;
+  tags: string[];
+  image: StaticImageData;
+  author: string;
+  tableOfContents: TableOfContentsItem[];
+  sections: BlogSections;
+  quote: string;
+  additionalContent: string;
+}
+
+export interface BlogDetailsPageProps {
+  params: {
+    title: string;
+  };
+}
+
+export interface SubmitInvestorResponse {
+  success: boolean;
+  message?: string;
+}
+
+
+--- C:\Users\hanos\sytech\app\api\submit-investor\route.ts ---
+// app/api/submit-investor/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+import { ServerClient } from "postmark";
+import { SubmitInvestorResponse } from "@/app/types";
+
+export const runtime = "nodejs";
+
+interface InvestorFormFields {
+  investorName: string;
+  investorEmail: string;
+  investorPhone: string;
+  investmentAmount: string;
+}
+
+// Function to sanitize input to prevent XSS attacks
+const sanitize = (input: string): string => {
+  return input
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<SubmitInvestorResponse>> {
+  try {
+    // Ensure the request has the correct Content-Type
+    const contentType = req.headers.get("Content-Type") || "";
+    if (!contentType.includes("application/json")) {
+      console.warn("Invalid Content-Type:", contentType);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid Content-Type. Expected application/json.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Parse the incoming JSON data
+    let body: any;
+    try {
+      body = await req.json();
+    } catch (parseError) {
+      console.warn("JSON parsing error:", parseError);
+      return NextResponse.json(
+        { success: false, message: "Invalid JSON format." },
+        { status: 400 }
+      );
+    }
+
+    // Extract and sanitize form fields
+    const investorFields: InvestorFormFields = {
+      investorName: sanitize(body.investorName || ""),
+      investorEmail: sanitize(body.investorEmail || ""),
+      investorPhone: sanitize(body.investorPhone || ""),
+      investmentAmount: sanitize(body.investmentAmount || ""),
+    };
+
+    const { investorName, investorEmail, investorPhone, investmentAmount } =
+      investorFields;
+
+    // Validate required fields
+    if (!investorName || !investorEmail || !investorPhone || !investmentAmount) {
+      console.warn("Missing required fields:", investorFields);
+      return NextResponse.json(
+        { success: false, message: "يرجى ملء جميع الحقول المطلوبة." },
+        { status: 400 }
+      );
+    }
+
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(investorEmail)) {
+      console.warn("Invalid email format:", investorEmail);
+      return NextResponse.json(
+        { success: false, message: "البريد الإلكتروني غير صالح." },
+        { status: 400 }
+      );
+    }
+
+    // Phone format check (7-14 digits, optional +)
+    const phoneRegex = /^\+?\d{7,14}$/;
+    if (!phoneRegex.test(investorPhone)) {
+      console.warn("Invalid phone format:", investorPhone);
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "رقم الهاتف غير صالح. يجب أن يتألف من 7-14 رقم، مع السماح بعلامة + اختيارياً.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Investment amount check
+    const investmentNum = parseFloat(investmentAmount);
+    if (isNaN(investmentNum) || investmentNum < 100) {
+      console.warn("Invalid investment amount:", investmentAmount);
+      return NextResponse.json(
+        {
+          success: false,
+          message: "مبلغ الاستثمار غير صالح (الحد الأدنى 100 دولار).",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Initialize Postmark client
+    const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
+    if (!postmarkToken) {
+      console.error(
+        "POSTMARK_SERVER_TOKEN is not defined in environment variables."
+      );
+      return NextResponse.json(
+        { success: false, message: "Internal Server Error." },
+        { status: 500 }
+      );
+    }
+
+    const client = new ServerClient(postmarkToken);
+
+    // Send email using Postmark
+    const sendResult = await client.sendEmail({
+      From: "info@syriatech.co",
+      To: "habrahllc@gmail.com",
+      Subject: "تقديم مستثمر جديد",
+      HtmlBody: `
+        <p><strong>اسم المستثمر:</strong> ${investorName}</p>
+        <p><strong>البريد الإلكتروني:</strong> ${investorEmail}</p>
+        <p><strong>رقم الهاتف:</strong> ${investorPhone}</p>
+        <p><strong>مبلغ الاستثمار المتوقع:</strong> ${investmentAmount}</p>
+      `,
+      TextBody: `
+        اسم المستثمر: ${investorName}
+        البريد الإلكتروني: ${investorEmail}
+        رقم الهاتف: ${investorPhone}
+        مبلغ الاستثمار المتوقع: ${investmentAmount}
+      `,
+      MessageStream: "outbound",
+    });
+
+    // Check if the email was sent successfully
+    if (sendResult.Message === "OK") {
+      console.log("Email sent successfully:", sendResult);
+      return NextResponse.json({ success: true }, { status: 200 });
+    } else {
+      console.error("Postmark send email failed:", sendResult.Message);
+      return NextResponse.json(
+        { success: false, message: "فشل في إرسال البريد الإلكتروني." },
+        { status: 500 }
+      );
+    }
+  } catch (error: any) {
+    console.error("Unexpected error in submit-investor API:", error);
+
+    // Catch-all for any unexpected errors
+    return NextResponse.json(
+      { success: false, message: "حدث خطأ أثناء معالجة الطلب." },
+      { status: 500 }
+    );
+  }
+}
+
+
+--- C:\Users\hanos\sytech\app\api\submit-project\route.ts ---
+// app/api/submit-project/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+import { ServerClient } from "postmark";
+
+interface SubmitProjectResponse {
+  success: boolean;
+  message?: string;
+}
+
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<SubmitProjectResponse>> {
+  try {
+    const formData = await req.formData();
+
+    const fullName = formData.get("fullName")?.toString().trim() || "";
+    const email = formData.get("email")?.toString().trim() || "";
+    const phone = formData.get("phone")?.toString().trim() || "";
+    const linkedin = formData.get("linkedin")?.toString().trim() || "";
+    const website = formData.get("website")?.toString().trim() || "";
+    const pitchDeck = formData.get("pitchDeck") as File | null;
+
+    // Basic required fields check
+    if (!fullName || !email || !phone || !linkedin || !website || !pitchDeck) {
+      return NextResponse.json(
+        { success: false, message: "يرجى ملء جميع الحقول المطلوبة." },
+        { status: 400 }
+      );
+    }
+
+    // Email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { success: false, message: "البريد الإلكتروني غير صالح." },
+        { status: 400 }
+      );
+    }
+
+    // Phone format check (7-14 digits, optional +)
+    const phoneRegex = /^\+?\d{7,14}$/;
+    if (!phoneRegex.test(phone)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "رقم الهاتف غير صالح. يجب أن يتألف من 7-14 رقم، مع السماح بعلامة + اختيارياً.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Allowed file types and size checks
+    if (pitchDeck.type !== "application/pdf") {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "نوع الملف غير مسموح به. يرجى تحميل ملف PDF.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const maxFileSize = 10 * 1024 * 1024; // 10MB
+    if (pitchDeck.size > maxFileSize) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "حجم الملف كبير جداً. الحد الأقصى هو 10MB.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Convert file to Base64 so we can attach it to an email
+    const arrayBuffer = await pitchDeck.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const base64File = buffer.toString("base64");
+
+    const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
+    if (!postmarkToken) {
+      console.error(
+        "POSTMARK_SERVER_TOKEN is not defined in environment variables."
+      );
+      return NextResponse.json(
+        { success: false, message: "Internal Server Error." },
+        { status: 500 }
+      );
+    }
+
+    const client = new ServerClient(postmarkToken);
+
+    const sanitize = (input: string): string => {
+      return input
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
+    const sendResult = await client.sendEmail({
+      From: "info@syriatech.co",
+      To: "habrahllc@gmail.com",
+      Subject: "تقديم عرض مشروع جديد",
+      HtmlBody: `
+        <p><strong>الاسم الكامل:</strong> ${sanitize(fullName)}</p>
+        <p><strong>البريد الإلكتروني:</strong> ${sanitize(email)}</p>
+        <p><strong>رقم الهاتف:</strong> ${sanitize(phone)}</p>
+        <p><strong>ملف لينكدإن:</strong> <a href="${sanitize(
+          linkedin
+        )}">${sanitize(linkedin)}</a></p>
+        <p><strong>الموقع الإلكتروني أو موقع الشركة:</strong> <a href="${sanitize(
+          website
+        )}">${sanitize(website)}</a></p>
+      `,
+      TextBody: `
+        الاسم الكامل: ${sanitize(fullName)}
+        البريد الإلكتروني: ${sanitize(email)}
+        رقم الهاتف: ${sanitize(phone)}
+        ملف لينكدإن: ${sanitize(linkedin)}
+        الموقع الإلكتروني أو موقع الشركة: ${sanitize(website)}
+      `,
+      Attachments: [
+        {
+          Name: pitchDeck.name || "pitch-deck.pdf",
+          Content: base64File,
+          ContentType: pitchDeck.type || "application/pdf",
+          ContentID: "pitch-deck",
+        },
+      ],
+    });
+
+    if (sendResult.Message === "OK") {
+      return NextResponse.json({ success: true });
+    } else {
+      console.error("Postmark send email failed:", sendResult.Message);
+      return NextResponse.json(
+        { success: false, message: "فشل في إرسال البريد الإلكتروني." },
+        { status: 500 }
+      );
+    }
+  } catch (error: any) {
+    console.error("Error in submit-project API:", error);
+    return NextResponse.json(
+      { success: false, message: "حدث خطأ أثناء معالجة الطلب." },
+      { status: 500 }
+    );
+  }
+}
+
+
+--- C:\Users\hanos\sytech\app\blogs\page.tsx ---
+"use client";
+import Image from "next/image";
+import logo from "@/public/images/logo.png";
+import fb from "@/public/images/fb.png";
+import tt from "@/public/images/tt.png";
+import x from "@/public/images/x.png";
+import sp from "@/public/images/sp.png";
+import hero from "@/public/images/hero.png";
+import { blogData } from "@/public/blogdata";
+import Link from "next/link";
+import { formatString } from "@/utils/formatString";
+import { useState } from "react";
+import AnimateHeight from "react-animate-height";
+import { Blog } from "@/app/types"; // Import the Blog interface
+
+const topics = [
+  {
+    id: 1,
+    title: "Fundamentals",
+    articles: ["Web dev basics", "Getting Started in web dev", "Key web concepts", "Clean code tips", "First web app guide"],
+  },
+  {
+    id: 2,
+    title: "HTML",
+    articles: ["Introduction to HTML", "Semantic HTML Guide", "HTML Form Best Practices", "HTML for SEO & Access", "Responsive HTML Layouts"],
+  },
+  {
+    id: 3,
+    title: "CSS",
+    articles: ["Master CSS Grid", "Responsive Flexbox Tips", "CSS Animations Guide", "Scalable CSS Practices", "Advanced CSS Tricks"],
+  },
+  {
+    id: 4,
+    title: "JavaScript",
+    articles: ["JavaScript ES6 Features You Should Know", "JavaScript Functions: A Brief Guide", "JavaScript Design Patterns: Writing More Efficient Code", "DOM Manipulation with JavaScript", "Asynchronous JavaScript: Understanding Promises"],
+  },
+  {
+    id: 5,
+    title: "Databases",
+    articles: ["Basic SQL Queries for Beginners", "NoSQL vs SQL: Key Differences", "Understanding Database Indexing Techniques", "Database Normalization Simplified", "Integrating Databases with Your Web Application"],
+  },
+  {
+    id: 6,
+    title: "Deployment",
+    articles: ["Deploying Web Applications: A Guide", "Introduction to Continuous Deployment", "Deploying with Git and GitHub", "Best Practices for Secure Deployment", "Automating Deployments with CI/CD"],
+  },
+];
+
+const AllBlogs = () => {
+  const [opened, setOpened] = useState<null | number>(1);
+  return (
+    <>
+      <header className="header-blog">
+        <div className="container d-flex flex-wrap gap-4 align-items-center justify-content-between">
+          <Link href="/">
+            <Image src={logo} alt="logo" />
+          </Link>
+          <Link href="/" className="d-flex align-items-center gap-2">
+            <i className="ph ph-arrow-left"></i> Back to Home
+          </Link>
+        </div>
+      </header>
+
+      {/* <!-- main content --> */}
+      <main>
+        <section id="top" className="hero blog-hero">
+          <div className="container">
+            <div className="row gx-4 justify-content-center align-items-center">
+              <div className="col-12 col-md-6 col-xl-6 hero-content">
+                <div>
+                  <h1 className="fw-medium mb-4">Hi, i&apos;m Jenny Wilson</h1>
+                  <p className="mb-4 mb-xl-5">I&apos;m a Developer in California. I like working on the front-end of the web. This is my site, Portify where I blog, share and write tutorials...</p>
+                </div>
+                <form className="connect">
+                  <input type="text" placeholder="Enter your email address" />
+                  <button>Subscribe</button>
+                </form>
+                <div className="d-flex gap-3 align-items-center">
+                  <span className="fw-medium">Follow Me</span>
+                  <div className="d-flex gap-3">
+                    <a href="#">
+                      <Image src={fb} alt="Facebook" />
+                    </a>
+                    <a href="#">
+                      <Image src={tt} alt="Twitter" />
+                    </a>
+                    <a href="#">
+                      <Image src={x} alt="X (formerly Twitter)" />
+                    </a>
+                    <a href="#">
+                      <Image src={sp} alt="Spotify" />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4 d-flex justify-content-center">
+                <div className="img-wrapper">
+                  <div className="waves-top">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <Image className="img-fluid rounded-circle hero-img" src={hero} alt="Hero Image" />
+                  <div className="waves-bottom">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* <!-- Topics --> */}
+        <section className="topics">
+          <div className="container">
+            <h2 className="fw-medium mb-4 mb-xl-5 text-center">Trending Topics</h2>
+            <div className="topics-inner">
+              <a href="#" className="topic-box">
+                <div className="icon">
+                  <span>4</span>
+                  <i className="ph ph-file-html"></i>
+                </div>
+                <p>HTML</p>
+              </a>
+              <a href="#" className="topic-box">
+                <div className="icon">
+                  <span>1</span>
+                  <i className="ph ph-code"></i>
+                </div>
+                <p>Fundamentals</p>
+              </a>
+              <a href="#" className="topic-box">
+                <div className="icon">
+                  <span>7</span>
+                  <i className="ph ph-file-css"></i>
+                </div>
+                <p>CSS</p>
+              </a>
+              <a href="#" className="topic-box">
+                <div className="icon">
+                  <span>5</span>
+                  <i className="ph ph-stack"></i>
+                </div>
+                <p>Deployment</p>
+              </a>
+              <a href="#" className="topic-box">
+                <div className="icon">
+                  <span>2</span>
+                  <i className="ph ph-database"></i>
+                </div>
+                <p>Databases</p>
+              </a>
+            </div>
+            <div className="row">
+              <div className="col-md-4 col-xxl-3">
+                <div className="topic-index position-sticky">
+                  <h4 className="mb-3 mb-xl-4">Topics Index</h4>
+                  <div className="d-flex flex-column gap-3">
+                    {topics.map(({ id, articles, title }) => (
+                      <div key={id} className="blog-topic">
+                        <div onClick={() => setOpened(opened === id ? null : id)} className="title">
+                          <span>1</span>
+                          <div className="d-flex align-items-center gap-2">
+                            <p>{title}</p>
+                            <i className="ph ph-arrow-right"></i>
+                          </div>
+                        </div>
+                        <AnimateHeight height={opened === id ? "auto" : 0} key={id}>
+                          <div className="list">
+                            <div className="list-inner">
+                              {articles.map((item) => (
+                                <li key={item}>
+                                  <a href="#">{item}</a>
+                                </li>
+                              ))}
+                            </div>
+                          </div>
+                        </AnimateHeight>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-8 col-xxl-9 d-flex flex-column gap-4">
+                {blogData.map(({ date, desc, id, image, tags, time, title }: Blog) => (
+                  <Link key={id} href={`/blogs/${formatString(title)}`} className="blog-card">
+                    <div className="overflow-hidden rounded-4 img-wrapper">
+                      <Image src={image} className="img-fluid" alt={title} />
+                    </div>
+                    <div>
+                      <h4 className="fw-medium mb-3">{title}</h4>
+                      <div className="d-flex align-items-center gap-4 flex-wrap mb-3">
+                        <div className="d-flex gap-2 align-items-center fs-5">
+                          <i className="ph ph-calendar"></i>
+                          <p>{date}</p>
+                        </div>
+                        --
+                        <div className="d-flex gap-2 align-items-center fs-5">
+                          <i className="ph ph-clock"></i>
+                          <p>{time}</p>
+                        </div>
+                      </div>
+                      <p className="details">{desc}</p>
+                      <div className="d-flex align-items-center gap-3">
+                        {tags.map((tag: string) => (
+                          <div key={tag} className="d-flex align-items-center gap-2">
+                            <span className="fs-3">•</span>
+                            <p>{tag}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="pagination">
+              <a href="#">
+                <i className="ph ph-caret-left"></i>
+              </a>
+              <a href="#">1</a>
+              <a href="#">2</a>
+              <a href="#">...</a>
+              <a href="#">
+                <i className="ph ph-caret-right"></i>
+              </a>
+            </div>
+          </div>
+        </section>
+        {/* <!-- newsletter --> */}
+        <section className="newsletter">
+          <div className="container">
+            <div className="content">
+              <h2 className="mb-3 fw-medium">Subscribe our newsletter</h2>
+              <p className="mb-4 pb-2">Technology blogging, captivating your audience goes beyond just the written word.</p>
+              <form className="mb-3">
+                <input type="text" placeholder="Enter your email address" />
+                <button>Subscribe</button>
+              </form>
+              <div>
+                <label htmlFor="agree" className="d-flex align-items-center gap-2">
+                  <input type="checkbox" id="agree" />
+                  <p>
+                    I agree with{" "}
+                    <a href="#" className="underlined">
+                      Privacy Policy
+                    </a>{" "}
+                    &amp;{" "}
+                    <a href="#" className="underlined">
+                      Terms
+                    </a>
+                  </p>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div className="contaner">
+          <div className="d-flex justify-content-center gap-3">
+            <p>
+              Copyright @ <span id="year"></span> Portify
+            </p>
+            <p>|</p>
+            <p>
+              Designed By <a href="#">Pixelaxis</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default AllBlogs;
+
+
+--- C:\Users\hanos\sytech\app\blogs\[title]\page.tsx ---
+// app/blogs/[title]/page.tsx
+
+import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import blogDetails from '@/public/images/blog-details.png';
+import { blogData } from '@/public/blogdata';
+import { formatString } from '@/utils/formatString';
+import DetailsVideo from '@/components/DetailsVideo';
+import logo from "@/public/images/logo.png";
+import fb from "@/public/images/fb.png";
+import tt from "@/public/images/tt.png";
+import x from "@/public/images/x.png";
+import sp from "@/public/images/sp.png";
+import { Blog, BlogDetailsPageProps, TableOfContentsItem } from '../../types'; // Import the new type
+
+export async function generateStaticParams() {
+  return blogData.map((blog: Blog) => ({
+    title: formatString(blog.title),
+  }));
+}
+
+const BlogDetailsPage = async ({ params }: BlogDetailsPageProps) => {
+  const blog = blogData.find((blog: Blog) => formatString(blog.title) === params.title);
+
+  if (!blog) {
+    return (
+      <div>
+        <h1>Blog Not Found</h1>
+        <Link href="/blogs">Back to Blogs</Link>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <header className="header-blog">
+        <div className="container d-flex flex-wrap gap-4 align-items-center justify-content-between">
+          <Link href="/">
+            <Image src={logo} alt="logo" />
+          </Link>
+          <Link href="/" className="d-flex align-items-center gap-2">
+            <i className="ph ph-arrow-left"></i> Back to Home
+          </Link>
+        </div>
+      </header>
+
+      <main>
+        <section className="blog-details">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-4 col-xxl-3">
+                <div className="details-left">
+                  <div className="info-box">
+                    <h4>Article Information</h4>
+                    <div className="d-flex flex-column gap-3">
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="ph ph-tag fs-5"></i>
+                        <p>
+                          <span className="fw-medium">Category</span>: Inspiration
+                        </p>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="ph ph-clock fs-5"></i>
+                        <p>
+                          <span className="fw-medium">Updated</span>: {blog.date}
+                        </p>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="ph ph-user fs-5"></i>
+                        <p>
+                          <span className="fw-medium">Author</span>: {blog.author}
+                        </p>
+                      </div>
+                      <div className="d-flex align-items-center gap-2">
+                        <i className="ph ph-alarm fs-5"></i>
+                        <p>
+                          <span className="fw-medium">Reading Time</span>: {blog.time}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="info-box">
+                    <h4>Table of Contents</h4>
+                    <div id="blog-index" className="d-flex flex-column gap-2 table-of-content">
+                      {blog.tableOfContents.map((item: TableOfContentsItem) => (
+                        <a key={item.id} href={`#${item.id}`}>
+                          {item.title}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="col-md-8 col-xxl-9 d-flex flex-column gap-4"
+                data-bs-spy="scroll"
+                data-bs-target="#blog-index"
+                data-bs-smooth-scroll="true"
+              >
+                <div className="details-container">
+                  <div className="details-content">
+                    <div id="title" className="row align-items-center g-4 mb-4 mb-xl-5">
+                      <div className="col-md-6">
+                        <Image src={blog.image} className="img-fluid w-100 rounded-3" alt="" />
+                      </div>
+                      <div className="col-md-6">
+                        <h3 className="mb-3 fw-medium">{blog.title}</h3>
+                        <div className="d-flex align-items-center gap-2">
+                          <i className="ph ph-calendar fs-4"></i>
+                          <p>
+                            <span className="fw-medium">Updated</span>: {blog.date}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-lg mb-4 mb-xl-5">{blog.desc}</p>
+                    <h4 id="understanding" className="fw-medium mb-3">
+                      {blog.sections.understanding.title}
+                    </h4>
+                    <p className="text-lg mb-4 mb-xl-5">{blog.sections.understanding.content}</p>
+
+                    <DetailsVideo />
+
+                    <div id="crafting" className="mb-4 mb-xl-5">
+                      <h5 className="mb-3">{blog.sections.crafting.title}</h5>
+                      <p className="text-lg">{blog.sections.crafting.content}</p>
+                    </div>
+
+                    <div id="showcasing" className="mb-4 mb-xl-5">
+                      <h5 className="mb-3">{blog.sections.showcasing.title}</h5>
+                      <p className="text-lg">{blog.sections.showcasing.content}</p>
+                    </div>
+
+                    <div className="quote">{blog.quote}</div>
+                    <p className="mb-4 mb-xl-5">{blog.additionalContent}</p>
+
+                    <div className="mb-4 mb-xl-5">
+                      <Image src={blogDetails} className="img-fluid w-100 rounded-3" alt="" />
+                    </div>
+
+                    <div id="conclusion" className="mb-4 mb-xl-5">
+                      <h5 className="mb-3">{blog.sections.conclusion.title}</h5>
+                      <p className="text-lg">{blog.sections.conclusion.content}</p>
+                    </div>
+
+                    <div className="share py-4">
+                      <div className="d-flex gap-3 align-items-center justify-content-center mb-4">
+                        <p>Follow Me</p>
+                        <div className="d-flex gap-3">
+                          <a href="#">
+                            <Image src={fb} alt="Facebook" />
+                          </a>
+                          <a href="#">
+                            <Image src={tt} alt="Twitter" />
+                          </a>
+                          <a href="#">
+                            <Image src={x} alt="X" />
+                          </a>
+                          <a href="#">
+                            <Image src={sp} alt="Spotify" />
+                          </a>
+                        </div>
+                      </div>
+                      <form>
+                        <input type="text" value="Portify-?node-id=0-1&t=3MUWkaOWKQ0TLoKa-0" disabled />
+                        <button>Copy Link</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div className="next-prev">
+                    <a href="#" className="article-card">
+                      <button>
+                        <i className="ph ph-arrow-left"></i>
+                      </button>
+                      <div>
+                        <p className="fw-medium mb-1">Previous Article</p>
+                        <h5 className="fw-medium">The Evolution of My Design Style Over Time</h5>
+                      </div>
+                    </a>
+                    <div className="divider d-none d-md-block"></div>
+                    <a href="#" className="article-card right">
+                      <div>
+                        <p className="fw-medium mb-1">Next Article</p>
+                        <h5 className="fw-medium">The Evolution of My Design Style Over Time</h5>
+                      </div>
+                      <button>
+                        <i className="ph ph-arrow-left"></i>
+                      </button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="newsletter">
+          <div className="container">
+            <div className="content">
+              <h2 className="mb-3 fw-medium">Subscribe to our newsletter</h2>
+              <p className="mb-4 pb-2">
+                Technology blogging, captivating your audience goes beyond just the written word.
+              </p>
+              <form className="mb-3">
+                <input type="email" placeholder="Enter your email address" required />
+                <button type="submit">Subscribe</button>
+              </form>
+              <div>
+                <label htmlFor="agree" className="d-flex align-items-center gap-2">
+                  <input type="checkbox" id="agree" required />
+                  <p>
+                    I agree with{' '}
+                    <a href="#" className="underlined">
+                      Privacy Policy
+                    </a>{' '}
+                    &amp;{' '}
+                    <a href="#" className="underlined">
+                      Terms
+                    </a>
+                  </p>
+                </label>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer>
+        <div className="container">
+          <div className="d-flex justify-content-center gap-3">
+            <p>
+              Copyright @ <span id="year">{new Date().getFullYear()}</span> Portify
+            </p>
+            <p>|</p>
+            <p>
+              Designed By <a href="#">Pixelaxis</a>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default BlogDetailsPage;
+
+
+--- C:\Users\hanos\sytech\components\AboutMe.tsx ---
+import Link from "next/link";
+import React from "react";
+import SectionTitle from "./SectionTitle";
+import SectionOverlayText from "./SectionOverlayText";
+const AboutMe = () => {
+  return (
+    <section id="about_me" className="about section">
+      <SectionTitle subtitle="كلمتين نظاف أحسن من جريدة وسخة" title="تعرف علينا" />
+      <div className="row mb-4 mb-lg-5 align-items-center">
+        <div className="col-lg-7 col-xl-8 about-desc">
+          <h2>أنا أنس هبره وهذه سيرياتك</h2>
+          <p className="desc">
+            سيرياتك شركة خاصة مساهمة بتدعم رواد الأعمال والشركات الناشئة لتطوير مشاريعهم وتحقيق النجاح. بتشتغل كمسرّعة أعمال، يعني بتجمع المستثمرين مع رواد الأعمال وبتقدم لهم استشارات استراتيجية، وبتوفر لهم الموارد اللازمة، وبتساعدهم يبنوا شبكة علاقات قوية. الهدف الأساسي هو تمكين الشباب السوري الطموح لتحويل أفكارهم إلى مشاريع ناجحة تساهم بنهضة الاقتصاد المحلي وتقلل من اعتماد السوق على الشركات الأجنبية، وتسد الفراغ الموجود بعدة قطاعات، في الجانب التقني.
+          </p>
+          <div className="row about-contact">
+            <div className="col-sm-4 about-contact-item">
+              <p>العنوان</p>
+              <span>حماه، سوريا</span>
+            </div>
+            <div className="col-sm-4 about-contact-item">
+              <p>رئيس مجلس الإدارة</p>
+              <span>أنس هبره</span>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-5 col-xl-4">
+          <div className="experience-card">
+            <div className="card-inner"></div>
+            <div>
+              <div className="numbers">
+                <span className="number-outline-one">10</span>
+                <span className="number-outline-two">10</span>
+                <span className="number-main">10</span>
+              </div>
+              <p>سنوات الخبرة</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="col-12">
+        <Link href="#services" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">3/6</span>
+          <span className="next">القسم التالي</span>
+          <span className="icon">
+            <i className="ph ph-arrow-elbow-right-down"></i>
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default AboutMe;
+
+
+--- C:\Users\hanos\sytech\components\Attainments.tsx ---
+"use client";
+
+import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import Link from "next/link";
+import SectionTitle from "./SectionTitle";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SubmitInvestorResponse } from "@/app/types";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface FormData {
+  investorName: string;
+  investorEmail: string;
+  investorPhone: string;
+  investmentAmount: string;
+}
+
+interface Status {
+  loading: boolean;
+  success: string | null;
+  error: string | null;
+}
+
+const Attainments: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    investorName: "",
+    investorEmail: "",
+    investorPhone: "",
+    investmentAmount: "",
+  });
+
+  const [status, setStatus] = useState<Status>({
+    loading: false,
+    success: null,
+    error: null,
+  });
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    // Fade in for each .attainments-form-group on scroll
+    const formGroups = gsap.utils.toArray<HTMLElement>(".attainments-form-group");
+    gsap.fromTo(
+      formGroups,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".attainments",
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
+
+    // Remove scrollTrigger for the button entirely:
+    // Just do a simple one-time fade in (no scrolling logic).
+    gsap.from(".submit-button", {
+      duration: 1.0,
+      opacity: 0,
+      y: 30,
+      ease: "power2.out",
+    });
+
+    return () => {
+      // Kill only the triggers associated with the form groups
+      // so they don’t cause stale triggers. 
+      ScrollTrigger.getAll().forEach((triggerInstance) => {
+        if (triggerInstance?.trigger?.classList.contains("attainments")) {
+          triggerInstance.kill();
+        }
+      });
+    };
+  }, []);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    setStatus({ loading: true, success: null, error: null });
+
+    try {
+      const response = await fetch("/api/submit-investor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      console.log("Response Status:", response.status);
+      console.log("Response Headers:", response.headers);
+
+      const contentType = response.headers.get("Content-Type") || "";
+      if (!contentType.includes("application/json")) {
+        const text = await response.text();
+        console.error("Invalid Content-Type:", contentType, "Response body:", text);
+        throw new Error("Server responded with invalid content type.");
+      }
+
+      const data: SubmitInvestorResponse = await response.json();
+      if (response.ok && data.success) {
+        setStatus({
+          loading: false,
+          success: "تم إرسال بياناتك بنجاح!",
+          error: null,
+        });
+        setFormData({
+          investorName: "",
+          investorEmail: "",
+          investorPhone: "",
+          investmentAmount: "",
+        });
+        formRef.current?.reset();
+      } else {
+        setStatus({
+          loading: false,
+          success: null,
+          error: data.message || "حدث خطأ غير متوقع.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Form submission error:", error);
+      setStatus({
+        loading: false,
+        success: null,
+        error:
+          error instanceof Error
+            ? error.message
+            : "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+      });
+    }
+  };
+
+  return (
+    <section
+      id="attainments"
+      className="attainments section position-relative pb-5 mb-5"
+    >
+      <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
+
+      <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
+        <div className="row g-4 g-xl-5">
+          <div className="col-sm-6 contact-input attainments-form-group">
+            <label htmlFor="investorName">الاسم الكامل</label>
+            <input
+              type="text"
+              id="investorName"
+              name="investorName"
+              value={formData.investorName}
+              onChange={handleChange}
+              required
+              placeholder="الاسم الكريم"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input attainments-form-group">
+            <label htmlFor="investorEmail">البريد الإلكتروني</label>
+            <input
+              type="email"
+              id="investorEmail"
+              name="investorEmail"
+              value={formData.investorEmail}
+              onChange={handleChange}
+              required
+              placeholder="ايميلك بعد إذنك"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input attainments-form-group">
+            <label htmlFor="investorPhone">رقم الجوال</label>
+            <input
+              type="tel"
+              id="investorPhone"
+              name="investorPhone"
+              value={formData.investorPhone}
+              onChange={handleChange}
+              required
+              placeholder="لاتنسى مفتاح الدولة"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input attainments-form-group">
+            <label htmlFor="investmentAmount">مبلغ الاستثمار المتوقع</label>
+            <input
+              type="number"
+              id="investmentAmount"
+              name="investmentAmount"
+              value={formData.investmentAmount}
+              onChange={handleChange}
+              required
+              placeholder="حدد المبلغ الأقصى بالدولار"
+            />
+          </div>
+
+          {/* Feedback Messages */}
+          {status.loading && (
+            <div className="col-12">
+              <p className="message loading">جارٍ الإرسال...</p>
+            </div>
+          )}
+          {status.success && (
+            <div className="col-12">
+              <p className="message success">{status.success}</p>
+            </div>
+          )}
+          {status.error && (
+            <div className="col-12">
+              <p className="message error">{status.error}</p>
+            </div>
+          )}
+
+          <div className="col-12">
+            <button
+              type="submit"
+              disabled={status.loading}
+              className="submit-btn position-relative submit-button"
+            >
+              <div className="waves-top-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              {status.loading ? "جارٍ الإرسال..." : "إرسال"}
+              <div className="waves-bottom-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div className="col-12">
+        <Link
+          href="#next-section"
+          className="d-flex gap-4 align-items-center next-chapter"
+        >
+          <span className="page">5/6</span>
+          <span className="next">القسم التالي</span>
+          <span className="icon">
+            <i className="ph ph-arrow-elbow-right-down"></i>
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default Attainments;
+
+
+--- C:\Users\hanos\sytech\components\BgDotsAnim.tsx ---
+import gsap from "gsap";
+import React, { useEffect, useRef } from "react";
+
+const BgDotsAnim: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    let width: number,
+      height: number,
+      canvas: HTMLCanvasElement | null,
+      ctx: CanvasRenderingContext2D | null,
+      points: Point[],
+      target: Target,
+      animateHeader = true;
+
+    const pointDistance = 45;
+    const pointRadius = 2;
+
+    interface Target {
+      x: number;
+      y: number;
+    }
+
+    interface Point {
+      x: number;
+      y: number;
+      originX: number;
+      originY: number;
+      closest?: Point[];
+      circle?: Circle;
+      opacity?: number;
+    }
+
+    class Circle {
+      pos: Point;
+      radius: number;
+      color: string;
+      opacity: number;
+
+      constructor(pos: Point, rad: number, color: string) {
+        this.pos = pos;
+        this.radius = rad;
+        this.color = color;
+        this.opacity = 1;
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    initHeader();
+    initAnimation();
+    addListeners();
+
+    function initHeader() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      target = { x: width / 2, y: height / 2 };
+
+      canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = width;
+      canvas.height = height;
+      ctx = canvas.getContext("2d");
+      initPoints();
+    }
+
+    function addListeners() {
+      if (!("ontouchstart" in window)) {
+        window.addEventListener("mousemove", mouseMove);
+      }
+      window.addEventListener("resize", resize);
+    }
+
+    function initAnimation() {
+      gsap.ticker.add(animate);
+    }
+
+    function animate() {
+      if (animateHeader) {
+        drawPoints();
+      }
+    }
+
+    function mouseMove(e: MouseEvent) {
+      target.x = e.clientX || e.pageX;
+      target.y = e.clientY || e.pageY;
+    }
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      if (!canvas) return;
+      canvas.width = width;
+      canvas.height = height;
+
+      points.forEach((point) => {
+        gsap.killTweensOf(point);
+      });
+
+      initPoints();
+    }
+
+    function initPoints() {
+      points = [];
+      for (let x = 0; x <= width / pointDistance; x++) {
+        for (let y = 0; y < height / pointDistance; y++) {
+          let px = x * pointDistance;
+          let py = y * pointDistance;
+          let p: Point = { x: px, originX: px, y: py, originY: py };
+          points.push(p);
+        }
+      }
+
+      points.forEach((p1) => {
+        p1.closest = points
+          .filter((p2) => p1 !== p2)
+          .sort((a, b) => getDistance(p1, a) - getDistance(p1, b))
+          .slice(0, 5);
+
+        p1.circle = new Circle(p1, pointRadius, "rgba(0, 0, 0, 1)");
+        shiftPoint(p1);
+      });
+    }
+
+    function drawPoints() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      points.forEach((point) => {
+        const distance = getDistance(target, point);
+        point.opacity = distance < 4000 ? 0.15 : distance < 20000 ? 0.05 : distance < 40000 ? 0.01 : 0;
+        point.circle!.opacity = distance < 20000 ? 0.5 : distance < 40000 ? 0.4 : 0.3;
+
+        point.circle!.color = "rgba(0, 0, 0,0.3)";
+        drawLines(point);
+        point.circle!.draw();
+      });
+    }
+
+    function shiftPoint(p: Point) {
+      gsap.to(p, {
+        duration: 1 + Math.random(),
+        x: p.originX + Math.random() * (pointDistance / 2),
+        y: p.originY + Math.random() * (pointDistance / 2),
+        ease: "circ.inOut",
+        onComplete: () => shiftPoint(p),
+      });
+    }
+
+    function drawLines(p: Point) {
+      if (!ctx || !p.closest) return;
+      p.closest.forEach((closest) => {
+        ctx!.beginPath();
+        ctx!.moveTo(p.x, p.y);
+        ctx!.lineTo(closest.x, closest.y);
+        ctx!.strokeStyle = `rgba(0, 0, 0, ${p.opacity})`;
+        ctx!.stroke();
+      });
+    }
+
+    function getDistance(p1: Target | Point, p2: Point) {
+      return Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("resize", resize);
+      gsap.ticker.remove(animate);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} id="background-canvas"></canvas>;
+};
+
+export default BgDotsAnim;
+
+
+--- C:\Users\hanos\sytech\components\Blogs.tsx ---
+import React from "react";
+import blog1 from "@/public/images/blog-1.png";
+import blog2 from "@/public/images/blog-2.png";
+import Image from "next/image";
+import Link from "next/link";
+import { formatString } from "@/utils/formatString";
+import { blogData } from "@/public/blogdata";
+const Blogs = () => {
+  return (
+    <section id="blogs" className="section blogs position-relative">
+      <span className="section-title-overlay-text">My Blogs</span>
+      <div className="section-title text-capitalize">
+        <h4>Explore My Blog</h4>
+        <h2>Latest Articles</h2>
+      </div>
+      <div className="pb-60 d-flex flex-column gap-4">
+        {blogData.slice(0, 2).map(({ date, desc, id, image, tags, time, title }) => (
+          <Link key={id} href={`/blogs/${formatString(title)}`} className="blog-card">
+            <div className="rounded-4 overflow-hidden img-wrapper">
+              <Image src={image} className="img-fluid" alt="" />
+            </div>
+            <div>
+              <h4 className="fw-medium mb-3">{title}</h4>
+              <div className="d-flex align-items-center gap-4 flex-wrap mb-3">
+                <div className="d-flex gap-2 align-items-center fs-5">
+                  <i className="ph ph-calendar"></i>
+                  <p>{date}</p>
+                </div>
+                --
+                <div className="d-flex gap-2 align-items-center fs-5">
+                  <i className="ph ph-clock"></i>
+                  <p>{time}</p>
+                </div>
+              </div>
+              <p className="details">{desc}</p>
+              <div className="d-flex align-items-center gap-3">
+                {tags.map((tag) => (
+                  <div key={tag} className="d-flex align-items-center gap-2">
+                    <span className="fs-3">•</span>
+                    <p>{tag}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div className="more-info d-flex flex-wrap align-items-center gap-5 gap-md-3">
+        <Link href="/blogs" className="fs-5 fw-medium">
+          View All Articles
+        </Link>
+        <span className="line"></span>
+        <Link href="/blogs" className="arrow-down position-relative">
+          <div className="waves-top-md">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <svg width="45" height="54" viewBox="0 0 45 54" className="rotate-90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M44 31.449L22.5 52.949L1 31.449L8.98204 23.3382L16.8353 31.449V0.550781H28.1647V31.449L36.018 23.3382L44 31.449Z" stroke="currentColor" />
+          </svg>
+          <div className="waves-bottom-md">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </Link>
+      </div>
+      <div className="col-12">
+        <a href="#testimonials" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">09/11</span>
+          <span className="next">Next Chapter</span>
+          <i className="ph ph-arrow-elbow-right-down"></i>
+        </a>
+      </div>
+    </section>
+  );
+};
+
+export default Blogs;
+
+
+--- C:\Users\hanos\sytech\components\Bootstrap.tsx ---
+// components/Bootstrap.tsx
+"use client";
+import React, { useEffect } from "react";
+
+const Bootstrap = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    import("bootstrap");
+  }, []);
+  return <>{children}</>;
+};
+
+export default Bootstrap;
+
+
+--- C:\Users\hanos\sytech\components\Contact.tsx ---
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import React, { useRef } from "react";
+import SectionTitle from "./SectionTitle";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import emailjs from "@emailjs/browser";
+gsap.registerPlugin(ScrollTrigger);
+
+const Contact = () => {
+  const [submitBtn, setSubmitBtn] = React.useState("إرسال");
+  useGSAP(() => {
+    gsap.fromTo(
+      ".section-title-overlay-text",
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".contact",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+    gsap.from(".submit-btn", {
+      scale: 0,
+      duration: 3.5,
+      ease: "elastic",
+      delay: 0.2,
+      scrollTrigger: {
+        trigger: ".submit-btn",
+      },
+    });
+    gsap.from(".contact-item", {
+      scale: 0,
+      duration: 0.8,
+      ease: "back",
+      scrollTrigger: {
+        trigger: ".contact-items",
+      },
+    });
+
+    gsap.from(".contact-input", {
+      opacity: 0,
+      scale: 0,
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: ".contact-input",
+      },
+    });
+  });
+  const form = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitBtn("[جاري الإرسال...");
+    emailjs.sendForm(process.env.NEXT_PUBLIC_SERVICE_ID as string, process.env.NEXT_PUBLIC_TEMPLATE_ID as string, form.current!, { publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY as string }).then(
+      function () {
+        console.log("إرسلت بنجاح!");
+        form.current?.reset();
+        setSubmitBtn("نجاح الإرسال");
+        setTimeout(function () {
+          setSubmitBtn("إرسال");
+        }, 3000);
+      },
+      function (error) {
+        setSubmitBtn("إرسال");
+        console.log("فشل...", error);
+      },
+    );
+  };
+  return (
+    <section id="contact" className="contact section position-relative">
+      <SectionTitle subtitle="خلينا نتواصل" title="اتركلنا رسالة" />
+      <form ref={form} onSubmit={handleSubmit} id="contact-form" className="contact-form">
+        <div className="row g-4 g-xl-5">
+          <div className="col-sm-6 contact-input">
+            <label htmlFor="name">الاسم</label>
+            <input type="text" id="user_name" name="user_name" placeholder="اسمك" required />
+          </div>
+          <div className="col-sm-6 contact-input">
+            <label htmlFor="email">الايميل</label>
+            <input type="email" id="user_email" name="user_email" placeholder="ايميلك" required />
+          </div>
+          <div className="col-12 contact-input">
+            <label htmlFor="message">الرسالة</label>
+            <textarea id="message" name="message" placeholder="رسالتك"></textarea>
+          </div>
+          <div className="col-12">
+            <button type="submit" id="submit-btn" className="submit-btn position-relative">
+              <div className="waves-top-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              {submitBtn}
+              <div className="waves-bottom-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  );
+};
+
+export default Contact;
+
+
+--- C:\Users\hanos\sytech\components\DetailsVideo.tsx ---
+"use client";
+import Image from "next/image";
+import React, { useState } from "react";
+import ModalVideo from "react-modal-video";
+import blogVideo from "@/public/images/blog-video.png";
+import youtube from "@/public/images/youtube.png";
+
+const DetailsVideo = () => {
+  const [isOpen, setOpen] = useState(false);
+  return (
+    <>
+      <div className="mb-4 mb-xl-5 position-relative blog-video">
+        <Image src={blogVideo} className="w-100 img-fluid rounded-3" alt="Blog Video" />
+        <span onClick={() => setOpen(true)} className="youtube">
+          <Image src={youtube} alt="Play Video" />
+        </span>
+      </div>
+      <ModalVideo
+        channel="youtube"
+        isOpen={isOpen}
+        videoId="dImgZ_AH7uA"
+        onClose={() => setOpen(false)}
+        autoplay={false}
+      />
+    </>
+  );
+};
+
+export default DetailsVideo;
+
+
+--- C:\Users\hanos\sytech\components\Experience.tsx ---
+// components/Experience.tsx
+
+"use client";
+
+import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import Link from "next/link";
+import SectionTitle from "./SectionTitle";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface FormDataState {
+  fullName: string;
+  email: string;
+  phone: string;
+  linkedin: string;
+  website: string;
+  pitchDeck: File | null;
+}
+
+interface Status {
+  loading: boolean;
+  success: string | null;
+  error: string | null;
+}
+
+const Experience: React.FC = () => {
+  const [formData, setFormData] = useState<FormDataState>({
+    fullName: "",
+    email: "",
+    phone: "",
+    linkedin: "",
+    website: "",
+    pitchDeck: null,
+  });
+
+  const [status, setStatus] = useState<Status>({
+    loading: false,
+    success: null,
+    error: null,
+  });
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    // Animate input fields in
+    const formGroups = gsap.utils.toArray<HTMLElement>(".experience-form-group");
+    gsap.fromTo(
+      formGroups,
+      { opacity: 0, y: 50 },
+      {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".experience",
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
+
+    // Simplified fade for the button
+    gsap.from(".submit-button", {
+      duration: 1.0,
+      opacity: 0,
+      y: 30,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".submit-button",
+        start: "top 95%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    return () => {
+      // Cleanup triggers
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (
+          trigger.trigger &&
+          trigger.trigger.classList &&
+          (trigger.trigger.classList.contains("experience") ||
+            trigger.trigger.classList.contains("submit-button"))
+        ) {
+          trigger.kill();
+        }
+      });
+    };
+  }, []);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, type, files, value } = e.target as HTMLInputElement;
+    if (type === "file" && files) {
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    setStatus({ loading: true, success: null, error: null });
+
+    try {
+      const data = new FormData();
+      data.append("fullName", formData.fullName);
+      data.append("email", formData.email);
+      data.append("phone", formData.phone);
+      data.append("linkedin", formData.linkedin);
+      data.append("website", formData.website);
+      if (formData.pitchDeck) {
+        data.append("pitchDeck", formData.pitchDeck);
+      }
+
+      const response = await fetch("/api/submit-project", {
+        method: "POST",
+        body: data,
+      });
+
+      const resData = await response.json();
+
+      if (response.ok && resData.success) {
+        setStatus({
+          loading: false,
+          success: "تم إرسال النموذج بنجاح!",
+          error: null,
+        });
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          linkedin: "",
+          website: "",
+          pitchDeck: null,
+        });
+        formRef.current?.reset();
+      } else {
+        setStatus({
+          loading: false,
+          success: null,
+          error: resData.message || "حدث خطأ غير متوقع.",
+        });
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setStatus({
+        loading: false,
+        success: null,
+        error: "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+      });
+    }
+  };
+
+  return (
+    <section
+      id="experience"
+      className="experience section position-relative pb-5 mb-5"
+    >
+      <SectionTitle
+        subtitle="إذا كنت رائد أعمال سوري، حياك الله"
+        title="ابعتلنا مشروعك لندرسه"
+      />
+
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="contact-form experience-form-container"
+      >
+        <div className="row g-4 g-xl-5">
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="fullName">الاسم الكامل</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+              placeholder="اكتبلي اسمك الكامل"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="email">البريد الالكتروني</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="اكتبلي إيميلك"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="phone">رقم الجوال</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              placeholder="لاتنسى رمز الدولة"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="linkedin">لينكدإن</label>
+            <input
+              type="url"
+              id="linkedin"
+              name="linkedin"
+              value={formData.linkedin}
+              onChange={handleChange}
+              required
+              placeholder="بدي رابط لينكدإن"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="website">الموقع الالكتروني</label>
+            <input
+              type="url"
+              id="website"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              required
+              placeholder="ابط الموقع او التطبيق"
+            />
+          </div>
+
+          <div className="col-sm-6 contact-input experience-form-group">
+            <label htmlFor="pitchDeck">تحميل عرض المشروع (PDF)</label>
+            <input
+              type="file"
+              id="pitchDeck"
+              name="pitchDeck"
+              accept="application/pdf"
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {status.loading && (
+            <div className="col-12">
+              <p className="message loading">جارٍ الإرسال...</p>
+            </div>
+          )}
+          {status.success && (
+            <div className="col-12">
+              <p className="message success">{status.success}</p>
+            </div>
+          )}
+          {status.error && (
+            <div className="col-12">
+              <p className="message error">{status.error}</p>
+            </div>
+          )}
+
+          <div className="col-12">
+            <button
+              type="submit"
+              disabled={status.loading}
+              className="submit-btn position-relative submit-button"
+            >
+              <div className="waves-top-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              {status.loading ? "جارٍ الإرسال..." : "إرسال"}
+              <div className="waves-bottom-md">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+  );
+};
+
+export default Experience;
+
+
+--- C:\Users\hanos\sytech\components\FunFacts.tsx ---
+"use client";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import SectionTitle from "./SectionTitle";
+
+const FunFacts = () => {
+  const [offsetX, setOffestX] = useState(0);
+  const [offsetY, setOffestY] = useState(0);
+
+  useGSAP(() => {
+    gsap.fromTo(
+      ".section-title-overlay-text",
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".fun_facts",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+    gsap.from(".fun-fact", {
+      scale: 0,
+      duration: 1,
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ".fun-fact",
+      },
+    });
+  });
+  useEffect(() => {
+    document.addEventListener("mousemove", mouseMove);
+  }, []);
+  const mouseMove = (e: MouseEvent) => {
+    setOffestX((e.clientX - window.innerWidth / 2) * 0.01);
+    setOffestY((e.clientY - window.innerHeight / 2) * 0.01);
+  };
+  return (
+    <section id="fun_facts" className="fun_facts section">
+      <span className="section-title-overlay-text">my facts</span>
+      <SectionTitle subtitle="Some interesting facts about me" title="Fun Facts" />
+
+      <div className="row pb-60">
+        <div className="col-sm-6 col-md-4 col-xl-3">
+          <div className="fun-fact">
+            <div className="numbers">
+              <span className="number-outline-one" style={{ transform: `translate(${offsetX / 2}px, ${offsetY / 2}px)` }}>
+                145
+              </span>
+              <span className="number-outline-two" style={{ transform: `translate(${offsetX}px, ${offsetY}px)` }}>
+                145
+              </span>
+              <span className="number-main">145</span>
+            </div>
+            <p>Finished Projects</p>
+          </div>
+        </div>
+        <div className="col-sm-6 col-md-4 offset-md-1 col-xl-3">
+          <div className="fun-fact">
+            <div className="numbers">
+              <span className="number-outline-one" style={{ transform: `translate(${offsetX / 2}px, ${offsetY / 2}px)` }}>
+                128
+              </span>
+              <span className="number-outline-two" style={{ transform: `translate(${offsetX}px, ${offsetY}px)` }}>
+                128
+              </span>
+              <span className="number-main">128</span>
+            </div>
+            <p>Happy Customers</p>
+          </div>
+        </div>
+      </div>
+      <div className="row pb-60">
+        <div className="col-sm-6 col-md-4 offset-md-2 offset-xl-5 col-xl-3">
+          <div className="fun-fact">
+            <div className="numbers">
+              <span className="number-outline-one" style={{ transform: `translate(${offsetX / 2}px, ${offsetY / 2}px)` }}>
+                865
+              </span>
+              <span className="number-outline-two" style={{ transform: `translate(${offsetX}px, ${offsetY}px)` }}>
+                865
+              </span>
+              <span className="number-main">865</span>
+            </div>
+            <p>Working Hours</p>
+          </div>
+        </div>
+        <div className="col-sm-6 col-md-4 offset-md-1 col-xl-3">
+          <div className="fun-fact">
+            <div className="numbers">
+              <span className="number-outline-one" style={{ transform: `translate(${offsetX / 2}px, ${offsetY / 2}px)` }}>
+                232
+              </span>
+              <span className="number-outline-two" style={{ transform: `translate(${offsetX}px, ${offsetY}px)` }}>
+                232
+              </span>
+              <span className="number-main">232</span>
+            </div>
+            <p>Coffe Cups</p>
+          </div>
+        </div>
+      </div>
+      <div className="col-12">
+        <Link href="#experience" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">05/11</span>
+          <span className="next">Next Chapter</span>
+          <span className="icon">
+            <i className="ph ph-arrow-elbow-right-down"></i>
+          </span>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default FunFacts;
+
+
+--- C:\Users\hanos\sytech\components\GSAPAnimations.tsx ---
+// components/GSAPAnimations.tsx
+
+"use client";
+
+import { useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+const GSAPAnimations = () => {
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Example GSAP animation targeting elements with the class 'animate-me'
+    const animation = gsap.from(".animate-me", {
+      scrollTrigger: {
+        trigger: ".animate-me",
+        start: "top 80%",
+      },
+      y: 100,
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out",
+    });
+
+    // Cleanup function to kill only this specific ScrollTrigger
+    return () => {
+      if (animation.scrollTrigger) {
+        animation.scrollTrigger.kill();
+      }
+    };
+  }, []);
+
+  return null; // This component doesn't render anything
+};
+
+export default GSAPAnimations;
+
+
+--- C:\Users\hanos\sytech\components\Header.tsx ---
+import React, { Dispatch, SetStateAction } from "react";
+import Logo from "@/public/images/logo.png";
+import Image from "next/image";
+import Link from "next/link";
+const Header = ({ setNavOpen, navOpen, classes }: { setNavOpen: Dispatch<SetStateAction<boolean>>; navOpen: boolean; classes?: string }) => {
+  return (
+    <header className="header">
+      <div className="container-fluid d-flex align-items-center justify-content-between">
+        <Link href="/" className={classes}>
+          <Image src={Logo} alt="logo" />
+        </Link>
+
+        <button onClick={() => setNavOpen((p) => !p)} className="bg-transparent border-0 d-xl-none">
+          <div className={`nav-icon ${navOpen ? "open" : ""}`}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+
+--- C:\Users\hanos\sytech\components\Hero.tsx ---
+import Image from "next/image";
+import React from "react";
+import HeroImg from "@/public/images/hero.png";
+import Typewriter from "typewriter-effect";
+import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import SplitType from "split-type";
+import gsap from "gsap";
+
+const Hero = ({ classes }: { classes?: string }) => {
+  useGSAP(() => {
+    gsap.from(".img-wrapper", { duration: 1.5, scale: 1.5, ease: "back", delay: 0.3, opacity: 0 });
+    gsap.from(".work-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
+    gsap.from(".contact-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
+
+    const freelancer = SplitType.create(".freelancer", { types: 'words' }).words;
+    const desc = SplitType.create(".description", { types: 'words' }).words;
+    gsap.from(freelancer, { duration: 1.5, opacity: 0, ease: "bounce", stagger: 0.2 });
+    gsap.from(desc, { duration: 1, opacity: 0, stagger: 0.2 });
+  });
+  
+  return (
+    <section id="top" className={`hero ${classes}`}>
+      <div className="row gx-4 justify-content-center align-items-center">
+        <div className="col-12 col-md-6 col-xl-6 hero-content">
+          <div>
+            <h4 className="text-uppercase freelancer">سيرياتك</h4>
+            <Typewriter
+              component={"h1"}
+              options={{
+                strings: ["رائد أعمال طموح", "مستثمر ذكي", "مشروع ناجح"],
+                autoStart: true,
+                loop: true,
+              }}
+            />
+            <p className="description">مسرعة أعمال سورية مساهمة خاصة</p>
+          </div>
+          <div className="d-flex gap-4">
+            <Link href="#attainments" className="btn work-btn text-capitalize btn-secondary">
+              سجل كمستثمر
+            </Link>
+            <Link href="#experience" className="btn contact-btn text-capitalize btn-outline-secondary">
+              قدم مشروعك
+            </Link>
+          </div>
+        </div>
+        <div className="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4 d-flex justify-content-center">
+          <div className="img-wrapper">
+            <div className="waves-top">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <Image className="img-fluid rounded-circle hero-img" priority={true} src={HeroImg} alt="" />
+            <div className="waves-bottom">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <Link href="#about_me" className="d-flex gap-4 align-items-center next-chapter mt-5">
+            <span className="page">2/6</span>
+            <span className="next">القسم التالي</span>
+            <span className="icon">
+              <i className="ph ph-arrow-elbow-right-down"></i>
+            </span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
+
+
+--- C:\Users\hanos\sytech\components\HowIWork.tsx ---
+import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import SectionTitle from "./SectionTitle";
+const HowIWork = () => {
+  useGSAP(() => {
+    gsap.fromTo(
+      ".section-title-overlay-text",
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".how-i-work",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+    gsap.from(".more-info", {
+      scale: 0,
+      duration: 1.2,
+      ease: "elastic",
+      delay: 0.5,
+      scrollTrigger: {
+        trigger: ".more-info",
+      },
+    });
+    gsap.from(".process", {
+      stagger: 0.15,
+      scale: 0,
+      duration: 2.8,
+      ease: "elastic",
+      scrollTrigger: {
+        trigger: ".process-list",
+        start: "top 60%",
+        end: "top 20%",
+      },
+    });
+  });
+  return (
+    <section id="how_i_work" className="how-i-work section position-relative">
+      <span className="section-title-overlay-text">How i Work</span>
+      <SectionTitle subtitle="How I Work" title="My Working Process" />
+
+      <div className="row pb-60 px-4 process-list justify-content-center">
+        <div className="process col-6">
+          <span className="circle position-absolute w-100 h-100"></span>
+          <div>
+            <p>01.</p>
+            <p>idea</p>
+          </div>
+        </div>
+        <div className="process col-6">
+          <span className="circle-even position-absolute w-100 h-100"></span>
+          <div>
+            <p>02.</p>
+            <p>sketch</p>
+          </div>
+        </div>
+        <div className="process col-6">
+          <span className="circle position-absolute w-100 h-100"></span>
+          <div>
+            <p>03.</p>
+            <p>design</p>
+          </div>
+        </div>
+        <div className="process col-6">
+          <span className="circle-even position-absolute w-100 h-100"></span>
+          <div>
+            <p>04.</p>
+            <p>develop</p>
+          </div>
+        </div>
+        <div className="process col-6">
+          <span className="circle position-absolute w-100 h-100"></span>
+          <div>
+            <p>05.</p>
+            <p>text</p>
+          </div>
+        </div>
+        <div className="process col-6">
+          <span className="circle-even position-absolute w-100 h-100"></span>
+          <div>
+            <p>06.</p>
+            <p>launch</p>
+          </div>
+        </div>
+      </div>
+      <div className="more-info d-flex flex-wrap align-items-center gap-5 gap-md-3">
+        <p>Need More info? Please Get in touch</p>
+        <span className="line"></span>
+        <Link href="#contact" className="arrow-down position-relative">
+          <div className="waves-top-md">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <svg width="45" height="54" viewBox="0 0 45 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M44 31.449L22.5 52.949L1 31.449L8.98204 23.3382L16.8353 31.449V0.550781H28.1647V31.449L36.018 23.3382L44 31.449Z" stroke="currentColor" />
+          </svg>
+          <div className="waves-bottom-md">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </Link>
+      </div>
+      <div className="col-12">
+        <Link href="#testimonials" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">08/11</span>
+          <span className="next">Next Chapter</span>
+          <i className="ph ph-arrow-elbow-right-down"></i>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default HowIWork;
+
+
+--- C:\Users\hanos\sytech\components\Navigation.tsx ---
+import Image from "next/image";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import Logo from "@/public/images/logo.png";
+import Link from "next/link";
+import shuffleLetters from "shuffle-letters";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+const Navigation = ({
+  setNavOpen,
+  navOpen,
+}: {
+  setNavOpen: Dispatch<SetStateAction<boolean>>;
+  navOpen: boolean;
+}) => {
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleClassChange = (mutationsList: MutationRecord[], observer: MutationObserver) => {
+      mutationsList.forEach((mutation) => {
+        if (mutation.type === "attributes" && mutation.attributeName === "class") {
+          const target = mutation.target as HTMLElement;
+          if (target.classList.contains("active")) {
+            const textElement = target.querySelector(".text");
+            if (textElement) {
+              shuffleLetters(textElement, { iterations: 5 });
+            }
+          }
+        }
+      });
+    };
+
+    const observer = new MutationObserver(handleClassChange);
+    const config = { attributes: true, subtree: true, attributeFilter: ["class"] };
+
+    if (navRef.current) {
+      observer.observe(navRef.current, config);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useGSAP(() => {
+    gsap.to(".navigation", { "--height": "100%", duration: 1, ease: "power1.inOut" });
+    gsap.from(".nav-link", { duration: 0.8, delay: 0.5, opacity: 0, stagger: 0.1 });
+  });
+
+  return (
+    <>
+      <nav ref={navRef} className={`navigation ${navOpen ? "opened" : ""}`} id="navigation">
+        <Image src={Logo} className="mb-4 d-xl-none" alt="logo" />
+        <ul>
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#top" className="active">
+              <span>01</span> <span className="text">المقدمة</span>{" "}
+            </Link>
+          </li>
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#about_me">
+              <span>02</span> <span className="text">من نحن</span>{" "}
+            </Link>
+          </li>
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#services">
+              <span>03</span> <span className="text">شو بنعمل</span>{" "}
+            </Link>
+          </li>
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#attainments">
+              <span>04</span> <span className="text">المستثمر</span>{" "}
+            </Link>
+          </li>
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#fun_facts">
+              <span>05</span> <span className="text">facts</span>{" "}
+            </Link>
+          </li> */}
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#experience">
+              <span>05</span> <span className="text">رائد الأعمال</span>{" "}
+            </Link>
+          </li>
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#projects">
+              <span>07</span> <span className="text">projects</span>{" "}
+            </Link>
+          </li> */}
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#how_i_work">
+              <span>06</span> <span className="text">how i work</span>{" "}
+            </Link>
+          </li> */}
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#blogs">
+              <span>08</span> <span className="text">Blogs</span>{" "}
+            </Link>
+          </li> */}
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#testimonials">
+              <span>09</span> <span className="text">testimonials</span>{" "}
+            </Link>
+          </li> */}
+          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#contact">
+              <span>06</span> <span className="text">حاكينا</span>{" "}
+            </Link>
+          </li> */}
+        </ul>
+      </nav>
+      <div onClick={() => setNavOpen(false)} className="nav-overlay d-xl-none"></div>
+    </>
+  );
+};
+
+export default Navigation;
+
+
+--- C:\Users\hanos\sytech\components\ProgressChart.tsx ---
+"use client";
+import { ApexOptions } from "apexcharts";
+import React, { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+import dynamic from "next/dynamic";
+
+const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+const ProgressChart = ({ progress }: { progress: number }) => {
+  const [chartProgress, setChartProgress] = useState(0);
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  useEffect(() => {
+    if (inView) {
+      setChartProgress(progress);
+    }
+  }, [inView, progress]);
+
+  const options: ApexOptions = {
+    chart: {
+      type: "radialBar",
+      width: 250,
+      height: 250,
+      sparkline: {
+        enabled: false,
+      },
+      animations: {
+        enabled: true,
+        speed: 2000,
+        animateGradually: {
+          enabled: true,
+          delay: 150,
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 1350,
+        },
+      },
+    },
+    series: [chartProgress],
+    legend: {
+      show: false,
+    },
+    stroke: {
+      lineCap: "butt",
+    },
+    colors: ["#000000"],
+    plotOptions: {
+      radialBar: {
+        dataLabels: {
+          value: {
+            show: false,
+          },
+          name: {
+            offsetY: 15,
+            fontSize: "44px",
+          },
+        },
+        hollow: {
+          size: "80%",
+        },
+      },
+    },
+    labels: [`${chartProgress}%`],
+    grid: {
+      padding: {
+        top: -16,
+        bottom: -20,
+      },
+    },
+  };
+
+  return (
+    <div ref={ref}>
+      <ApexChart
+        options={options}
+        series={options.series}
+        type="radialBar"
+        width={"100%"}
+        height={250}
+      />
+    </div>
+  );
+};
+
+export default ProgressChart;
+
+
+--- C:\Users\hanos\sytech\components\Projects.tsx ---
+import React, { useState } from "react";
+import projectOne from "@/public/images/project-one.png";
+import projectTwo from "@/public/images/project-two.png";
+import projectThree from "@/public/images/project-three.png";
+import Image from "next/image";
+import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import SectionTitle from "./SectionTitle";
+import SectionOverlayText from "./SectionOverlayText";
+import { createPortal } from "react-dom";
+import projectDetailsOne from "@/public/images/project-details-1.png";
+import projectDetailsTwo from "@/public/images/project-details-2.png";
+import edumasterBig from "@/public/images/edumaster-big.png";
+import techshopBig from "@/public/images/techshop-big.png";
+import quickbiteBig from "@/public/images/quickbite-big.png";
+const projects = [
+  {
+    name: "TechShop",
+    description: `TechShop is a state-of-the-art e-commerce platform designed to cater to the diverse needs of both businesses and consumers, providing a seamless shopping experience powered by cutting-edge technology and innovative design. The platform's sleek design, characterized by a clean layout and easy navigation, ensures that users can effortlessly browse through products, categories, and deals. TechShop offers a comprehensive product catalog management system, allowing businesses to showcase their products with rich media, detailed descriptions, and customer reviews. The checkout process on TechShop is designed to be smooth and hassle-free, minimizing cart abandonment rates and enhancing customer satisfaction. The platform integrates with multiple payment gateways, offering a variety of payment options, including credit/debit cards, digital wallets, and bank transfers. TechShop leverages advanced data analytics to offer personalized shopping experiences tailored to individual preferences and behaviors. The backend of TechShop is built using modern technologies, ensuring scalability, reliability, and security. The platform is compliant with international data protection regulations, employing industry-standard encryption and security protocols to safeguard user information. Looking ahead, TechShop aims to expand its reach and continue innovating to meet the evolving needs of the e-commerce landscape, with plans to integrate augmented reality for virtual try-ons and expand its global logistics network.`,
+    tags: ["design", "frontend", "backend"],
+    category: "E-commerce Platform",
+    image: projectOne,
+    bigImg: techshopBig,
+  },
+  {
+    name: "Edumaster",
+    description: `Edumaster is a comprehensive online learning platform that empowers students and educators alike to explore new horizons in education. The platform offers a rich array of courses and educational resources that span multiple disciplines and skill levels. Edumaster's innovative approach to course delivery emphasizes engagement and interactivity, leveraging multimedia elements, including videos, animations, quizzes, and interactive exercises, to create immersive learning experiences. Edumaster offers personalized learning journeys tailored to individual goals, preferences, and learning styles. The platform adapts to the pace and progress of each student, providing targeted recommendations and feedback that support continuous improvement and mastery. The platform also offers a comprehensive suite of features for educators, including course authoring tools, analytics dashboards, and communication channels. Edumaster fosters a vibrant community of learners and educators who collaborate and connect through the platform. Discussion forums, peer reviews, group projects, and live sessions create opportunities for meaningful interaction and knowledge exchange. The platform is optimized for accessibility, offering features such as closed captioning, screen reader compatibility, and multilingual support. Looking to the future, Edumaster is poised to lead the way in shaping the future of education, with plans to incorporate cutting-edge technologies such as virtual reality and artificial intelligence.`,
+    tags: ["design", "frontend", "backend"],
+    category: "Online Learning Platform",
+    image: projectTwo,
+    bigImg: edumasterBig,
+  },
+  {
+    name: "QuickBite",
+    description: `QuickBite is a groundbreaking mobile app that redefines the food delivery experience, offering users a seamless, user-friendly, and innovative way to satisfy their cravings with just a few taps on their smartphones. The app's intuitive interface allows users to browse a vast selection of restaurants and cuisines, from local favorites to international delicacies. QuickBite offers real-time order tracking, allowing users to monitor the status of their delivery from preparation to arrival. QuickBite has established a highly efficient delivery network, partnering with a wide range of restaurants and local eateries to offer users an extensive selection of options. The app's sophisticated logistics system optimizes delivery routes and dispatches, ensuring that orders are fulfilled promptly and accurately. QuickBite prioritizes user-centric design, making the app accessible and easy to use for everyone. The app's clean and modern interface is complemented by seamless navigation and intuitive controls. To further enhance customer satisfaction and engagement, QuickBite offers a variety of promotions and loyalty programs. Users can take advantage of exclusive discounts, special offers, and rewards that incentivize repeat orders and foster brand loyalty. QuickBite is committed to ensuring the highest standards of quality and sustainability in its operations. The app collaborates with restaurants to ensure that food is delivered fresh and in an eco-friendly manner.`,
+    tags: ["ui/ux design", "mobile development"],
+    category: "Food Delivery Mobile App",
+    image: projectThree,
+    bigImg: quickbiteBig,
+  },
+];
+
+const Projects = () => {
+  const [currentProject, setCurrentProject] = useState(projects[0]);
+  useGSAP(() => {
+    gsap.from(".single-project", {
+      opacity: 0,
+      stagger: 0.2,
+      scale: 0,
+      scrollTrigger: {
+        trigger: ".project-list",
+        start: "top 60%",
+        end: "top 20%",
+      },
+    });
+  });
+  return (
+    <>
+      <section id="projects" className="projects section position-relative">
+        <SectionOverlayText text="projects" />
+        <SectionTitle subtitle="Some of my most recent projects" title="My Featured Projects" />
+        <div className="row pb-60 project-list g-4">
+          {projects.map((project) => (
+            <div key={project.name} onClick={() => setCurrentProject(project)} className="col-sm-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <div className="single-project">
+                <div className="project-card">
+                  <div className="card-inner"></div>
+                  <Image src={project.image} className="img-fluid w-100 card-img h-100" alt="" />
+                  <div className="card-arrow">
+                    <div className="arrow-inner">
+                      <i className="ph ph-arrow-up-right"></i>
+                    </div>
+                  </div>
+                </div>
+                <div className="project-info">
+                  <h2>{project.name}</h2>
+                  <p>{project.category}</p>
+                  <div className="tags d-flex align-items-center gap-1">
+                    {project.tags.map((tag, i) => (
+                      <React.Fragment key={tag}>
+                        <span>{tag}</span> {i < project.tags.length - 1 && "-"}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="col-12">
+          <Link href="#how_i_work" className="d-flex gap-4 align-items-center next-chapter">
+            <span className="page">07/11</span>
+            <span className="next">Next Chapter</span>
+            <i className="ph ph-arrow-elbow-right-down"></i>
+          </Link>
+        </div>
+      </section>
+      {createPortal(
+        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog modal-fullscreen">
+            <div className="modal-content">
+              <div className="modal-body">
+                <button type="button" className="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close">
+                  <i className="ph ph-x"></i>
+                </button>
+                <Image src={currentProject.bigImg} className="w-100 img-fluid project-details-img rounded-3 mb-3 mb-xl-4" alt="" />
+                <div className="row gx-4 gy-4 gy-md-0">
+                  <div className="col-md-7 col-xl-9">
+                    <h1 className="mb-3 fw-semibold" id="project-title">
+                      {currentProject.name}
+                    </h1>
+                    <p className="mb-4 mb-xl-5">Designed and developed a fully functional e-commerce platform for a startup specializing in handcrafted goods. The project involved creating a visually appealing user interface, and ensuring an overall smooth shopping experience.</p>
+                    <h2 className="mb-3 fw-semibold">Project Goals</h2>
+                    <p className="mb-4">Developed a website for a non-profit organization aimed at raising awareness and funds for environmental conservation. The site features educational content, event management, and donation capabilities.</p>
+                    <ul className="list-plus">
+                      <li>Create a visually cohesive blog that aligns with the influencer&apos;s personal brand.</li>
+                      <li>Implement a secure and reliable payment gateway.</li>
+                      <li>Ensure the website is responsive and performs well across all devices.</li>
+                      <li>Optimize the site for search engines to increase organic traffic.</li>
+                    </ul>
+                  </div>
+                  <div className="col-md-5 col-xl-3">
+                    <div className="right-bar">
+                      <div>
+                        <p className="mb-1">Client</p>
+                        <h6 className="fw-semibold">Mashroom</h6>
+                      </div>
+                      <div>
+                        <p className="mb-1">Category</p>
+                        <h6 className="fw-semibold">User Experience</h6>
+                      </div>
+                      <div>
+                        <p className="mb-1">Start Date</p>
+                        <h6 className="fw-semibold">02/08/2023</h6>
+                      </div>
+                      <div>
+                        <p className="mb-1">End Date</p>
+                        <h6 className="fw-semibold">01/03/2024</h6>
+                      </div>
+                      <div>
+                        <p className="mb-1">Tools</p>
+                        <h6 className="fw-semibold">Adobe Xd, Figma</h6>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="fw-medium mb-2">Challenges and Solutions</h3>
+                  <p className="mb-4">
+                    One of the main challenges was optimizing the website&apos;s load time while maintaining high-quality images of the products. To address this, I implemented lazy loading for images and used optimized image formats, resulting in a faster, smoother browsing experience without
+                    compromising visual quality.
+                  </p>
+                  <div className="row gx-4 gy-4 gy-md-0 mb-4 mb-xl-5 pb-3">
+                    <div className="col-md-6">
+                      <Image src={projectDetailsOne} className="w-100 img-fluid rounded-3" alt="" />
+                    </div>
+                    <div className="col-md-6">
+                      <Image src={projectDetailsTwo} className="w-100 img-fluid rounded-3" alt="" />
+                    </div>
+                  </div>
+                  <h4 className="mb-3">Key Features:</h4>
+                  <p className="mb-4">Developed a website for a non-profit organization aimed at raising awareness and funds for environmental conservation. The site features educational content, event management, and donation capabilities.</p>
+                  <ul className="bullet mb-4 pb-3 mb-xl-5">
+                    <li>Custom Blog Layouts: Designed multiple blog layouts to cater to different content types, including image-heavy posts and long-form articles.</li>
+                    <li>Content Management System: Integrated WordPress for easy content updates and management, allowing the influencer to focus on creating content without technical hurdles.</li>
+                    <li>Responsive Design: Ensured the blog is fully responsive, providing a seamless experience on smartphones, tablets, and desktops.</li>
+                    <li>SEO and Social Media Integration: Implemented SEO best practices and integrated social media sharing buttons, making it easy for readers to share posts across platforms.</li>
+                    <li>Newsletter Signup: Added a newsletter signup form to help the influencer grow their email list and maintain engagement with followers.</li>
+                  </ul>
+                  <div className="outcome">
+                    <h5 className="mb-3">Outcome:</h5>
+                    <p>The blog quickly gained traction, attracting a growing audience and enhancing the influencer’s online presence. The user-friendly design and seamless social media integration led to higher engagement rates and increased content sharing.</p>
+                  </div>
+                  <form className="contact-form full-width">
+                    <h3 className="mb-3">Have project in mind? Let&apos;s discuss</h3>
+                    <p className="mb-4 mb-xl-5 pb-2">Get in touch with us to see how we can help you with your project</p>
+                    <div className="row g-4 g-xl-5">
+                      <div className="col-sm-6 contact-input">
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name="user_name" placeholder="Your name" required />
+                      </div>
+                      <div className="col-sm-6 contact-input">
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="user_email" placeholder="Your e-mail" required />
+                      </div>
+                      <div className="col-12 contact-input">
+                        <label htmlFor="service">Service</label>
+                        <input name="service" placeholder="Your Serivice" />
+                      </div>
+                      <div className="col-12 contact-input">
+                        <label htmlFor="message">Message</label>
+                        <textarea name="message" placeholder="Your message"></textarea>
+                      </div>
+                      <div className="col-12">
+                        <button type="submit" className="submit-btn position-relative">
+                          <div className="waves-top-md">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                          submit
+                          <div className="waves-bottom-md">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
+    </>
+  );
+};
+
+export default Projects;
+
+
+--- C:\Users\hanos\sytech\components\SectionOverlayText.tsx ---
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const SectionOverlayText = ({ text }: { text: string }) => {
+  const sectionTitleRef = useRef(null);
+
+  useGSAP(() => {
+    const element = sectionTitleRef.current;
+
+    const anim = gsap.fromTo(
+      element,
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".about",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+
+    return () => {
+      anim.kill();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Clean up all ScrollTriggers
+    };
+  });
+
+  return (
+    <span ref={sectionTitleRef} className="section-title-overlay-text">
+      {text}
+    </span>
+  );
+};
+
+export default SectionOverlayText;
+
+
+--- C:\Users\hanos\sytech\components\SectionTitle.tsx ---
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+type Props = {
+  subtitle: string;
+  title: string;
+};
+
+gsap.registerPlugin(ScrollTrigger);
+
+const SectionTitle = ({ title, subtitle }: Props) => {
+  const sectionTitleRef = useRef(null);
+
+  useGSAP(() => {
+    const element = sectionTitleRef.current;
+
+    const fromAnimation = gsap.from(element, {
+      opacity: 0,
+      y: 50,
+      scrollTrigger: {
+        trigger: element,
+        start: "top bottom", // adjust as needed
+      },
+    });
+
+    const toAnimation = gsap.to(element, {
+      "--height": "100%",
+      delay: 0.5,
+      scrollTrigger: {
+        trigger: element,
+        start: "top bottom", // adjust as needed
+      },
+    });
+
+    return () => {
+      fromAnimation.kill();
+      toAnimation.kill();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Clean up all ScrollTriggers
+    };
+  });
+
+  return (
+    <div ref={sectionTitleRef} className="section-title text-capitalize">
+      <h4>{subtitle}</h4>
+      <h2>{title}</h2>
+    </div>
+  );
+};
+
+export default SectionTitle;
+
+
+--- C:\Users\hanos\sytech\components\Services.tsx ---
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
+import React from "react";
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SectionTitle from "./SectionTitle";
+import SectionOverlayText from "./SectionOverlayText";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const Services = () => {
+  useGSAP(() => {
+    gsap.from(".service-card", {
+      stagger: 0.2,
+      opacity: 0,
+      duration: 1.5,
+      scrollTrigger: {
+        trigger: ".services",
+        start: "top 60%",
+        end: "top 20%",
+      },
+    });
+  });
+  return (
+    <section id="services" className="services section position-relative">
+      <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
+      <Swiper
+        slidesPerView={"auto"}
+        spaceBetween={24}
+        loop={true}
+        autoplay={{
+          delay: 5000,
+        }}
+        pagination={{ clickable: true, el: ".swiper-pagination" }}
+        modules={[Autoplay, Pagination]}
+        breakpoints={{
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 24,
+          },
+          1550: {
+            slidesPerView: 3,
+            spaceBetween: 24,
+          },
+        }}
+        dir="ltr"
+        className="swiper service-swiper"
+      >
+        <SwiperSlide className="overflow-visible p-3">
+          <div className="service-card">
+            <div className="card-inner"></div>
+            <div className="content">
+              <div className="number-circle">
+                <div className="waves-top-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <h2>01</h2>
+                <div className="waves-bottom-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <h4>رائد الأعمال</h4>
+              <ul className="service-list">
+                <li>
+                  <i className="ph ph-caret-double-right"></i> عندك مشروع ناشيء
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> عندك تيم لو من شخصين
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> المشروع يعمل
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> عم يحقق أرباح أو لا مش مشكلة
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> قدم عرض تقديمي إلينا
+                </li>
+              </ul>
+            </div>
+          </div>
+        </SwiperSlide>
+        <SwiperSlide className="overflow-visible p-3">
+          <div className="service-card">
+            <div className="card-inner"></div>
+            <div className="content">
+              <div className="number-circle">
+                <div className="waves-top-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <h2>02</h2>
+                <div className="waves-bottom-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <h4>سيرياتك</h4>
+              <ul className="service-list">
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بندرس عرضك التقديمي
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> مستشارينا بيقيموا المشروع
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بنرسل مشروعك للمستثمرين
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بنجمع ردود المستثمرين
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> يصلك إيميل قبول أو رفض
+                </li>
+              </ul>
+            </div>
+          </div>
+        </SwiperSlide>
+        <SwiperSlide className="overflow-visible p-3">
+          <div className="service-card">
+            <div className="card-inner"></div>
+            <div className="content">
+              <div className="number-circle">
+                <div className="waves-top-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <h2>03</h2>
+                <div className="waves-bottom-sm">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <h4>المستثمر</h4>
+              <ul className="service-list">
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بيسجل بياناته للتواصل
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بنرسل له المشاريع المقترحة
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> بنرفق تقييمنا مع العرض التقديمي
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> ننتظر الرد بالقبول أو الرفض
+                </li>
+                <li>
+                  <i className="ph ph-caret-double-right"></i> ترتيب اجتماع مع رائد الأعمال
+                </li>
+              </ul>
+            </div>
+          </div>
+        </SwiperSlide>
+
+        <div className="swiper-pagination"></div>
+      </Swiper>
+      <div className="col-12">
+        <Link href="#attainments" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">4/6</span>
+          <span className="next">القسم التالي</span>
+
+          <i className="ph ph-arrow-elbow-right-down"></i>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default Services;
+
+
+--- C:\Users\hanos\sytech\components\SkillBar.tsx ---
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import React, { useEffect, useState } from "react";
+// Adjust the import path as needed
+
+interface SkillBarProps {
+  skill: string;
+  percentage: number;
+}
+
+const SkillBar: React.FC<SkillBarProps> = ({ skill, percentage }) => {
+  const [ref, isIntersecting] = useIntersectionObserver({
+    threshold: 0.5, // Adjust as needed
+  });
+  const [width, setWidth] = useState<number>(0);
+
+  useEffect(() => {
+    if (isIntersecting) {
+      setWidth(percentage);
+    }
+  }, [isIntersecting, percentage]);
+
+  return (
+    <div className="skill" ref={ref}>
+      <div className="d-flex justify-content-between align-items-center">
+        <span>{skill}</span>
+        <span>{percentage}%</span>
+      </div>
+      <div className="progress">
+        <div className="progress-bar" style={{ width: `${width}%`, transition: "width 1s ease-in-out" }}></div>
+      </div>
+    </div>
+  );
+};
+
+export default SkillBar;
+
+
+--- C:\Users\hanos\sytech\components\Testimonials.tsx ---
+import Image from "next/image";
+import React from "react";
+import HeroImg from "@/public/images/hero.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Scrollbar } from "swiper/modules";
+import Link from "next/link";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import SectionTitle from "./SectionTitle";
+
+const Testimonials = () => {
+  useGSAP(() => {
+    gsap.fromTo(
+      ".section-title-overlay-text",
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".testimonials",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      },
+    );
+    gsap.from(".testimonial-card", {
+      opacity: 0,
+      y: 40,
+      duration: 1.2,
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ".testimonial-card",
+      },
+    });
+  });
+  return (
+    <section id="testimonials" className="testimonials section position-relative">
+      <span className="section-title-overlay-text">TESTIMONIALS</span>
+      <SectionTitle subtitle="My Clients and Testimonials" title="My Clients Reviews" />
+
+      <div dir="ltr" className="row pb-120 testimonial px-3">
+        <Swiper
+          slidesPerView={"auto"}
+          spaceBetween={24}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+          }}
+          scrollbar={{ draggable: true, el: ".s-scrollbar", dragSize: "auto" }}
+          navigation={{ nextEl: ".testi-next", prevEl: ".testi-prev" }}
+          modules={[Autoplay, Scrollbar, Navigation]}
+          breakpoints={{
+            1024: {
+              slidesPerView: 1.4,
+              spaceBetween: 24,
+            },
+          }}
+          className="swiper testimonial-swiper pb-60"
+        >
+          <SwiperSlide>
+            <div className="testimonial-card">
+              <div className="img-wrapper">
+                <div className="inner">
+                  <div className="waves-top-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <Image src={HeroImg} width="82" height="82" alt="" />
+                  <div className="waves-bottom-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="content">
+                <h3>James Smith</h3>
+                <div className="d-flex align-items-center gap-2 mb-4">
+                  <p>website owner</p>
+                  <p>--</p>
+                  <span>www.websites.com</span>
+                </div>
+                <p className="desc">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              </div>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="testimonial-card">
+              <div className="img-wrapper">
+                <div className="inner">
+                  <div className="waves-top-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <Image src={HeroImg} width="82" height="82" alt="" />
+                  <div className="waves-bottom-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="content">
+                <h3>James Smith</h3>
+                <div className="d-flex align-items-center gap-2 mb-4">
+                  <p>website owner</p>
+                  <p>--</p>
+                  <span>www.websites.com</span>
+                </div>
+                <p className="desc">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              </div>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="testimonial-card">
+              <div className="img-wrapper">
+                <div className="inner">
+                  <div className="waves-top-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <Image src={HeroImg} width="82" height="82" alt="" />
+                  <div className="waves-bottom-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="content">
+                <h3>James Smith</h3>
+                <div className="d-flex align-items-center gap-2 mb-4">
+                  <p>website owner</p>
+                  <p>--</p>
+                  <span>www.websites.com</span>
+                </div>
+                <p className="desc">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              </div>
+            </div>
+          </SwiperSlide>
+          <SwiperSlide>
+            <div className="testimonial-card">
+              <div className="img-wrapper">
+                <div className="inner">
+                  <div className="waves-top-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <Image src={HeroImg} width="82" height="82" alt="" />
+                  <div className="waves-bottom-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+              <div className="content">
+                <h3>James Smith</h3>
+                <div className="d-flex align-items-center gap-2 mb-4">
+                  <p>website owner</p>
+                  <p>--</p>
+                  <span>www.websites.com</span>
+                </div>
+                <p className="desc">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+              </div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+        <div className="d-flex justify-content-between gap-4 align-items-center">
+          <div className="s-scrollbar flex-grow-1"></div>
+          <div className="d-flex gap-3">
+            <button className="testi-prev">
+              <i className="ph ph-arrow-left"></i>
+            </button>
+            <button className="testi-next">
+              <i className="ph ph-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="col-12">
+        <Link href="#contact" className="d-flex gap-4 align-items-center next-chapter">
+          <span className="page">10/11</span>
+          <span className="next">Next Chapter</span>
+          <i className="ph ph-arrow-elbow-right-down"></i>
+        </Link>
+      </div>
+    </section>
+  );
+};
+
+export default Testimonials;
+
+
+--- C:\Users\hanos\sytech\components\TopbarHeader.tsx ---
+import Image from "next/image";
+import React, { Dispatch, SetStateAction } from "react";
+import Logo from "@/public/images/logo.png";
+import Link from "next/link";
+
+const TopbarHeader = ({ setNavOpen, navOpen, classes }: { setNavOpen: Dispatch<SetStateAction<boolean>>; navOpen: boolean; classes?: string }) => {
+  return (
+    <header className="header-topbar">
+      <div className="container d-flex align-items-center justify-content-between">
+        <Link href="/">
+          <Image src={Logo} alt="logo" />
+        </Link>
+
+        <div className="d-flex gap-2 gap-sm-3 align-items-center">
+          <Link className="d-flex gap-2 align-items-center" href="mailto:emily@devis.com">
+            <i className="ph ph-envelope"></i> emily@devis.com
+          </Link>
+          <button onClick={() => setNavOpen((p) => !p)} className="bg-transparent border-0">
+            <div className={`nav-icon ${navOpen ? "open" : ""}`}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <nav className={`navigation-topbar ${navOpen ? "opened" : ""}`} id="navigation">
+        <ul>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#top" className="active">
+              <span className="text">top</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#about_me">
+              <span className="text">about me</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#services">
+              <span className="text">my services</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#attainments">
+              <span className="text">skills</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#fun_facts">
+              <span className="text">facts</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#experience">
+              <span className="text">experiences</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#projects">
+              <span className="text">projects</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#how_i_work">
+              <span className="text">how i work</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#testimonials">
+              <span className="text">testimonials</span>
+            </Link>
+          </li>
+          <li className="nav-link" onClick={() => setNavOpen(false)}>
+            <Link href="#contact">
+              <span className="text">contact</span>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <div onClick={() => setNavOpen(false)} className="nav-overlay"></div>
+    </header>
+  );
+};
+
+export default TopbarHeader;
+
+
+--- C:\Users\hanos\sytech\components\TraingleAnim.tsx ---
+import React, { useCallback, useEffect, useRef } from "react";
+
+interface Point {
+  x: number;
+  y: number;
+  originX: number;
+  originY: number;
+}
+
+const PolygonBackground: React.FC = () => {
+  const svgRef = useRef<HTMLDivElement>(null);
+  const refreshTimeoutRef = useRef<number | null>(null);
+  const pointsRef = useRef<Point[]>([]);
+
+  const numPointsXRef = useRef<number>(0);
+  const numPointsYRef = useRef<number>(0);
+  const unitWidthRef = useRef<number>(0);
+  const unitHeightRef = useRef<number>(0);
+
+  const refreshDuration = 10000;
+
+  const randomize = useCallback(() => {
+    pointsRef.current.forEach((point) => {
+      if (point.originX !== 0 && point.originX !== unitWidthRef.current * (numPointsXRef.current - 1)) {
+        point.x = point.originX + Math.random() * unitWidthRef.current - unitWidthRef.current / 2;
+      }
+      if (point.originY !== 0 && point.originY !== unitHeightRef.current * (numPointsYRef.current - 1)) {
+        point.y = point.originY + Math.random() * unitHeightRef.current - unitHeightRef.current / 2;
+      }
+    });
+  }, []);
+
+  const refresh = useCallback(() => {
+    randomize();
+    if (svgRef.current) {
+      Array.from(svgRef.current.querySelectorAll("polygon")).forEach((polygon: SVGPolygonElement) => {
+        const animate = polygon.querySelector("animate") as SVGAnimateElement;
+        if (animate.getAttribute("to")) {
+          animate.setAttribute("from", animate.getAttribute("to") || "");
+        }
+        const point1 = pointsRef.current[(polygon as any).point1];
+        const point2 = pointsRef.current[(polygon as any).point2];
+        const point3 = pointsRef.current[(polygon as any).point3];
+        animate.setAttribute("to", `${point1.x},${point1.y} ${point2.x},${point2.y} ${point3.x},${point3.y}`);
+        animate.beginElement();
+      });
+    }
+    refreshTimeoutRef.current = window.setTimeout(refresh, refreshDuration);
+  }, [randomize]); // Include any dependencies here
+
+  useEffect(() => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", window.outerWidth.toString());
+    svg.setAttribute("height", window.outerHeight.toString());
+    svgRef.current?.appendChild(svg);
+
+    const unitSize = (window.innerWidth + window.innerHeight) / 15;
+    numPointsXRef.current = Math.ceil(window.innerWidth / unitSize) + 1;
+    numPointsYRef.current = Math.ceil(window.innerHeight / unitSize) + 1;
+    unitWidthRef.current = Math.ceil(window.innerWidth / (numPointsXRef.current - 1));
+    unitHeightRef.current = Math.ceil(window.innerHeight / (numPointsYRef.current - 1));
+
+    for (let y = 0; y < numPointsYRef.current; y++) {
+      for (let x = 0; x < numPointsXRef.current; x++) {
+        pointsRef.current.push({
+          x: unitWidthRef.current * x,
+          y: unitHeightRef.current * y,
+          originX: unitWidthRef.current * x,
+          originY: unitHeightRef.current * y,
+        });
+      }
+    }
+
+    randomize();
+
+    pointsRef.current.forEach((point, i) => {
+      if (point.originX !== unitWidthRef.current * (numPointsXRef.current - 1) && point.originY !== unitHeightRef.current * (numPointsYRef.current - 1)) {
+        const topLeftX = point.x;
+        const topLeftY = point.y;
+        const topRightX = pointsRef.current[i + 1].x;
+        const topRightY = pointsRef.current[i + 1].y;
+        const bottomLeftX = pointsRef.current[i + numPointsXRef.current].x;
+        const bottomLeftY = pointsRef.current[i + numPointsXRef.current].y;
+        const bottomRightX = pointsRef.current[i + numPointsXRef.current + 1].x;
+        const bottomRightY = pointsRef.current[i + numPointsXRef.current + 1].y;
+
+        const rando = Math.floor(Math.random() * 2);
+
+        for (let n = 0; n < 2; n++) {
+          const polygon = document.createElementNS(svg.namespaceURI, "polygon");
+
+          if (rando === 0) {
+            if (n === 0) {
+              (polygon as any).point1 = i;
+              (polygon as any).point2 = i + numPointsXRef.current;
+              (polygon as any).point3 = i + numPointsXRef.current + 1;
+              polygon.setAttribute("points", `${topLeftX},${topLeftY} ${bottomLeftX},${bottomLeftY} ${bottomRightX},${bottomRightY}`);
+            } else if (n === 1) {
+              (polygon as any).point1 = i;
+              (polygon as any).point2 = i + 1;
+              (polygon as any).point3 = i + numPointsXRef.current + 1;
+              polygon.setAttribute("points", `${topLeftX},${topLeftY} ${topRightX},${topRightY} ${bottomRightX},${bottomRightY}`);
+            }
+          } else if (rando === 1) {
+            if (n === 0) {
+              (polygon as any).point1 = i;
+              (polygon as any).point2 = i + numPointsXRef.current;
+              (polygon as any).point3 = i + 1;
+              polygon.setAttribute("points", `${topLeftX},${topLeftY} ${bottomLeftX},${bottomLeftY} ${topRightX},${topRightY}`);
+            } else if (n === 1) {
+              (polygon as any).point1 = i + numPointsXRef.current;
+              (polygon as any).point2 = i + 1;
+              (polygon as any).point3 = i + numPointsXRef.current + 1;
+              polygon.setAttribute("points", `${bottomLeftX},${bottomLeftY} ${topRightX},${topRightY} ${bottomRightX},${bottomRightY}`);
+            }
+          }
+          polygon.setAttribute("fill", `rgba(0,0,0,${Math.random() / 3})`);
+          const animate = document.createElementNS("http://www.w3.org/2000/svg", "animate");
+          animate.setAttribute("fill", "freeze");
+          animate.setAttribute("attributeName", "points");
+          animate.setAttribute("dur", `${refreshDuration}ms`);
+          animate.setAttribute("calcMode", "linear");
+          polygon.appendChild(animate);
+          svg.appendChild(polygon);
+        }
+      }
+    });
+
+    refresh();
+
+    return () => {
+      if (refreshTimeoutRef.current !== null) {
+        clearTimeout(refreshTimeoutRef.current);
+      }
+    };
+  }, [refresh, randomize]);
+
+  return <div id="bg" className="bg-traingle" ref={svgRef}></div>;
+};
+
+export default PolygonBackground;
+
+
+--- C:\Users\hanos\sytech\hooks\useIntersectionObserver.ts ---
+// hooks/useIntersectionObserver.ts
+import { useEffect, useState, useRef, RefObject } from "react";
+
+interface IntersectionObserverOptions {
+  root?: Element | null;
+  rootMargin?: string;
+  threshold?: number | number[];
+}
+
+function useIntersectionObserver(options?: IntersectionObserverOptions): [RefObject<HTMLDivElement>, boolean] {
+  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting);
+    }, options);
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [options]);
+
+  return [ref, isIntersecting];
+}
+
+export default useIntersectionObserver;
+
+
+--- C:\Users\hanos\sytech\out\blogdata.ts ---
+// app/public/blogdata.ts
+import { Blog } from "@/app/types";
+import heroImage from "@/public/images/hero.png"; // Adjust the path as necessary
+
+export const blogData: Blog[] = [
+  {
+    id: 1,
+    title: "Understanding TypeScript in Next.js",
+    date: "2024-04-20",
+    time: "8 min",
+    desc: "An in-depth look at integrating TypeScript with Next.js for better type safety and developer experience.",
+    tags: ["TypeScript", "Next.js", "JavaScript"],
+    image: heroImage, // Ensure this is correctly imported as StaticImageData
+    author: "Jenny Wilson",
+    tableOfContents: [
+      { id: "1", title: "Introduction" },
+      { id: "2", title: "Setting Up TypeScript" },
+      { id: "3", title: "Benefits of Type Safety" },
+      { id: "4", title: "Conclusion" },
+    ],
+    sections: {
+      understanding: {
+        title: "Understanding TypeScript",
+        content: "Content for understanding TypeScript...",
+      },
+      crafting: {
+        title: "Crafting with TypeScript",
+        content: "Content for crafting with TypeScript...",
+      },
+      showcasing: {
+        title: "Showcasing Projects",
+        content: "Content for showcasing projects...",
+      },
+      conclusion: {
+        title: "Conclusion",
+        content: "Final thoughts on TypeScript in Next.js...",
+      },
+    },
+    quote: "TypeScript adds type safety to JavaScript, enhancing developer productivity.",
+    additionalContent: "Additional resources and links.",
+  },
+  // Add more blog objects as needed
+];
+
+
+--- C:\Users\hanos\sytech\public\blogdata.ts ---
+// app/public/blogdata.ts
+import { Blog } from "@/app/types";
+import heroImage from "@/public/images/hero.png"; // Adjust the path as necessary
+
+export const blogData: Blog[] = [
+  {
+    id: 1,
+    title: "Understanding TypeScript in Next.js",
+    date: "2024-04-20",
+    time: "8 min",
+    desc: "An in-depth look at integrating TypeScript with Next.js for better type safety and developer experience.",
+    tags: ["TypeScript", "Next.js", "JavaScript"],
+    image: heroImage, // Ensure this is correctly imported as StaticImageData
+    author: "Jenny Wilson",
+    tableOfContents: [
+      { id: "1", title: "Introduction" },
+      { id: "2", title: "Setting Up TypeScript" },
+      { id: "3", title: "Benefits of Type Safety" },
+      { id: "4", title: "Conclusion" },
+    ],
+    sections: {
+      understanding: {
+        title: "Understanding TypeScript",
+        content: "Content for understanding TypeScript...",
+      },
+      crafting: {
+        title: "Crafting with TypeScript",
+        content: "Content for crafting with TypeScript...",
+      },
+      showcasing: {
+        title: "Showcasing Projects",
+        content: "Content for showcasing projects...",
+      },
+      conclusion: {
+        title: "Conclusion",
+        content: "Final thoughts on TypeScript in Next.js...",
+      },
+    },
+    quote: "TypeScript adds type safety to JavaScript, enhancing developer productivity.",
+    additionalContent: "Additional resources and links.",
+  },
+  // Add more blog objects as needed
+];
+
+
+--- C:\Users\hanos\sytech\utils\formatString.ts ---
+export const formatString = (str: string) => {
+  return str.split(" ").join("-").toLowerCase();
+};
+
+
