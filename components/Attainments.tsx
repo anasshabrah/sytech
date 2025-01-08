@@ -1,11 +1,9 @@
 "use client";
-
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
 import SectionTitle from "./SectionTitle";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SubmitInvestorResponse } from "@/app/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +12,11 @@ interface FormData {
   investorEmail: string;
   investorPhone: string;
   investmentAmount: string;
+}
+
+interface SubmitInvestorResponse {
+  success: boolean;
+  message?: string;
 }
 
 interface Status {
@@ -39,7 +42,6 @@ const Attainments: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Fade in each .attainments-form-group on scroll
     const formGroups = gsap.utils.toArray<HTMLElement>(".attainments-form-group");
     gsap.fromTo(
       formGroups,
@@ -53,12 +55,9 @@ const Attainments: React.FC = () => {
         scrollTrigger: {
           trigger: ".attainments",
           start: "top 80%",
-          toggleActions: "play none none none",
         },
       }
     );
-
-    // Use fromTo() for .submit-button so it ends fully visible.
     gsap.fromTo(
       ".submit-button",
       { opacity: 0, y: 30 },
@@ -69,25 +68,15 @@ const Attainments: React.FC = () => {
         ease: "power2.out",
       }
     );
-
-    return () => {
-      // Only kill triggers associated with .attainments
-      ScrollTrigger.getAll().forEach((triggerInstance) => {
-        if (triggerInstance?.trigger?.classList.contains("attainments")) {
-          triggerInstance.kill();
-        }
-      });
-    };
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     setStatus({ loading: true, success: null, error: null });
 
     try {
@@ -99,29 +88,16 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      console.log("Response Status:", response.status);
-      console.log("Response Headers:", response.headers);
-
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
         const text = await response.text();
-        console.error("Invalid Content-Type:", contentType, "Response body:", text);
-        throw new Error("Server responded with invalid content type.");
+        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
       }
 
       const data: SubmitInvestorResponse = await response.json();
       if (response.ok && data.success) {
-        setStatus({
-          loading: false,
-          success: "تم إرسال بياناتك بنجاح!",
-          error: null,
-        });
-        setFormData({
-          investorName: "",
-          investorEmail: "",
-          investorPhone: "",
-          investmentAmount: "",
-        });
+        setStatus({ loading: false, success: "تم إرسال بياناتك بنجاح!", error: null });
+        setFormData({ investorName: "", investorEmail: "", investorPhone: "", investmentAmount: "" });
         formRef.current?.reset();
       } else {
         setStatus({
@@ -130,26 +106,18 @@ const Attainments: React.FC = () => {
           error: data.message || "حدث خطأ غير متوقع.",
         });
       }
-    } catch (error: any) {
-      console.error("Form submission error:", error);
+    } catch (err: any) {
       setStatus({
         loading: false,
         success: null,
-        error:
-          error instanceof Error
-            ? error.message
-            : "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+        error: err.message || "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
       });
     }
   };
 
   return (
-    <section
-      id="attainments"
-      className="attainments section position-relative pb-5 mb-5"
-    >
+    <section id="attainments" className="attainments section position-relative pb-5 mb-5">
       <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
-
       <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
         <div className="row g-4 g-xl-5">
           <div className="col-sm-6 contact-input attainments-form-group">
@@ -164,7 +132,6 @@ const Attainments: React.FC = () => {
               placeholder="الاسم الكريم"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investorEmail">البريد الإلكتروني</label>
             <input
@@ -177,7 +144,6 @@ const Attainments: React.FC = () => {
               placeholder="ايميلك بعد إذنك"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investorPhone">رقم الجوال</label>
             <input
@@ -190,7 +156,6 @@ const Attainments: React.FC = () => {
               placeholder="لاتنسى مفتاح الدولة"
             />
           </div>
-
           <div className="col-sm-6 contact-input attainments-form-group">
             <label htmlFor="investmentAmount">مبلغ الاستثمار المتوقع</label>
             <input
@@ -203,8 +168,6 @@ const Attainments: React.FC = () => {
               placeholder="حدد المبلغ الأقصى بالدولار"
             />
           </div>
-
-          {/* Feedback Messages */}
           {status.loading && (
             <div className="col-12">
               <p className="message loading">جارٍ الإرسال...</p>
@@ -220,13 +183,8 @@ const Attainments: React.FC = () => {
               <p className="message error">{status.error}</p>
             </div>
           )}
-
           <div className="col-12">
-            <button
-              type="submit"
-              disabled={status.loading}
-              className="submit-btn position-relative submit-button"
-            >
+            <button type="submit" disabled={status.loading} className="submit-btn position-relative submit-button">
               <div className="waves-top-md">
                 <span></span>
                 <span></span>
@@ -244,12 +202,8 @@ const Attainments: React.FC = () => {
           </div>
         </div>
       </form>
-
       <div className="col-12">
-        <Link
-          href="#next-section"
-          className="d-flex gap-4 align-items-center next-chapter"
-        >
+        <Link href="#next-section" className="d-flex gap-4 align-items-center next-chapter">
           <span className="page">5/6</span>
           <span className="next">القسم التالي</span>
           <span className="icon">

@@ -110,7 +110,7 @@ export async function POST(
     }
 
     // Initialize Postmark client
-    const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
+    const postmarkToken = "4eeccc42-3da5-48d0-a4e4-de7b92528e70";
     if (!postmarkToken) {
       console.error(
         "POSTMARK_SERVER_TOKEN is not defined in environment variables."

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
 import SectionTitle from "./SectionTitle";
@@ -15,6 +14,11 @@ interface FormDataState {
   linkedin: string;
   website: string;
   pitchDeck: File | null;
+}
+
+interface SubmitProjectResponse {
+  success: boolean;
+  message?: string;
 }
 
 interface Status {
@@ -42,7 +46,6 @@ const Experience: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Animate input fields in
     const formGroups = gsap.utils.toArray<HTMLElement>(".experience-form-group");
     gsap.fromTo(
       formGroups,
@@ -56,12 +59,9 @@ const Experience: React.FC = () => {
         scrollTrigger: {
           trigger: ".experience",
           start: "top 80%",
-          toggleActions: "play none none none",
         },
       }
     );
-
-    // Use fromTo() for the button so it doesn't stay hidden
     gsap.fromTo(
       ".submit-button",
       { opacity: 0, y: 30 },
@@ -73,33 +73,14 @@ const Experience: React.FC = () => {
         scrollTrigger: {
           trigger: ".submit-button",
           start: "top 95%",
-          toggleActions: "play none none none",
         },
       }
     );
-
-    return () => {
-      // Cleanup triggers
-      ScrollTrigger.getAll().forEach((trigger) => {
-        if (
-          trigger.trigger &&
-          trigger.trigger.classList &&
-          (
-            trigger.trigger.classList.contains("experience") ||
-            trigger.trigger.classList.contains("submit-button")
-          )
-        ) {
-          trigger.kill();
-        }
-      });
-    };
   }, []);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, type, files, value } = e.target as HTMLInputElement;
-    if (type === "file" && files) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, type, files, value } = e.target;
+    if (type === "file" && files?.length) {
       setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -108,7 +89,6 @@ const Experience: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     setStatus({ loading: true, success: null, error: null });
 
     try {
@@ -127,14 +107,15 @@ const Experience: React.FC = () => {
         body: data,
       });
 
-      const resData = await response.json();
+      const contentType = response.headers.get("Content-Type") || "";
+      if (!contentType.includes("application/json")) {
+        const text = await response.text();
+        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+      }
 
+      const resData: SubmitProjectResponse = await response.json();
       if (response.ok && resData.success) {
-        setStatus({
-          loading: false,
-          success: "تم إرسال النموذج بنجاح!",
-          error: null,
-        });
+        setStatus({ loading: false, success: "تم إرسال النموذج بنجاح!", error: null });
         setFormData({
           fullName: "",
           email: "",
@@ -151,32 +132,19 @@ const Experience: React.FC = () => {
           error: resData.message || "حدث خطأ غير متوقع.",
         });
       }
-    } catch (error) {
-      console.error("Form submission error:", error);
+    } catch (err: any) {
       setStatus({
         loading: false,
         success: null,
-        error: "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
+        error: err.message || "حدث خطأ أثناء الإرسال. يرجى المحاولة لاحقًا.",
       });
     }
   };
 
   return (
-    <section
-      id="experience"
-      className="experience section position-relative pb-5 mb-5"
-    >
-      <SectionTitle
-        subtitle="إذا كنت رائد أعمال سوري، حياك الله"
-        title="ابعتلنا مشروعك لندرسه"
-      />
-
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        encType="multipart/form-data"
-        className="contact-form experience-form-container"
-      >
+    <section id="experience" className="experience section position-relative pb-5 mb-5">
+      <SectionTitle subtitle="إذا كنت رائد أعمال سوري، حياك الله" title="ابعتلنا مشروعك لندرسه" />
+      <form ref={formRef} onSubmit={handleSubmit} encType="multipart/form-data" className="contact-form experience-form-container">
         <div className="row g-4 g-xl-5">
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="fullName">الاسم الكامل</label>
@@ -190,7 +158,6 @@ const Experience: React.FC = () => {
               placeholder="اكتبلي اسمك الكامل"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="email">البريد الالكتروني</label>
             <input
@@ -203,7 +170,6 @@ const Experience: React.FC = () => {
               placeholder="اكتبلي إيميلك"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="phone">رقم الجوال</label>
             <input
@@ -216,7 +182,6 @@ const Experience: React.FC = () => {
               placeholder="لاتنسى رمز الدولة"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="linkedin">لينكدإن</label>
             <input
@@ -229,7 +194,6 @@ const Experience: React.FC = () => {
               placeholder="بدي رابط لينكدإن"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="website">الموقع الالكتروني</label>
             <input
@@ -242,7 +206,6 @@ const Experience: React.FC = () => {
               placeholder="ابط الموقع او التطبيق"
             />
           </div>
-
           <div className="col-sm-6 contact-input experience-form-group">
             <label htmlFor="pitchDeck">تحميل عرض المشروع (PDF)</label>
             <input
@@ -254,7 +217,6 @@ const Experience: React.FC = () => {
               required
             />
           </div>
-
           {status.loading && (
             <div className="col-12">
               <p className="message loading">جارٍ الإرسال...</p>
@@ -270,13 +232,8 @@ const Experience: React.FC = () => {
               <p className="message error">{status.error}</p>
             </div>
           )}
-
           <div className="col-12">
-            <button
-              type="submit"
-              disabled={status.loading}
-              className="submit-btn position-relative submit-button"
-            >
+            <button type="submit" disabled={status.loading} className="submit-btn position-relative submit-button">
               <div className="waves-top-md">
                 <span></span>
                 <span></span>
