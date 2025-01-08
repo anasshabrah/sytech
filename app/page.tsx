@@ -14,20 +14,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // If you must set a CSS variable or dir dynamically, do it AFTER hydration
-    // but realize Next.js will warn about server/client mismatch if
-    // they differ from what's in the server HTML.
-    //
-    // const savedColor = localStorage.getItem("color");
-    // if (savedColor) {
-    //   document.documentElement.style.setProperty("--primary", savedColor);
-    // }
-
-    // const savedDir = localStorage.getItem("dir");
-    // if (savedDir) {
-    //   document.documentElement.dir = savedDir;
-    // }
-
     setLoading(false);
   }, []);
 
@@ -42,11 +28,7 @@ export default function Home() {
   return (
     <>
       <Header navOpen={navOpen} setNavOpen={setNavOpen} />
-
-      {/* navigation */}
       <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
-
-      {/* shape bg */}
       <svg className="bg-gradiant" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
         <path
           fill="#9b5de5"
@@ -69,8 +51,6 @@ export default function Home() {
           d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z"
         />
       </svg>
-
-      {/* main content */}
       <main className="container-fluid">
         <div className="row gx-xxl-6">
           <div className="col col-xl-9" data-bs-spy="scroll" data-bs-target="#navigation">

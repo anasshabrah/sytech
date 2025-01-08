@@ -6,8 +6,7 @@ import "@/public/scss/styles.scss";
 
 export const metadata: Metadata = {
   title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
-  description:
-    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  description: "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
 };
 
 type LayoutType = {
@@ -24,7 +23,6 @@ export default function RootLayout({ children }: LayoutType) {
     <html lang="ar" dir="rtl">
       <body className={readexPro.className}>
         <Bootstrap>
-          {/* Register global GSAP animations (if needed) */}
           <GSAPAnimations />
           {children}
         </Bootstrap>
