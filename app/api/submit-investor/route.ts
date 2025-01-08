@@ -1,7 +1,7 @@
 // app/api/submit-investor/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { ServerClient, PostmarkError } from "postmark";
+import { ServerClient } from "postmark";
 
 // Specify runtime environment
 export const runtime = "nodejs";
@@ -115,8 +115,8 @@ export async function POST(req: NextRequest): Promise<NextResponse<SubmitInvesto
   } catch (error: any) {
     console.error("Error in submit-investor API:", error);
 
-    // Handle Postmark-specific errors
-    if (error instanceof PostmarkError) {
+    // Handle Postmark-specific errors by inspecting error properties
+    if (error && error.message && error.message.includes("Postmark")) {
       return NextResponse.json(
         { success: false, message: "Postmark service error." },
         { status: 500 }
