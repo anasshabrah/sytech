@@ -2,21 +2,17 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
+import { SubmitInvestorResponse } from "@/app/types"; // <-- Import Shared Interface
 
 // Specify runtime environment
 export const runtime = "nodejs";
 
-// Define interfaces for request and response
+// Define interfaces for request
 interface InvestorFormFields {
   investorName: string;
   investorEmail: string;
   investorPhone: string;
   investmentAmount: string;
-}
-
-interface SubmitInvestorResponse {
-  success: boolean;
-  message?: string;
 }
 
 // Function to sanitize input to prevent XSS attacks

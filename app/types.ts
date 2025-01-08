@@ -38,3 +38,8 @@ export interface BlogDetailsPageProps {
     title: string;
   };
 }
+
+export interface SubmitInvestorResponse { // <-- Shared Interface
+  success: boolean;
+  message?: string;
+}

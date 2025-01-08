@@ -7,6 +7,7 @@ import Link from "next/link";
 import SectionTitle from "./SectionTitle";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SubmitInvestorResponse } from "@/app/types"; // <-- Import Shared Interface
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -42,7 +43,8 @@ const Attainments: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Animate form groups with gsap.fromTo to ensure elements end up visible
+    // GSAP animations setup...
+    // Example:
     const formGroups = gsap.utils.toArray<HTMLElement>(".attainments-form-group");
     gsap.fromTo(
       formGroups,
@@ -61,7 +63,6 @@ const Attainments: React.FC = () => {
       }
     );
 
-    // Animate submit button with gsap.fromTo
     gsap.fromTo(
       ".submit-button",
       { opacity: 0, scale: 0 },
@@ -122,7 +123,7 @@ const Attainments: React.FC = () => {
         throw new Error("Server responded with invalid content type.");
       }
 
-      const data: SubmitInvestorResponse = await response.json();
+      const data: SubmitInvestorResponse = await response.json(); // <-- Now recognized
 
       if (response.ok && data.success) {
         setStatus({
