@@ -33,11 +33,140 @@ declare module 'react-modal-video' {
 /// <reference types="next/image-types/global" />
 
 // NOTE: This file should not be edited
-// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+--- C:\Users\hanos\sytech\next.config.mjs ---
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    unoptimized: true,
+  },
+  output: "export",
+  trailingSlash: true,
+};
+
+export default nextConfig;
+
+
+--- C:\Users\hanos\sytech\package.json ---
+{
+  "name": "SyTech",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@gsap/react": "^2.1.1",
+    "@popperjs/core": "^2.11.8",
+    "apexcharts": "^4.3.0",
+    "bootstrap": "^5.3.3",
+    "core-js": "^3.40.0",
+    "gsap": "^3.12.5",
+    "next": "^15.1.4",
+    "phosphor-icons": "^1.4.2",
+    "postmark": "^4.0.5",
+    "react": "18.2.0",
+    "react-animate-height": "^3.2.3",
+    "react-apexcharts": "^1.7.0",
+    "react-dom": "18.2.0",
+    "react-intersection-observer": "^9.14.1",
+    "react-modal-video": "^2.0.2",
+    "sharp": "^0.33.5",
+    "shuffle-letters": "^1.1.0",
+    "split-type": "^0.3.4",
+    "swiper": "^11.2.0",
+    "typewriter-effect": "2.21.0"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@types/bootstrap": "^5.2.10",
+    "@types/next": "^9.0.0",
+    "@types/node": "22.10.5",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "@types/react-modal-video": "^1.2.3",
+    "postcss": "^8.4.49",
+    "postcss-import": "^16.1.0",
+    "postcss-preset-env": "^10.1.3",
+    "sass": "^1.83.1",
+    "typescript": "5.7.3"
+  }
+}
+
+
+--- C:\Users\hanos\sytech\postcss.config.js ---
+// postcss.config.js
+
+const purgecss = [
+  '@fullhuman/postcss-purgecss',
+  {
+    content: [
+      './app/**/*.{js,jsx,ts,tsx}',
+      './components/**/*.{js,jsx,ts,tsx}',
+      './pages/**/*.{js,jsx,ts,tsx}', // Include if you have a pages directory
+    ],
+    defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+    safelist: {
+      standard: [
+        // Add any class names that should not be purged
+        'active',
+        'opened',
+        /^nav-/,
+        /^btn-/,
+        /^text-/,
+        /^bg-/,
+        // Add more patterns as needed
+      ],
+    },
+  },
+];
+
+module.exports = {
+  plugins: [
+    'postcss-import',
+    'postcss-preset-env',
+    ...(process.env.NODE_ENV === 'production' ? purgecss : []),
+  ],
+};
 
 
 --- C:\Users\hanos\sytech\shuffle.d.ts ---
 declare module "shuffle-letters";
+
+
+--- C:\Users\hanos\sytech\tsconfig.json ---
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
 
 
 --- C:\Users\hanos\sytech\app\layout.tsx ---
@@ -49,7 +178,8 @@ import "@/public/scss/styles.scss";
 
 export const metadata: Metadata = {
   title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
-  description: "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  description:
+    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
 };
 
 type LayoutType = {
@@ -64,7 +194,7 @@ const readexPro = Readex_Pro({
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={readexPro.className}>
+      <body className={readexPro.className /* no style={{}} here */}>
         <Bootstrap>
           <GSAPAnimations />
           {children}
@@ -85,7 +215,6 @@ import Services from "@/components/Services";
 import Attainments from "@/components/Attainments";
 import Experience from "@/components/Experience";
 import { useEffect, useState } from "react";
-import Blogs from "@/components/Blogs";
 
 export default function Home() {
   const [navOpen, setNavOpen] = useState(false);
@@ -154,39 +283,6 @@ export interface TableOfContentsItem {
   title: string;
 }
 
-export interface BlogSection {
-  title: string;
-  content: string;
-}
-
-export interface BlogSections {
-  understanding: BlogSection;
-  crafting: BlogSection;
-  showcasing: BlogSection;
-  conclusion: BlogSection;
-}
-
-export interface Blog {
-  id: number;
-  title: string;
-  date: string;
-  time: string;
-  desc: string;
-  tags: string[];
-  image: StaticImageData;
-  author: string;
-  tableOfContents: TableOfContentsItem[];
-  sections: BlogSections;
-  quote: string;
-  additionalContent: string;
-}
-
-export interface BlogDetailsPageProps {
-  params: {
-    title: string;
-  };
-}
-
 export interface SubmitInvestorResponse {
   success: boolean;
   message?: string;
@@ -200,8 +296,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
 import { SubmitInvestorResponse } from "@/app/types";
 
+// Define the runtime environment if necessary
 export const runtime = "nodejs";
 
+// Interface for the expected form fields
 interface InvestorFormFields {
   investorName: string;
   investorEmail: string;
@@ -209,6 +307,7 @@ interface InvestorFormFields {
   investmentAmount: string;
 }
 
+// Sanitization function to prevent XSS attacks
 const sanitize = (input: string): string => {
   return input
     .replace(/&/g, "&amp;")
@@ -218,15 +317,18 @@ const sanitize = (input: string): string => {
     .replace(/'/g, "&#039;");
 };
 
+// Main POST handler
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<SubmitInvestorResponse>> {
   console.log("Received POST request to /api/submit-investor");
 
   try {
+    // Extract and log Content-Type header
     const contentType = req.headers.get("Content-Type") || "";
     console.log(`Content-Type header: ${contentType}`);
 
+    // Validate Content-Type
     if (!contentType.includes("application/json")) {
       console.warn("Invalid Content-Type received");
       return NextResponse.json(
@@ -235,6 +337,7 @@ export async function POST(
       );
     }
 
+    // Attempt to parse JSON body
     let body: any;
     try {
       body = await req.json();
@@ -249,6 +352,7 @@ export async function POST(
 
     console.log("Original request body:", body);
 
+    // Sanitize and assign form fields
     const investorFields: InvestorFormFields = {
       investorName: sanitize(body.investorName || ""),
       investorEmail: sanitize(body.investorEmail || ""),
@@ -281,7 +385,7 @@ export async function POST(
     }
     console.log("Email format is valid");
 
-    // Validate phone number format
+    // Validate phone number format (7-14 digits, optional +)
     const phoneRegex = /^\+?\d{7,14}$/;
     if (!phoneRegex.test(investorPhone)) {
       console.warn("Validation failed: Invalid phone number format");
@@ -295,7 +399,7 @@ export async function POST(
     }
     console.log("Phone number format is valid");
 
-    // Validate investment amount
+    // Validate investment amount (numeric and minimum value)
     const investmentNum = parseFloat(investmentAmount);
     if (isNaN(investmentNum) || investmentNum < 100) {
       console.warn("Validation failed: Invalid investment amount");
@@ -306,7 +410,7 @@ export async function POST(
     }
     console.log(`Investment amount is valid: ${investmentNum}`);
 
-    // Check for Postmark token
+    // Retrieve Postmark server token from environment variables
     const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
     if (!postmarkToken) {
       console.error("Postmark server token is missing in environment variables");
@@ -317,8 +421,10 @@ export async function POST(
     }
     console.log("Postmark server token retrieved successfully");
 
-    // Log the Postmark token for debugging (ensure this is removed or secured in production)
-    console.log("Postmark Token:", postmarkToken);
+    // Conditionally log Postmark token (only in non-production)
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Postmark Token:", postmarkToken);
+    }
 
     // Initialize Postmark client
     const client = new ServerClient(postmarkToken);
@@ -326,8 +432,8 @@ export async function POST(
 
     // Prepare email content
     const emailContent = {
-      From: "info@syriatech.co",
-      To: "habrahllc@gmail.com",
+      From: "info@syriatech.co", // Replace with your verified Postmark sender
+      To: "habrahllc@gmail.com", // Replace with your recipient email
       Subject: "تقديم مستثمر جديد",
       HtmlBody: `
         <p><strong>اسم المستثمر:</strong> ${investorName}</p>
@@ -343,11 +449,12 @@ export async function POST(
       `,
       MessageStream: "outbound",
     };
+
     console.log("Email content prepared:", {
       From: emailContent.From,
       To: emailContent.To,
       Subject: emailContent.Subject,
-      // Omitting HtmlBody and TextBody for brevity and security
+      // Omitting HtmlBody and TextBody for security
     });
 
     // Send email via Postmark
@@ -359,7 +466,7 @@ export async function POST(
       console.log("Email sent successfully");
       return NextResponse.json({ success: true }, { status: 200 });
     } else {
-      console.error("Failed to send email via Postmark");
+      console.error("Failed to send email via Postmark:", sendResult.Message);
       return NextResponse.json(
         { success: false, message: "فشل في إرسال البريد الإلكتروني." },
         { status: 500 }
@@ -527,537 +634,6 @@ export async function POST(
     );
   }
 }
-
-
---- C:\Users\hanos\sytech\app\blogs\page.tsx ---
-"use client";
-import Image from "next/image";
-import logo from "@/public/images/logo.png";
-import fb from "@/public/images/fb.png";
-import tt from "@/public/images/tt.png";
-import x from "@/public/images/x.png";
-import sp from "@/public/images/sp.png";
-import hero from "@/public/images/hero.png";
-import { blogData } from "@/public/blogdata";
-import Link from "next/link";
-import { formatString } from "@/utils/formatString";
-import { useState } from "react";
-import AnimateHeight from "react-animate-height";
-import { Blog } from "@/app/types"; // Import the Blog interface
-
-const topics = [
-  {
-    id: 1,
-    title: "Fundamentals",
-    articles: ["Web dev basics", "Getting Started in web dev", "Key web concepts", "Clean code tips", "First web app guide"],
-  },
-  {
-    id: 2,
-    title: "HTML",
-    articles: ["Introduction to HTML", "Semantic HTML Guide", "HTML Form Best Practices", "HTML for SEO & Access", "Responsive HTML Layouts"],
-  },
-  {
-    id: 3,
-    title: "CSS",
-    articles: ["Master CSS Grid", "Responsive Flexbox Tips", "CSS Animations Guide", "Scalable CSS Practices", "Advanced CSS Tricks"],
-  },
-  {
-    id: 4,
-    title: "JavaScript",
-    articles: ["JavaScript ES6 Features You Should Know", "JavaScript Functions: A Brief Guide", "JavaScript Design Patterns: Writing More Efficient Code", "DOM Manipulation with JavaScript", "Asynchronous JavaScript: Understanding Promises"],
-  },
-  {
-    id: 5,
-    title: "Databases",
-    articles: ["Basic SQL Queries for Beginners", "NoSQL vs SQL: Key Differences", "Understanding Database Indexing Techniques", "Database Normalization Simplified", "Integrating Databases with Your Web Application"],
-  },
-  {
-    id: 6,
-    title: "Deployment",
-    articles: ["Deploying Web Applications: A Guide", "Introduction to Continuous Deployment", "Deploying with Git and GitHub", "Best Practices for Secure Deployment", "Automating Deployments with CI/CD"],
-  },
-];
-
-const AllBlogs = () => {
-  const [opened, setOpened] = useState<null | number>(1);
-  return (
-    <>
-      <header className="header-blog">
-        <div className="container d-flex flex-wrap gap-4 align-items-center justify-content-between">
-          <Link href="/">
-            <Image src={logo} alt="logo" />
-          </Link>
-          <Link href="/" className="d-flex align-items-center gap-2">
-            <i className="ph ph-arrow-left"></i> Back to Home
-          </Link>
-        </div>
-      </header>
-
-      {/* <!-- main content --> */}
-      <main>
-        <section id="top" className="hero blog-hero">
-          <div className="container">
-            <div className="row gx-4 justify-content-center align-items-center">
-              <div className="col-12 col-md-6 col-xl-6 hero-content">
-                <div>
-                  <h1 className="fw-medium mb-4">Hi, i&apos;m Jenny Wilson</h1>
-                  <p className="mb-4 mb-xl-5">I&apos;m a Developer in California. I like working on the front-end of the web. This is my site, Portify where I blog, share and write tutorials...</p>
-                </div>
-                <form className="connect">
-                  <input type="text" placeholder="Enter your email address" />
-                  <button>Subscribe</button>
-                </form>
-                <div className="d-flex gap-3 align-items-center">
-                  <span className="fw-medium">Follow Me</span>
-                  <div className="d-flex gap-3">
-                    <a href="#">
-                      <Image src={fb} alt="Facebook" />
-                    </a>
-                    <a href="#">
-                      <Image src={tt} alt="Twitter" />
-                    </a>
-                    <a href="#">
-                      <Image src={x} alt="X (formerly Twitter)" />
-                    </a>
-                    <a href="#">
-                      <Image src={sp} alt="Spotify" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4 d-flex justify-content-center">
-                <div className="img-wrapper">
-                  <div className="waves-top">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <Image className="img-fluid rounded-circle hero-img" src={hero} alt="Hero Image" />
-                  <div className="waves-bottom">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* <!-- Topics --> */}
-        <section className="topics">
-          <div className="container">
-            <h2 className="fw-medium mb-4 mb-xl-5 text-center">Trending Topics</h2>
-            <div className="topics-inner">
-              <a href="#" className="topic-box">
-                <div className="icon">
-                  <span>4</span>
-                  <i className="ph ph-file-html"></i>
-                </div>
-                <p>HTML</p>
-              </a>
-              <a href="#" className="topic-box">
-                <div className="icon">
-                  <span>1</span>
-                  <i className="ph ph-code"></i>
-                </div>
-                <p>Fundamentals</p>
-              </a>
-              <a href="#" className="topic-box">
-                <div className="icon">
-                  <span>7</span>
-                  <i className="ph ph-file-css"></i>
-                </div>
-                <p>CSS</p>
-              </a>
-              <a href="#" className="topic-box">
-                <div className="icon">
-                  <span>5</span>
-                  <i className="ph ph-stack"></i>
-                </div>
-                <p>Deployment</p>
-              </a>
-              <a href="#" className="topic-box">
-                <div className="icon">
-                  <span>2</span>
-                  <i className="ph ph-database"></i>
-                </div>
-                <p>Databases</p>
-              </a>
-            </div>
-            <div className="row">
-              <div className="col-md-4 col-xxl-3">
-                <div className="topic-index position-sticky">
-                  <h4 className="mb-3 mb-xl-4">Topics Index</h4>
-                  <div className="d-flex flex-column gap-3">
-                    {topics.map(({ id, articles, title }) => (
-                      <div key={id} className="blog-topic">
-                        <div onClick={() => setOpened(opened === id ? null : id)} className="title">
-                          <span>1</span>
-                          <div className="d-flex align-items-center gap-2">
-                            <p>{title}</p>
-                            <i className="ph ph-arrow-right"></i>
-                          </div>
-                        </div>
-                        <AnimateHeight height={opened === id ? "auto" : 0} key={id}>
-                          <div className="list">
-                            <div className="list-inner">
-                              {articles.map((item) => (
-                                <li key={item}>
-                                  <a href="#">{item}</a>
-                                </li>
-                              ))}
-                            </div>
-                          </div>
-                        </AnimateHeight>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-8 col-xxl-9 d-flex flex-column gap-4">
-                {blogData.map(({ date, desc, id, image, tags, time, title }: Blog) => (
-                  <Link key={id} href={`/blogs/${formatString(title)}`} className="blog-card">
-                    <div className="overflow-hidden rounded-4 img-wrapper">
-                      <Image src={image} className="img-fluid" alt={title} />
-                    </div>
-                    <div>
-                      <h4 className="fw-medium mb-3">{title}</h4>
-                      <div className="d-flex align-items-center gap-4 flex-wrap mb-3">
-                        <div className="d-flex gap-2 align-items-center fs-5">
-                          <i className="ph ph-calendar"></i>
-                          <p>{date}</p>
-                        </div>
-                        --
-                        <div className="d-flex gap-2 align-items-center fs-5">
-                          <i className="ph ph-clock"></i>
-                          <p>{time}</p>
-                        </div>
-                      </div>
-                      <p className="details">{desc}</p>
-                      <div className="d-flex align-items-center gap-3">
-                        {tags.map((tag: string) => (
-                          <div key={tag} className="d-flex align-items-center gap-2">
-                            <span className="fs-3">•</span>
-                            <p>{tag}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="pagination">
-              <a href="#">
-                <i className="ph ph-caret-left"></i>
-              </a>
-              <a href="#">1</a>
-              <a href="#">2</a>
-              <a href="#">...</a>
-              <a href="#">
-                <i className="ph ph-caret-right"></i>
-              </a>
-            </div>
-          </div>
-        </section>
-        {/* <!-- newsletter --> */}
-        <section className="newsletter">
-          <div className="container">
-            <div className="content">
-              <h2 className="mb-3 fw-medium">Subscribe our newsletter</h2>
-              <p className="mb-4 pb-2">Technology blogging, captivating your audience goes beyond just the written word.</p>
-              <form className="mb-3">
-                <input type="text" placeholder="Enter your email address" />
-                <button>Subscribe</button>
-              </form>
-              <div>
-                <label htmlFor="agree" className="d-flex align-items-center gap-2">
-                  <input type="checkbox" id="agree" />
-                  <p>
-                    I agree with{" "}
-                    <a href="#" className="underlined">
-                      Privacy Policy
-                    </a>{" "}
-                    &amp;{" "}
-                    <a href="#" className="underlined">
-                      Terms
-                    </a>
-                  </p>
-                </label>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div className="contaner">
-          <div className="d-flex justify-content-center gap-3">
-            <p>
-              Copyright @ <span id="year"></span> Portify
-            </p>
-            <p>|</p>
-            <p>
-              Designed By <a href="#">Pixelaxis</a>
-            </p>
-          </div>
-        </div>
-      </footer>
-    </>
-  );
-};
-
-export default AllBlogs;
-
-
---- C:\Users\hanos\sytech\app\blogs\[title]\page.tsx ---
-// app/blogs/[title]/page.tsx
-
-import { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import blogDetails from '@/public/images/blog-details.png';
-import { blogData } from '@/public/blogdata';
-import { formatString } from '@/utils/formatString';
-import DetailsVideo from '@/components/DetailsVideo';
-import logo from "@/public/images/logo.png";
-import fb from "@/public/images/fb.png";
-import tt from "@/public/images/tt.png";
-import x from "@/public/images/x.png";
-import sp from "@/public/images/sp.png";
-import { Blog, BlogDetailsPageProps, TableOfContentsItem } from '../../types'; // Import the new type
-
-export async function generateStaticParams() {
-  return blogData.map((blog: Blog) => ({
-    title: formatString(blog.title),
-  }));
-}
-
-const BlogDetailsPage = async ({ params }: BlogDetailsPageProps) => {
-  const blog = blogData.find((blog: Blog) => formatString(blog.title) === params.title);
-
-  if (!blog) {
-    return (
-      <div>
-        <h1>Blog Not Found</h1>
-        <Link href="/blogs">Back to Blogs</Link>
-      </div>
-    );
-  }
-
-  return (
-    <>
-      <header className="header-blog">
-        <div className="container d-flex flex-wrap gap-4 align-items-center justify-content-between">
-          <Link href="/">
-            <Image src={logo} alt="logo" />
-          </Link>
-          <Link href="/" className="d-flex align-items-center gap-2">
-            <i className="ph ph-arrow-left"></i> Back to Home
-          </Link>
-        </div>
-      </header>
-
-      <main>
-        <section className="blog-details">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-4 col-xxl-3">
-                <div className="details-left">
-                  <div className="info-box">
-                    <h4>Article Information</h4>
-                    <div className="d-flex flex-column gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <i className="ph ph-tag fs-5"></i>
-                        <p>
-                          <span className="fw-medium">Category</span>: Inspiration
-                        </p>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <i className="ph ph-clock fs-5"></i>
-                        <p>
-                          <span className="fw-medium">Updated</span>: {blog.date}
-                        </p>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <i className="ph ph-user fs-5"></i>
-                        <p>
-                          <span className="fw-medium">Author</span>: {blog.author}
-                        </p>
-                      </div>
-                      <div className="d-flex align-items-center gap-2">
-                        <i className="ph ph-alarm fs-5"></i>
-                        <p>
-                          <span className="fw-medium">Reading Time</span>: {blog.time}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="info-box">
-                    <h4>Table of Contents</h4>
-                    <div id="blog-index" className="d-flex flex-column gap-2 table-of-content">
-                      {blog.tableOfContents.map((item: TableOfContentsItem) => (
-                        <a key={item.id} href={`#${item.id}`}>
-                          {item.title}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col-md-8 col-xxl-9 d-flex flex-column gap-4"
-                data-bs-spy="scroll"
-                data-bs-target="#blog-index"
-                data-bs-smooth-scroll="true"
-              >
-                <div className="details-container">
-                  <div className="details-content">
-                    <div id="title" className="row align-items-center g-4 mb-4 mb-xl-5">
-                      <div className="col-md-6">
-                        <Image src={blog.image} className="img-fluid w-100 rounded-3" alt="" />
-                      </div>
-                      <div className="col-md-6">
-                        <h3 className="mb-3 fw-medium">{blog.title}</h3>
-                        <div className="d-flex align-items-center gap-2">
-                          <i className="ph ph-calendar fs-4"></i>
-                          <p>
-                            <span className="fw-medium">Updated</span>: {blog.date}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <p className="text-lg mb-4 mb-xl-5">{blog.desc}</p>
-                    <h4 id="understanding" className="fw-medium mb-3">
-                      {blog.sections.understanding.title}
-                    </h4>
-                    <p className="text-lg mb-4 mb-xl-5">{blog.sections.understanding.content}</p>
-
-                    <DetailsVideo />
-
-                    <div id="crafting" className="mb-4 mb-xl-5">
-                      <h5 className="mb-3">{blog.sections.crafting.title}</h5>
-                      <p className="text-lg">{blog.sections.crafting.content}</p>
-                    </div>
-
-                    <div id="showcasing" className="mb-4 mb-xl-5">
-                      <h5 className="mb-3">{blog.sections.showcasing.title}</h5>
-                      <p className="text-lg">{blog.sections.showcasing.content}</p>
-                    </div>
-
-                    <div className="quote">{blog.quote}</div>
-                    <p className="mb-4 mb-xl-5">{blog.additionalContent}</p>
-
-                    <div className="mb-4 mb-xl-5">
-                      <Image src={blogDetails} className="img-fluid w-100 rounded-3" alt="" />
-                    </div>
-
-                    <div id="conclusion" className="mb-4 mb-xl-5">
-                      <h5 className="mb-3">{blog.sections.conclusion.title}</h5>
-                      <p className="text-lg">{blog.sections.conclusion.content}</p>
-                    </div>
-
-                    <div className="share py-4">
-                      <div className="d-flex gap-3 align-items-center justify-content-center mb-4">
-                        <p>Follow Me</p>
-                        <div className="d-flex gap-3">
-                          <a href="#">
-                            <Image src={fb} alt="Facebook" />
-                          </a>
-                          <a href="#">
-                            <Image src={tt} alt="Twitter" />
-                          </a>
-                          <a href="#">
-                            <Image src={x} alt="X" />
-                          </a>
-                          <a href="#">
-                            <Image src={sp} alt="Spotify" />
-                          </a>
-                        </div>
-                      </div>
-                      <form>
-                        <input type="text" value="Portify-?node-id=0-1&t=3MUWkaOWKQ0TLoKa-0" disabled />
-                        <button>Copy Link</button>
-                      </form>
-                    </div>
-                  </div>
-                  <div className="next-prev">
-                    <a href="#" className="article-card">
-                      <button>
-                        <i className="ph ph-arrow-left"></i>
-                      </button>
-                      <div>
-                        <p className="fw-medium mb-1">Previous Article</p>
-                        <h5 className="fw-medium">The Evolution of My Design Style Over Time</h5>
-                      </div>
-                    </a>
-                    <div className="divider d-none d-md-block"></div>
-                    <a href="#" className="article-card right">
-                      <div>
-                        <p className="fw-medium mb-1">Next Article</p>
-                        <h5 className="fw-medium">The Evolution of My Design Style Over Time</h5>
-                      </div>
-                      <button>
-                        <i className="ph ph-arrow-left"></i>
-                      </button>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="newsletter">
-          <div className="container">
-            <div className="content">
-              <h2 className="mb-3 fw-medium">Subscribe to our newsletter</h2>
-              <p className="mb-4 pb-2">
-                Technology blogging, captivating your audience goes beyond just the written word.
-              </p>
-              <form className="mb-3">
-                <input type="email" placeholder="Enter your email address" required />
-                <button type="submit">Subscribe</button>
-              </form>
-              <div>
-                <label htmlFor="agree" className="d-flex align-items-center gap-2">
-                  <input type="checkbox" id="agree" required />
-                  <p>
-                    I agree with{' '}
-                    <a href="#" className="underlined">
-                      Privacy Policy
-                    </a>{' '}
-                    &amp;{' '}
-                    <a href="#" className="underlined">
-                      Terms
-                    </a>
-                  </p>
-                </label>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer>
-        <div className="container">
-          <div className="d-flex justify-content-center gap-3">
-            <p>
-              Copyright @ <span id="year">{new Date().getFullYear()}</span> Portify
-            </p>
-            <p>|</p>
-            <p>
-              Designed By <a href="#">Pixelaxis</a>
-            </p>
-          </div>
-        </div>
-      </footer>
-    </>
-  );
-};
-
-export default BlogDetailsPage;
 
 
 --- C:\Users\hanos\sytech\components\AboutMe.tsx ---
@@ -1349,91 +925,6 @@ const Attainments: React.FC = () => {
 export default Attainments;
 
 
---- C:\Users\hanos\sytech\components\Blogs.tsx ---
-import React from "react";
-import blog1 from "@/public/images/blog-1.png";
-import blog2 from "@/public/images/blog-2.png";
-import Image from "next/image";
-import Link from "next/link";
-import { formatString } from "@/utils/formatString";
-import { blogData } from "@/public/blogdata";
-const Blogs = () => {
-  return (
-    <section id="blogs" className="section blogs position-relative">
-      <span className="section-title-overlay-text">My Blogs</span>
-      <div className="section-title text-capitalize">
-        <h4>Explore My Blog</h4>
-        <h2>Latest Articles</h2>
-      </div>
-      <div className="pb-60 d-flex flex-column gap-4">
-        {blogData.slice(0, 2).map(({ date, desc, id, image, tags, time, title }) => (
-          <Link key={id} href={`/blogs/${formatString(title)}`} className="blog-card">
-            <div className="rounded-4 overflow-hidden img-wrapper">
-              <Image src={image} className="img-fluid" alt="" />
-            </div>
-            <div>
-              <h4 className="fw-medium mb-3">{title}</h4>
-              <div className="d-flex align-items-center gap-4 flex-wrap mb-3">
-                <div className="d-flex gap-2 align-items-center fs-5">
-                  <i className="ph ph-calendar"></i>
-                  <p>{date}</p>
-                </div>
-                --
-                <div className="d-flex gap-2 align-items-center fs-5">
-                  <i className="ph ph-clock"></i>
-                  <p>{time}</p>
-                </div>
-              </div>
-              <p className="details">{desc}</p>
-              <div className="d-flex align-items-center gap-3">
-                {tags.map((tag) => (
-                  <div key={tag} className="d-flex align-items-center gap-2">
-                    <span className="fs-3">•</span>
-                    <p>{tag}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-      <div className="more-info d-flex flex-wrap align-items-center gap-5 gap-md-3">
-        <Link href="/blogs" className="fs-5 fw-medium">
-          View All Articles
-        </Link>
-        <span className="line"></span>
-        <Link href="/blogs" className="arrow-down position-relative">
-          <div className="waves-top-md">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <svg width="45" height="54" viewBox="0 0 45 54" className="rotate-90" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M44 31.449L22.5 52.949L1 31.449L8.98204 23.3382L16.8353 31.449V0.550781H28.1647V31.449L36.018 23.3382L44 31.449Z" stroke="currentColor" />
-          </svg>
-          <div className="waves-bottom-md">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </Link>
-      </div>
-      <div className="col-12">
-        <a href="#testimonials" className="d-flex gap-4 align-items-center next-chapter">
-          <span className="page">09/11</span>
-          <span className="next">Next Chapter</span>
-          <i className="ph ph-arrow-elbow-right-down"></i>
-        </a>
-      </div>
-    </section>
-  );
-};
-
-export default Blogs;
-
-
 --- C:\Users\hanos\sytech\components\Bootstrap.tsx ---
 // components/Bootstrap.tsx
 "use client";
@@ -1447,153 +938,6 @@ const Bootstrap = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default Bootstrap;
-
-
---- C:\Users\hanos\sytech\components\Contact.tsx ---
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import React, { useRef } from "react";
-import SectionTitle from "./SectionTitle";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import emailjs from "@emailjs/browser";
-gsap.registerPlugin(ScrollTrigger);
-
-const Contact = () => {
-  const [submitBtn, setSubmitBtn] = React.useState("إرسال");
-  useGSAP(() => {
-    gsap.fromTo(
-      ".section-title-overlay-text",
-      { y: "50%" },
-      {
-        y: "-50%",
-        scrollTrigger: {
-          trigger: ".contact",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      },
-    );
-    gsap.from(".submit-btn", {
-      scale: 0,
-      duration: 3.5,
-      ease: "elastic",
-      delay: 0.2,
-      scrollTrigger: {
-        trigger: ".submit-btn",
-      },
-    });
-    gsap.from(".contact-item", {
-      scale: 0,
-      duration: 0.8,
-      ease: "back",
-      scrollTrigger: {
-        trigger: ".contact-items",
-      },
-    });
-
-    gsap.from(".contact-input", {
-      opacity: 0,
-      scale: 0,
-      duration: 0.8,
-      scrollTrigger: {
-        trigger: ".contact-input",
-      },
-    });
-  });
-  const form = useRef<HTMLFormElement>(null);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSubmitBtn("[جاري الإرسال...");
-    emailjs.sendForm(process.env.NEXT_PUBLIC_SERVICE_ID as string, process.env.NEXT_PUBLIC_TEMPLATE_ID as string, form.current!, { publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY as string }).then(
-      function () {
-        console.log("إرسلت بنجاح!");
-        form.current?.reset();
-        setSubmitBtn("نجاح الإرسال");
-        setTimeout(function () {
-          setSubmitBtn("إرسال");
-        }, 3000);
-      },
-      function (error) {
-        setSubmitBtn("إرسال");
-        console.log("فشل...", error);
-      },
-    );
-  };
-  return (
-    <section id="contact" className="contact section position-relative">
-      <SectionTitle subtitle="خلينا نتواصل" title="اتركلنا رسالة" />
-      <form ref={form} onSubmit={handleSubmit} id="contact-form" className="contact-form">
-        <div className="row g-4 g-xl-5">
-          <div className="col-sm-6 contact-input">
-            <label htmlFor="name">الاسم</label>
-            <input type="text" id="user_name" name="user_name" placeholder="اسمك" required />
-          </div>
-          <div className="col-sm-6 contact-input">
-            <label htmlFor="email">الايميل</label>
-            <input type="email" id="user_email" name="user_email" placeholder="ايميلك" required />
-          </div>
-          <div className="col-12 contact-input">
-            <label htmlFor="message">الرسالة</label>
-            <textarea id="message" name="message" placeholder="رسالتك"></textarea>
-          </div>
-          <div className="col-12">
-            <button type="submit" id="submit-btn" className="submit-btn position-relative">
-              <div className="waves-top-md">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              {submitBtn}
-              <div className="waves-bottom-md">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-            </button>
-          </div>
-        </div>
-      </form>
-    </section>
-  );
-};
-
-export default Contact;
-
-
---- C:\Users\hanos\sytech\components\DetailsVideo.tsx ---
-"use client";
-import Image from "next/image";
-import React, { useState } from "react";
-import ModalVideo from "react-modal-video";
-import blogVideo from "@/public/images/blog-video.png";
-import youtube from "@/public/images/youtube.png";
-
-const DetailsVideo = () => {
-  const [isOpen, setOpen] = useState(false);
-  return (
-    <>
-      <div className="mb-4 mb-xl-5 position-relative blog-video">
-        <Image src={blogVideo} className="w-100 img-fluid rounded-3" alt="Blog Video" />
-        <span onClick={() => setOpen(true)} className="youtube">
-          <Image src={youtube} alt="Play Video" />
-        </span>
-      </div>
-      <ModalVideo
-        channel="youtube"
-        isOpen={isOpen}
-        videoId="dImgZ_AH7uA"
-        onClose={() => setOpen(false)}
-        autoplay={false}
-      />
-    </>
-  );
-};
-
-export default DetailsVideo;
 
 
 --- C:\Users\hanos\sytech\components\Experience.tsx ---
@@ -2005,131 +1349,6 @@ const Hero = ({ classes }: { classes?: string }) => {
 export default Hero;
 
 
---- C:\Users\hanos\sytech\components\HowIWork.tsx ---
-import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import SectionTitle from "./SectionTitle";
-const HowIWork = () => {
-  useGSAP(() => {
-    gsap.fromTo(
-      ".section-title-overlay-text",
-      { y: "50%" },
-      {
-        y: "-50%",
-        scrollTrigger: {
-          trigger: ".how-i-work",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      },
-    );
-    gsap.from(".more-info", {
-      scale: 0,
-      duration: 1.2,
-      ease: "elastic",
-      delay: 0.5,
-      scrollTrigger: {
-        trigger: ".more-info",
-      },
-    });
-    gsap.from(".process", {
-      stagger: 0.15,
-      scale: 0,
-      duration: 2.8,
-      ease: "elastic",
-      scrollTrigger: {
-        trigger: ".process-list",
-        start: "top 60%",
-        end: "top 20%",
-      },
-    });
-  });
-  return (
-    <section id="how_i_work" className="how-i-work section position-relative">
-      <span className="section-title-overlay-text">How i Work</span>
-      <SectionTitle subtitle="How I Work" title="My Working Process" />
-
-      <div className="row pb-60 px-4 process-list justify-content-center">
-        <div className="process col-6">
-          <span className="circle position-absolute w-100 h-100"></span>
-          <div>
-            <p>01.</p>
-            <p>idea</p>
-          </div>
-        </div>
-        <div className="process col-6">
-          <span className="circle-even position-absolute w-100 h-100"></span>
-          <div>
-            <p>02.</p>
-            <p>sketch</p>
-          </div>
-        </div>
-        <div className="process col-6">
-          <span className="circle position-absolute w-100 h-100"></span>
-          <div>
-            <p>03.</p>
-            <p>design</p>
-          </div>
-        </div>
-        <div className="process col-6">
-          <span className="circle-even position-absolute w-100 h-100"></span>
-          <div>
-            <p>04.</p>
-            <p>develop</p>
-          </div>
-        </div>
-        <div className="process col-6">
-          <span className="circle position-absolute w-100 h-100"></span>
-          <div>
-            <p>05.</p>
-            <p>text</p>
-          </div>
-        </div>
-        <div className="process col-6">
-          <span className="circle-even position-absolute w-100 h-100"></span>
-          <div>
-            <p>06.</p>
-            <p>launch</p>
-          </div>
-        </div>
-      </div>
-      <div className="more-info d-flex flex-wrap align-items-center gap-5 gap-md-3">
-        <p>Need More info? Please Get in touch</p>
-        <span className="line"></span>
-        <Link href="#contact" className="arrow-down position-relative">
-          <div className="waves-top-md">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <svg width="45" height="54" viewBox="0 0 45 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M44 31.449L22.5 52.949L1 31.449L8.98204 23.3382L16.8353 31.449V0.550781H28.1647V31.449L36.018 23.3382L44 31.449Z" stroke="currentColor" />
-          </svg>
-          <div className="waves-bottom-md">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </Link>
-      </div>
-      <div className="col-12">
-        <Link href="#testimonials" className="d-flex gap-4 align-items-center next-chapter">
-          <span className="page">08/11</span>
-          <span className="next">Next Chapter</span>
-          <i className="ph ph-arrow-elbow-right-down"></i>
-        </Link>
-      </div>
-    </section>
-  );
-};
-
-export default HowIWork;
-
-
 --- C:\Users\hanos\sytech\components\Navigation.tsx ---
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
@@ -2248,326 +1467,6 @@ const Navigation = ({
 };
 
 export default Navigation;
-
-
---- C:\Users\hanos\sytech\components\ProgressChart.tsx ---
-"use client";
-import { ApexOptions } from "apexcharts";
-import React, { useState, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import dynamic from "next/dynamic";
-
-const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-const ProgressChart = ({ progress }: { progress: number }) => {
-  const [chartProgress, setChartProgress] = useState(0);
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-
-  useEffect(() => {
-    if (inView) {
-      setChartProgress(progress);
-    }
-  }, [inView, progress]);
-
-  const options: ApexOptions = {
-    chart: {
-      type: "radialBar",
-      width: 250,
-      height: 250,
-      sparkline: {
-        enabled: false,
-      },
-      animations: {
-        enabled: true,
-        speed: 2000,
-        animateGradually: {
-          enabled: true,
-          delay: 150,
-        },
-        dynamicAnimation: {
-          enabled: true,
-          speed: 1350,
-        },
-      },
-    },
-    series: [chartProgress],
-    legend: {
-      show: false,
-    },
-    stroke: {
-      lineCap: "butt",
-    },
-    colors: ["#000000"],
-    plotOptions: {
-      radialBar: {
-        dataLabels: {
-          value: {
-            show: false,
-          },
-          name: {
-            offsetY: 15,
-            fontSize: "44px",
-          },
-        },
-        hollow: {
-          size: "80%",
-        },
-      },
-    },
-    labels: [`${chartProgress}%`],
-    grid: {
-      padding: {
-        top: -16,
-        bottom: -20,
-      },
-    },
-  };
-
-  return (
-    <div ref={ref}>
-      <ApexChart
-        options={options}
-        series={options.series}
-        type="radialBar"
-        width={"100%"}
-        height={250}
-      />
-    </div>
-  );
-};
-
-export default ProgressChart;
-
-
---- C:\Users\hanos\sytech\components\Projects.tsx ---
-import React, { useState } from "react";
-import projectOne from "@/public/images/project-one.png";
-import projectTwo from "@/public/images/project-two.png";
-import projectThree from "@/public/images/project-three.png";
-import Image from "next/image";
-import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import SectionTitle from "./SectionTitle";
-import SectionOverlayText from "./SectionOverlayText";
-import { createPortal } from "react-dom";
-import projectDetailsOne from "@/public/images/project-details-1.png";
-import projectDetailsTwo from "@/public/images/project-details-2.png";
-import edumasterBig from "@/public/images/edumaster-big.png";
-import techshopBig from "@/public/images/techshop-big.png";
-import quickbiteBig from "@/public/images/quickbite-big.png";
-const projects = [
-  {
-    name: "TechShop",
-    description: `TechShop is a state-of-the-art e-commerce platform designed to cater to the diverse needs of both businesses and consumers, providing a seamless shopping experience powered by cutting-edge technology and innovative design. The platform's sleek design, characterized by a clean layout and easy navigation, ensures that users can effortlessly browse through products, categories, and deals. TechShop offers a comprehensive product catalog management system, allowing businesses to showcase their products with rich media, detailed descriptions, and customer reviews. The checkout process on TechShop is designed to be smooth and hassle-free, minimizing cart abandonment rates and enhancing customer satisfaction. The platform integrates with multiple payment gateways, offering a variety of payment options, including credit/debit cards, digital wallets, and bank transfers. TechShop leverages advanced data analytics to offer personalized shopping experiences tailored to individual preferences and behaviors. The backend of TechShop is built using modern technologies, ensuring scalability, reliability, and security. The platform is compliant with international data protection regulations, employing industry-standard encryption and security protocols to safeguard user information. Looking ahead, TechShop aims to expand its reach and continue innovating to meet the evolving needs of the e-commerce landscape, with plans to integrate augmented reality for virtual try-ons and expand its global logistics network.`,
-    tags: ["design", "frontend", "backend"],
-    category: "E-commerce Platform",
-    image: projectOne,
-    bigImg: techshopBig,
-  },
-  {
-    name: "Edumaster",
-    description: `Edumaster is a comprehensive online learning platform that empowers students and educators alike to explore new horizons in education. The platform offers a rich array of courses and educational resources that span multiple disciplines and skill levels. Edumaster's innovative approach to course delivery emphasizes engagement and interactivity, leveraging multimedia elements, including videos, animations, quizzes, and interactive exercises, to create immersive learning experiences. Edumaster offers personalized learning journeys tailored to individual goals, preferences, and learning styles. The platform adapts to the pace and progress of each student, providing targeted recommendations and feedback that support continuous improvement and mastery. The platform also offers a comprehensive suite of features for educators, including course authoring tools, analytics dashboards, and communication channels. Edumaster fosters a vibrant community of learners and educators who collaborate and connect through the platform. Discussion forums, peer reviews, group projects, and live sessions create opportunities for meaningful interaction and knowledge exchange. The platform is optimized for accessibility, offering features such as closed captioning, screen reader compatibility, and multilingual support. Looking to the future, Edumaster is poised to lead the way in shaping the future of education, with plans to incorporate cutting-edge technologies such as virtual reality and artificial intelligence.`,
-    tags: ["design", "frontend", "backend"],
-    category: "Online Learning Platform",
-    image: projectTwo,
-    bigImg: edumasterBig,
-  },
-  {
-    name: "QuickBite",
-    description: `QuickBite is a groundbreaking mobile app that redefines the food delivery experience, offering users a seamless, user-friendly, and innovative way to satisfy their cravings with just a few taps on their smartphones. The app's intuitive interface allows users to browse a vast selection of restaurants and cuisines, from local favorites to international delicacies. QuickBite offers real-time order tracking, allowing users to monitor the status of their delivery from preparation to arrival. QuickBite has established a highly efficient delivery network, partnering with a wide range of restaurants and local eateries to offer users an extensive selection of options. The app's sophisticated logistics system optimizes delivery routes and dispatches, ensuring that orders are fulfilled promptly and accurately. QuickBite prioritizes user-centric design, making the app accessible and easy to use for everyone. The app's clean and modern interface is complemented by seamless navigation and intuitive controls. To further enhance customer satisfaction and engagement, QuickBite offers a variety of promotions and loyalty programs. Users can take advantage of exclusive discounts, special offers, and rewards that incentivize repeat orders and foster brand loyalty. QuickBite is committed to ensuring the highest standards of quality and sustainability in its operations. The app collaborates with restaurants to ensure that food is delivered fresh and in an eco-friendly manner.`,
-    tags: ["ui/ux design", "mobile development"],
-    category: "Food Delivery Mobile App",
-    image: projectThree,
-    bigImg: quickbiteBig,
-  },
-];
-
-const Projects = () => {
-  const [currentProject, setCurrentProject] = useState(projects[0]);
-  useGSAP(() => {
-    gsap.from(".single-project", {
-      opacity: 0,
-      stagger: 0.2,
-      scale: 0,
-      scrollTrigger: {
-        trigger: ".project-list",
-        start: "top 60%",
-        end: "top 20%",
-      },
-    });
-  });
-  return (
-    <>
-      <section id="projects" className="projects section position-relative">
-        <SectionOverlayText text="projects" />
-        <SectionTitle subtitle="Some of my most recent projects" title="My Featured Projects" />
-        <div className="row pb-60 project-list g-4">
-          {projects.map((project) => (
-            <div key={project.name} onClick={() => setCurrentProject(project)} className="col-sm-6 col-lg-4" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              <div className="single-project">
-                <div className="project-card">
-                  <div className="card-inner"></div>
-                  <Image src={project.image} className="img-fluid w-100 card-img h-100" alt="" />
-                  <div className="card-arrow">
-                    <div className="arrow-inner">
-                      <i className="ph ph-arrow-up-right"></i>
-                    </div>
-                  </div>
-                </div>
-                <div className="project-info">
-                  <h2>{project.name}</h2>
-                  <p>{project.category}</p>
-                  <div className="tags d-flex align-items-center gap-1">
-                    {project.tags.map((tag, i) => (
-                      <React.Fragment key={tag}>
-                        <span>{tag}</span> {i < project.tags.length - 1 && "-"}
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="col-12">
-          <Link href="#how_i_work" className="d-flex gap-4 align-items-center next-chapter">
-            <span className="page">07/11</span>
-            <span className="next">Next Chapter</span>
-            <i className="ph ph-arrow-elbow-right-down"></i>
-          </Link>
-        </div>
-      </section>
-      {createPortal(
-        <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog modal-fullscreen">
-            <div className="modal-content">
-              <div className="modal-body">
-                <button type="button" className="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close">
-                  <i className="ph ph-x"></i>
-                </button>
-                <Image src={currentProject.bigImg} className="w-100 img-fluid project-details-img rounded-3 mb-3 mb-xl-4" alt="" />
-                <div className="row gx-4 gy-4 gy-md-0">
-                  <div className="col-md-7 col-xl-9">
-                    <h1 className="mb-3 fw-semibold" id="project-title">
-                      {currentProject.name}
-                    </h1>
-                    <p className="mb-4 mb-xl-5">Designed and developed a fully functional e-commerce platform for a startup specializing in handcrafted goods. The project involved creating a visually appealing user interface, and ensuring an overall smooth shopping experience.</p>
-                    <h2 className="mb-3 fw-semibold">Project Goals</h2>
-                    <p className="mb-4">Developed a website for a non-profit organization aimed at raising awareness and funds for environmental conservation. The site features educational content, event management, and donation capabilities.</p>
-                    <ul className="list-plus">
-                      <li>Create a visually cohesive blog that aligns with the influencer&apos;s personal brand.</li>
-                      <li>Implement a secure and reliable payment gateway.</li>
-                      <li>Ensure the website is responsive and performs well across all devices.</li>
-                      <li>Optimize the site for search engines to increase organic traffic.</li>
-                    </ul>
-                  </div>
-                  <div className="col-md-5 col-xl-3">
-                    <div className="right-bar">
-                      <div>
-                        <p className="mb-1">Client</p>
-                        <h6 className="fw-semibold">Mashroom</h6>
-                      </div>
-                      <div>
-                        <p className="mb-1">Category</p>
-                        <h6 className="fw-semibold">User Experience</h6>
-                      </div>
-                      <div>
-                        <p className="mb-1">Start Date</p>
-                        <h6 className="fw-semibold">02/08/2023</h6>
-                      </div>
-                      <div>
-                        <p className="mb-1">End Date</p>
-                        <h6 className="fw-semibold">01/03/2024</h6>
-                      </div>
-                      <div>
-                        <p className="mb-1">Tools</p>
-                        <h6 className="fw-semibold">Adobe Xd, Figma</h6>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="fw-medium mb-2">Challenges and Solutions</h3>
-                  <p className="mb-4">
-                    One of the main challenges was optimizing the website&apos;s load time while maintaining high-quality images of the products. To address this, I implemented lazy loading for images and used optimized image formats, resulting in a faster, smoother browsing experience without
-                    compromising visual quality.
-                  </p>
-                  <div className="row gx-4 gy-4 gy-md-0 mb-4 mb-xl-5 pb-3">
-                    <div className="col-md-6">
-                      <Image src={projectDetailsOne} className="w-100 img-fluid rounded-3" alt="" />
-                    </div>
-                    <div className="col-md-6">
-                      <Image src={projectDetailsTwo} className="w-100 img-fluid rounded-3" alt="" />
-                    </div>
-                  </div>
-                  <h4 className="mb-3">Key Features:</h4>
-                  <p className="mb-4">Developed a website for a non-profit organization aimed at raising awareness and funds for environmental conservation. The site features educational content, event management, and donation capabilities.</p>
-                  <ul className="bullet mb-4 pb-3 mb-xl-5">
-                    <li>Custom Blog Layouts: Designed multiple blog layouts to cater to different content types, including image-heavy posts and long-form articles.</li>
-                    <li>Content Management System: Integrated WordPress for easy content updates and management, allowing the influencer to focus on creating content without technical hurdles.</li>
-                    <li>Responsive Design: Ensured the blog is fully responsive, providing a seamless experience on smartphones, tablets, and desktops.</li>
-                    <li>SEO and Social Media Integration: Implemented SEO best practices and integrated social media sharing buttons, making it easy for readers to share posts across platforms.</li>
-                    <li>Newsletter Signup: Added a newsletter signup form to help the influencer grow their email list and maintain engagement with followers.</li>
-                  </ul>
-                  <div className="outcome">
-                    <h5 className="mb-3">Outcome:</h5>
-                    <p>The blog quickly gained traction, attracting a growing audience and enhancing the influencer’s online presence. The user-friendly design and seamless social media integration led to higher engagement rates and increased content sharing.</p>
-                  </div>
-                  <form className="contact-form full-width">
-                    <h3 className="mb-3">Have project in mind? Let&apos;s discuss</h3>
-                    <p className="mb-4 mb-xl-5 pb-2">Get in touch with us to see how we can help you with your project</p>
-                    <div className="row g-4 g-xl-5">
-                      <div className="col-sm-6 contact-input">
-                        <label htmlFor="name">Name</label>
-                        <input type="text" id="name" name="user_name" placeholder="Your name" required />
-                      </div>
-                      <div className="col-sm-6 contact-input">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" name="user_email" placeholder="Your e-mail" required />
-                      </div>
-                      <div className="col-12 contact-input">
-                        <label htmlFor="service">Service</label>
-                        <input name="service" placeholder="Your Serivice" />
-                      </div>
-                      <div className="col-12 contact-input">
-                        <label htmlFor="message">Message</label>
-                        <textarea name="message" placeholder="Your message"></textarea>
-                      </div>
-                      <div className="col-12">
-                        <button type="submit" className="submit-btn position-relative">
-                          <div className="waves-top-md">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                          </div>
-                          submit
-                          <div className="waves-bottom-md">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                          </div>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body,
-      )}
-    </>
-  );
-};
-
-export default Projects;
 
 
 --- C:\Users\hanos\sytech\components\SectionOverlayText.tsx ---
@@ -2858,91 +1757,2532 @@ const Services = () => {
 export default Services;
 
 
---- C:\Users\hanos\sytech\hooks\useIntersectionObserver.ts ---
-// hooks/useIntersectionObserver.ts
-import { useEffect, useState, useRef, RefObject } from "react";
+--- C:\Users\hanos\sytech\public\scss\bootstrap.scss ---
+$black: #000000;
+$yellow: #ffdb67;
+$white: #ffffff;
 
-interface IntersectionObserverOptions {
-  root?: Element | null;
-  rootMargin?: string;
-  threshold?: number | number[];
-}
+$btn-border-radius: 50px;
+$btn-padding-x: 16px;
+$btn-padding-y: 10px;
+$btn-font-size: 14px;
+$btn-font-weight: 500;
 
-function useIntersectionObserver(options?: IntersectionObserverOptions): [RefObject<HTMLDivElement>, boolean] {
-  const [isIntersecting, setIsIntersecting] = useState<boolean>(false);
-  const ref = useRef<HTMLDivElement>(null);
+$primary: $yellow;
+$secondary: #000000;
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsIntersecting(entry.isIntersecting);
-    }, options);
+// gutters
 
-    if (ref.current) {
-      observer.observe(ref.current);
+$spacer: 1rem;
+$gutters: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4.5,
+  7: $spacer * 6,
+  8: $spacer * 7.5,
+  9: $spacer * 9,
+  10: $spacer * 10,
+);
+
+/* libs */
+@import "bootstrap/scss/bootstrap";
+
+
+--- C:\Users\hanos\sytech\public\scss\mixins.scss ---
+// mixins
+
+@mixin min-width($breakpoint) {
+  $breakpoints: map-get($grid-breakpoints, $breakpoint);
+
+  @if $breakpoints {
+    @media (min-width: $breakpoints) {
+      @content;
     }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
-  }, [options]);
-
-  return [ref, isIntersecting];
+  } @else {
+    @warn "No valid breakpoint found for `#{$breakpoint}`. Valid breakpoints are: #{map-keys($grid-breakpoints)}.";
+  }
 }
 
-export default useIntersectionObserver;
 
+--- C:\Users\hanos\sytech\public\scss\styles.scss ---
+:root {
+  --black: 0, 0, 0;
+  --primary: 255, 219, 103;
+  --white: 255, 255, 255;
+}
 
---- C:\Users\hanos\sytech\public\blogdata.ts ---
-// app/public/blogdata.ts
-import { Blog } from "@/app/types";
-import heroImage from "@/public/images/hero.png"; // Adjust the path as necessary
+@import url("https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap");
 
-export const blogData: Blog[] = [
-  {
-    id: 1,
-    title: "Understanding TypeScript in Next.js",
-    date: "2024-04-20",
-    time: "8 min",
-    desc: "An in-depth look at integrating TypeScript with Next.js for better type safety and developer experience.",
-    tags: ["TypeScript", "Next.js", "JavaScript"],
-    image: heroImage, // Ensure this is correctly imported as StaticImageData
-    author: "Jenny Wilson",
-    tableOfContents: [
-      { id: "1", title: "Introduction" },
-      { id: "2", title: "Setting Up TypeScript" },
-      { id: "3", title: "Benefits of Type Safety" },
-      { id: "4", title: "Conclusion" },
-    ],
-    sections: {
-      understanding: {
-        title: "Understanding TypeScript",
-        content: "Content for understanding TypeScript...",
-      },
-      crafting: {
-        title: "Crafting with TypeScript",
-        content: "Content for crafting with TypeScript...",
-      },
-      showcasing: {
-        title: "Showcasing Projects",
-        content: "Content for showcasing projects...",
-      },
-      conclusion: {
-        title: "Conclusion",
-        content: "Final thoughts on TypeScript in Next.js...",
-      },
-    },
-    quote: "TypeScript adds type safety to JavaScript, enhancing developer productivity.",
-    additionalContent: "Additional resources and links.",
-  },
-  // Add more blog objects as needed
-];
+@import "bootstrap.scss";
+@import "phosphor-icons/src/css/icons.css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/scrollbar";
+@import "mixins.scss";
+@import "../../node_modules/react-modal-video/scss/modal-video.scss";
 
+// Reset
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: rgb(var(--primary));
+  color: rgb(var(--black));
+  font-size: 16px;
+  overflow-x: hidden;
+}
+a {
+  text-decoration: none;
+  color: rgb(var(--black));
+}
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgb(var(--black));
+  margin-bottom: 0;
+}
+@media screen and (min-width: 1400px) {
+  .btn {
+    padding: 12px 24px;
+    font-size: 18px;
+  }
+}
+.container-fluid {
+  position: relative;
+  z-index: 2;
+}
+@media screen and (min-width: 1750px) {
+  .container-fluid {
+    max-width: 1740px;
+  }
+  .navigation {
+    left: calc((100% - 1680px) / 2 + 1290px);
+    width: 360px;
+  }
+}
 
---- C:\Users\hanos\sytech\utils\formatString.ts ---
-export const formatString = (str: string) => {
-  return str.split(" ").join("-").toLowerCase();
-};
+/* HTML: <div class="loader"></div> */
+.loader-container {
+  height: 100vh;
+  .loader {
+    --R: 30px;
+    --g1: #514b82 96%, #0000;
+    --g2: #eeeeee 96%, #0000;
+    width: calc(2 * var(--R));
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    mask: linear-gradient(#000 0 0);
+    -webkit-mask: linear-gradient(#000 0 0);
+    animation: l30 2s infinite linear;
+  }
+  .loader::before,
+  .loader::after {
+    content: "";
+    grid-area: 1/1;
+    width: 50%;
+    background:
+      radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
+      radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
+      radial-gradient(farthest-side, var(--g2)) calc(var(--R) + 0.5 * var(--R) - var(--R)) calc(var(--R) - 0.866 * var(--R) - var(--R)),
+      radial-gradient(farthest-side, var(--g1)) 0 calc(-1 * var(--R)),
+      radial-gradient(farthest-side, var(--g2)) calc(var(--R) - 0.5 * var(--R) - var(--R)) calc(var(--R) - 0.866 * var(--R) - var(--R)),
+      radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
+      radial-gradient(farthest-side, var(--g2)) calc(-1 * var(--R)) 0,
+      radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866 * var(--R) - var(--R)) calc(var(--R) + 0.5 * var(--R) - var(--R));
+    background-size: calc(2 * var(--R)) calc(2 * var(--R));
+    background-repeat: no-repeat;
+  }
+  .loader::after {
+    transform: rotate(180deg);
+    transform-origin: right;
+  }
+
+  @keyframes l30 {
+    100% {
+      transform: rotate(-1turn);
+    }
+  }
+}
+
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 300;
+  transform: translateZ(0);
+
+  &:before {
+    content: "";
+    top: -10rem;
+    left: -10rem;
+    width: calc(100% + 20rem);
+    height: calc(100% + 20rem);
+    z-index: 301;
+    position: fixed;
+    background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png);
+    opacity: 0.12;
+    pointer-events: none;
+    -webkit-animation: noise 1s steps(2) infinite;
+    animation: noise 1s steps(2) infinite;
+  }
+
+  @-webkit-keyframes noise {
+    to {
+      transform: translate3d(-7rem, 0, 0);
+    }
+  }
+
+  @keyframes noise {
+    0% {
+      transform: translate3d(0, 9rem, 0);
+    }
+    10% {
+      transform: translate3d(-1rem, -4rem, 0);
+    }
+    20% {
+      transform: translate3d(-8rem, 2rem, 0);
+    }
+    30% {
+      transform: translate3d(9rem, -9rem, 0);
+    }
+    40% {
+      transform: translate3d(-2rem, 7rem, 0);
+    }
+    50% {
+      transform: translate3d(-9rem, -4rem, 0);
+    }
+    60% {
+      transform: translate3d(2rem, 6rem, 0);
+    }
+    70% {
+      transform: translate3d(7rem, -8rem, 0);
+    }
+    80% {
+      transform: translate3d(-9rem, 1rem, 0);
+    }
+    90% {
+      transform: translate3d(6rem, -5rem, 0);
+    }
+    to {
+      transform: translate3d(-7rem, 0, 0);
+    }
+  }
+}
+
+.header {
+  padding: 14px 0;
+  width: 100%;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  backdrop-filter: blur(3px);
+  position: fixed;
+  img {
+    max-width: 100%;
+  }
+  .nav-icon {
+    width: 36px;
+    height: 22px;
+    position: relative;
+    transform: rotate(0deg);
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    z-index: 15;
+    span {
+      display: block;
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      background: rgb(var(--black));
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: 0.25s ease-in-out;
+    }
+  }
+  .nav-icon span:nth-child(1) {
+    top: 0px;
+  }
+
+  .nav-icon span:nth-child(2) {
+    top: 10px;
+  }
+
+  .nav-icon span:nth-child(3) {
+    top: 20px;
+  }
+
+  .nav-icon.open span:nth-child(1) {
+    top: 10px;
+    transform: rotate(135deg);
+    background-color: rgb(var(--white));
+  }
+
+  .nav-icon.open span:nth-child(2) {
+    opacity: 0;
+    left: -60px;
+  }
+
+  .nav-icon.open span:nth-child(3) {
+    top: 10px;
+    transform: rotate(-135deg);
+    background-color: rgb(var(--white));
+  }
+}
+
+// navigation
+.navigation {
+  position: absolute;
+  --height: 0;
+  @media (max-width: 1200px) {
+    &:dir(ltr) {
+      transform: translateX(-100%);
+      left: 0;
+    }
+    &:dir(rtl) {
+      transform: translateX(100%);
+      right: 0;
+    }
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    max-width: 300px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+  }
+  &.opened {
+    @media (max-width: 1200px) {
+      transform: translateX(0);
+      position: fixed;
+      background-color: rgb(var(--primary));
+    }
+  }
+  @include min-width(xl) {
+    position: fixed;
+    top: 100px;
+    right: 0;
+    &:dir(rtl) {
+      left: 0;
+      right: auto;
+    }
+    display: block;
+    transform: translateX(0);
+  }
+  z-index: 100;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 100px;
+    @include min-width(xl) {
+      top: 0;
+    }
+    &:dir(ltr) {
+      left: 0;
+    }
+    &:dir(rtl) {
+      right: 0;
+    }
+    width: 2px;
+    height: var(--height);
+    background: rgb(var(--black));
+    opacity: 0.3;
+  }
+  ul {
+    list-style: none;
+    @include min-width(xl) {
+      width: 300px;
+    }
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    li > a {
+      color: rgb(var(--black));
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 30px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      font-size: 20px;
+      font-weight: 500;
+      &:dir(ltr) {
+        padding-left: 34px;
+        border-left: 2px solid transparent;
+      }
+      &:dir(rtl) {
+        padding-right: 34px;
+        border-right: 2px solid transparent;
+      }
+      transition-duration: 300ms;
+
+      display: block;
+      position: relative;
+      span {
+        font-size: 16px;
+      }
+      &::after {
+        transition-duration: 600ms;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: rgb(var(--black));
+        opacity: 0.15;
+        &:dir(rtl) {
+          left: auto;
+          right: 0;
+        }
+      }
+      &:hover {
+        &::after {
+          animation: grow 600ms ease-in-out;
+          width: 100%;
+        }
+        border-left: 2px solid rgb(var(--black));
+        &:dir(rtl) {
+          border-left: none;
+          border-right: 2px solid rgb(var(--black));
+        }
+      }
+
+      &.active {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          animation: grow 600ms ease-in-out;
+          height: 100%;
+          background: rgb(var(--black));
+          opacity: 0.15;
+          &:dir(rtl) {
+            left: auto;
+            right: 0;
+          }
+        }
+        border-left: 2px solid rgb(var(--black));
+        &:dir(rtl) {
+          border-left: none;
+          border-right: 2px solid rgb(var(--black));
+        }
+      }
+    }
+  }
+  .contact {
+    padding-top: 20px;
+    &:dir(ltr) {
+      padding-left: 34px;
+    }
+    &:dir(rtl) {
+      padding-right: 34px;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    a {
+      font-size: 18px;
+      color: rgb(var(--black));
+    }
+  }
+}
+
+.nav-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 12;
+  opacity: 0;
+  transition-duration: 500ms;
+  transform: translateX(100%);
+}
+
+.navigation.opened + .nav-overlay,
+.navigation-left-bar.opened + .nav-overlay,
+.navigation-sticky.opened + .nav-overlay,
+.navigation-topbar.opened + .nav-overlay {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+// hero section
+.hero {
+  min-height: 100vh;
+  &.hero-left-bar {
+    min-height: 85vh;
+    .next-chapter {
+      @include min-width(lg) {
+        padding-top: 80px;
+      }
+      padding-bottom: 40px;
+    }
+  }
+  padding-top: 100px;
+  @include min-width(xxl) {
+    padding-top: 200px;
+  }
+  height: auto;
+  .row {
+    height: 100%;
+    &:dir(rtl) {
+      .hero-content {
+        text-align: right;
+      }
+    }
+    .hero-content {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+    h4 {
+      font-size: 22px;
+      @include min-width(lg) {
+        font-size: 40px;
+      }
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    h1 {
+      font-size: 40px;
+      margin-bottom: 12px;
+      @include min-width(md) {
+        margin-bottom: 20px;
+        font-size: 44px;
+      }
+      @include min-width(xxl) {
+        font-size: 66px;
+      }
+      font-weight: 500;
+      letter-spacing: -1px;
+    }
+    p {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -1px;
+      margin-bottom: 40px;
+    }
+    .img-wrapper {
+      max-height: 416px;
+      max-width: 416px;
+      position: relative;
+      &:hover {
+        .waves-top,
+        .waves-bottom {
+          opacity: 0;
+        }
+      }
+      .hero-img {
+        border: 2px solid rgb(var(--black));
+      }
+    }
+  }
+  .next-chapter {
+    padding-top: 30px;
+    @include min-width(lg) {
+      padding-top: 160px;
+    }
+  }
+}
+
+// about section
+
+.about {
+  .section-title-overlay-text {
+    top: 80px;
+  }
+  position: relative;
+  padding-top: 60px;
+  @include min-width(xl) {
+    padding-top: 120px;
+  }
+  padding-bottom: 40px;
+  z-index: 3;
+  .about-desc {
+    h2 {
+      font-size: 32px;
+      @include min-width(md) {
+        font-size: 40px;
+      }
+      margin-bottom: 28px;
+    }
+    p.desc {
+      @include min-width(xl) {
+        font-size: 20px;
+      }
+      margin-bottom: 40px;
+    }
+  }
+  .about-contact {
+    p {
+      font-size: 18px;
+      font-weight: 500;
+    }
+    a,
+    span {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+  .experience-card {
+    border: 1px solid rgb(var(--black));
+    width: 100%;
+    padding: 40px;
+    text-align: center;
+    transition-duration: 500ms;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(var(--primary));
+    position: relative;
+    z-index: 3;
+    &::before {
+      content: "";
+      position: absolute;
+      transition-duration: 500ms;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgb(var(--black));
+      transform: rotate(2.5deg);
+      z-index: -1;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      transition-duration: 500ms;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgb(var(--black));
+      transform: rotate(-2.5deg);
+      z-index: -1;
+    }
+    &:hover {
+      &::before,
+      &::after {
+        transform: rotate(0);
+        opacity: 0;
+      }
+      .numbers .number-outline-one,
+      .numbers .number-outline-two {
+        transform: rotate(0);
+        opacity: 0;
+      }
+    }
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+    .numbers {
+      z-index: 1;
+      position: relative;
+      span {
+        font-size: 200px;
+        font-weight: 700;
+        line-height: 120%;
+      }
+      .number-outline-one,
+      .number-outline-two {
+        position: absolute;
+        top: 0;
+        -webkit-text-stroke: 1px #000;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        justify-content: center;
+        transition-duration: 500ms;
+      }
+      .number-outline-one {
+        transform: rotate(6deg);
+      }
+      .number-outline-two {
+        transform: rotate(-6deg);
+      }
+    }
+  }
+  .next-chapter {
+    padding-top: 100px;
+  }
+}
+
+/* services section */
+.services {
+  margin-top: 60px;
+  @media (min-width: 992px) {
+    margin-top: 60px;
+  }
+  padding-bottom: 40px;
+  .section-title {
+    padding-top: 60px;
+  }
+  .service-swiper {
+    padding-bottom: 50px;
+  }
+  .swiper-pagination {
+    .swiper-pagination-bullet {
+      width: 12px;
+      height: 12px;
+      opacity: 0.5;
+      background-color: #fff;
+    }
+    .swiper-pagination-bullet-active {
+      opacity: 1;
+    }
+  }
+  .next-chapter {
+    margin-top: 50px;
+    @media (min-width: 992px) {
+      margin-top: 80px;
+    }
+  }
+  .service-card {
+    position: relative;
+    padding: 16px;
+    @include min-width(sm) {
+      padding: 32px;
+    }
+    @media (min-width: 1200px) {
+      padding: 50px;
+    }
+    border: 1px solid rgb(var(--black));
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(var(--primary));
+      z-index: 1;
+    }
+    .number-circle {
+      .waves-top-sm,
+      .waves-bottom-sm {
+        opacity: 0;
+      }
+    }
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      transition-duration: 500ms;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      border: 1px solid rgb(var(--black));
+    }
+    &:hover {
+      &::before {
+        transform: rotate(3.5deg);
+        opacity: 1;
+      }
+      &::after {
+        transform: rotate(-3.5deg);
+        opacity: 1;
+      }
+      .number-circle {
+        .waves-top-sm,
+        .waves-bottom-sm {
+          opacity: 1;
+        }
+      }
+    }
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+    .number-circle {
+      margin-bottom: 40px;
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background-color: rgb(var(--primary));
+      border: 1px solid rgb(var(--black));
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      h2 {
+        font-size: 32px;
+        font-weight: 500;
+      }
+    }
+    h4 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      display: inline-block;
+      border-bottom: 2px solid rgb(var(--black));
+    }
+    .service-list {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgb(var(--black));
+        i {
+          color: #343330;
+        }
+      }
+    }
+  }
+}
+
+/* attainments */
+.attainments {
+  padding: 60px 0;
+  overflow-x: hidden;
+  @media (min-width: 992px) {
+    padding: 60px 0;
+  }
+  .section-title-overlay-text {
+    top: 60px;
+    &:dir(ltr) {
+      left: 6%;
+    }
+    &:dir(ltr) {
+      right: 6%;
+    }
+  }
+  .section-title-sm {
+    .top {
+      &:dir(ltr) {
+        padding: 20px 0 20px 32px;
+        border-left: 2px solid rgb(var(--black));
+      }
+      &:dir(rtl) {
+        padding: 20px 32px 20px 0;
+        border-right: 2px solid rgb(var(--black));
+      }
+      h2 {
+        margin-bottom: 12px;
+        font-size: 28px;
+        @include min-width(xxl) {
+          font-size: 40px;
+        }
+        font-weight: 500;
+      }
+      span {
+        @include min-width(xxl) {
+          font-size: 20px;
+        }
+      }
+    }
+    .serial {
+      color: rgba($color: #000000, $alpha: 0.5);
+      @include min-width(lg) {
+        transform: rotate(-90deg) translate(-24px, -8px);
+      }
+      transform: rotate(-90deg) translateX(-8px);
+      font-size: 28px;
+      @include min-width(lg) {
+        font-size: 40px;
+      }
+      font-weight: 500;
+      display: inline-block;
+      margin-bottom: 40px;
+    }
+  }
+
+  .skill {
+    .progress {
+      height: 3px;
+      margin-top: 8px;
+      background-color: rgb(var(--white));
+      .progress-bar {
+        background-color: rgb(var(--black));
+        transition-duration: 4s;
+        width: 0;
+        animation-timing-function: ease-in-out;
+      }
+    }
+  }
+
+  .next-chapter {
+    padding-top: 80px;
+  }
+}
+
+// components
+
+.next-chapter {
+  &:hover {
+    i {
+      animation: updown 0.5s linear alternate-reverse infinite;
+    }
+  }
+  .page {
+    color: rgba($color: #000000, $alpha: 0.5);
+    letter-spacing: -1px;
+  }
+  .next {
+    color: rgb(var(--black));
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -1px;
+  }
+  i {
+    font-size: 24px;
+    display: block;
+    color: rgb(var(--black));
+    transform: translateY(5px);
+    align-self: flex-end;
+    transition-duration: 500ms;
+  }
+}
+
+// section title
+.section-title {
+  padding-left: 32px;
+  padding-top: 24px;
+  position: relative;
+  @include min-width(xl) {
+    padding-top: 36px;
+    padding-left: 60px;
+  }
+  padding-bottom: 20px;
+  --height: 0;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: var(--height);
+    width: 2px;
+    background-color: rgb(var(--black));
+  }
+  &:dir(ltr) {
+    &::before {
+      left: 0;
+    }
+  }
+  &:dir(rtl) {
+    padding-left: 0;
+    padding-right: 32px;
+    @include min-width(xl) {
+      padding-left: 0;
+      padding-right: 60px;
+    }
+    &::before {
+      right: 0;
+    }
+  }
+  h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+    @include min-width(xl) {
+      font-size: 24px;
+    }
+    font-weight: 500;
+  }
+  h2 {
+    font-size: 22px;
+    @include min-width(sm) {
+      font-size: 28px;
+    }
+    @include min-width(sm) {
+      font-size: 40px;
+    }
+    @include min-width(xl) {
+      font-size: 55px;
+    }
+    @include min-width(xxl) {
+      font-size: 80px;
+    }
+    font-weight: 600;
+  }
+  margin-bottom: 42px;
+}
+
+.section-title-overlay-text {
+  color: rgb(var(--black));
+  font-family: Poppins;
+  font-size: 35px;
+  @include min-width(sm) {
+    font-size: 80px;
+  }
+  @include min-width(lg) {
+    font-size: 100px;
+  }
+  @include min-width(xxl) {
+    font-size: 120px;
+  }
+  @media (min-width: 1800px) {
+    font-size: 160px;
+  }
+  font-style: normal;
+  font-weight: 800;
+  line-height: 120%; /* 240px */
+  text-transform: uppercase;
+  opacity: 0.05;
+  position: absolute;
+  text-align: left;
+  top: 0;
+  left: 0;
+  &:dir(rtl) {
+    left: auto;
+    right: 0;
+  }
+}
+
+/* waves */
+.waves-top {
+  transition-duration: 300ms;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    border-top: 1px solid rgb(var(--black));
+    animation: btnWavesTop 2.1s linear infinite;
+    &:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+    &:nth-child(3) {
+      animation-delay: 1s;
+    }
+    &:nth-child(4) {
+      animation-delay: 1.5s;
+    }
+  }
+}
+.waves-bottom {
+  @extend .waves-top;
+  span {
+    border-top: none;
+    border-bottom: 1px solid rgb(var(--black));
+    animation: btnWavesBottom 2.1s linear infinite;
+  }
+}
+
+.waves-top-md {
+  @extend .waves-top;
+  span {
+    border-bottom: none;
+    border-top: 1px solid rgb(var(--black));
+    animation: btnWavesTopMd 2.1s linear infinite;
+  }
+}
+
+.waves-bottom-md {
+  @extend .waves-top;
+  span {
+    border-top: none;
+    border-bottom: 1px solid rgb(var(--black));
+    animation: btnWavesBottomMd 2.1s linear infinite;
+  }
+}
+
+.waves-top-sm {
+  @extend .waves-top;
+  span {
+    animation: btnWavesSmTop 3.2s linear infinite;
+    &:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+    &:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+    &:nth-child(4) {
+      animation-delay: 2.4s;
+    }
+  }
+}
+.waves-bottom-sm {
+  @extend .waves-bottom;
+  span {
+    animation: btnWavesSmBottom 3.2s linear infinite;
+    &:nth-child(2) {
+      animation-delay: 0.8s;
+    }
+    &:nth-child(3) {
+      animation-delay: 1.6s;
+    }
+    &:nth-child(4) {
+      animation-delay: 2.4s;
+    }
+  }
+}
+
+/* utilities */
+.pb-120 {
+  padding-bottom: 60px;
+  @media (min-width: 1200px) {
+    padding-bottom: 120px;
+  }
+}
+.pb-60 {
+  padding-bottom: 30px;
+  @media (min-width: 1200px) {
+    padding-bottom: 60px;
+  }
+}
+.select-none {
+  user-select: none;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+// animations
+@keyframes updown {
+  0% {
+    transform: translateY(12px);
+  }
+
+  100% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes btnWavesTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-4rem);
+    opacity: 0;
+  }
+}
+
+@keyframes btnWavesBottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(4rem);
+    opacity: 0;
+  }
+}
+
+@keyframes btnWavesTopMd {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes btnWavesBottomMd {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(2rem);
+    opacity: 0;
+  }
+}
+
+@keyframes btnWavesSmTop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+}
+
+@keyframes btnWavesSmBottom {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(1rem);
+    opacity: 0;
+  }
+}
+
+@keyframes grow {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.left-bar {
+  display: none;
+  @include min-width(xl) {
+    display: flex;
+  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  padding: 20px;
+  border-right: 1px solid rgba($color: #000000, $alpha: 0.1);
+  background-color: rgb(var(--primary));
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+  ul {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    li {
+      a {
+        font-size: 1.4rem;
+        width: 40px;
+        height: 40px;
+        border: 1px solid rgba($color: #000000, $alpha: 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition-duration: 500ms;
+        &:hover {
+          background-color: rgb(var(--black));
+          color: rgb(var(--white));
+        }
+      }
+    }
+  }
+}
+
+// email icon
+.email-icon {
+  display: none;
+  @include min-width(xl) {
+    display: flex;
+  }
+  width: 64px;
+  height: 64px;
+
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background-color: rgb(var(--primary));
+  position: fixed;
+  top: 0;
+  z-index: 102;
+  &:dir(ltr) {
+    right: 0;
+  }
+  &:dir(rtl) {
+    left: 0;
+  }
+  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
+  border-left: 1px solid rgba($color: #000000, $alpha: 0.1);
+}
+@keyframes goDown {
+  0% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+// navigation
+.navigation-left-bar {
+  position: sticky;
+  background-color: rgb(var(--primary));
+  --height: 0;
+  border-top: 1px solid rgba($color: #000000, $alpha: 0.1);
+  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
+  .scroll-down {
+    .scroll-anim {
+      height: 30px;
+      width: 20px;
+      border: 2px solid rgba($color: #000000, $alpha: 0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      span {
+        display: block;
+        width: 3px;
+        background-color: rgba($color: #000000, $alpha: 0.3);
+        height: 6px;
+        animation: goDown 2.5s ease-out infinite;
+      }
+    }
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    @include min-width(xxl) {
+      padding: 12px 32px;
+    }
+    p {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    &:dir(ltr) {
+      transform: translateX(-120%);
+      left: 0;
+    }
+    &:dir(rtl) {
+      transform: translateX(120%);
+      right: 0;
+    }
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    max-width: 300px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    img {
+      margin-bottom: 20px;
+    }
+  }
+  &.opened {
+    @media (max-width: 1200px) {
+      transform: translateX(0);
+      position: fixed;
+      ul {
+        display: flex;
+        flex-direction: column;
+      }
+      background-color: rgb(var(--primary));
+    }
+  }
+  @include min-width(xl) {
+    position: sticky;
+    top: 0;
+    margin-left: 81px;
+    display: flex;
+    align-items: center;
+    transform: translateX(0);
+  }
+  z-index: 100;
+  ul {
+    @include min-width(xl) {
+      border-left: 1px solid rgba($color: #000000, $alpha: 0.1);
+    }
+    list-style: none;
+    padding: 12px;
+    display: flex;
+    margin: 0;
+    gap: 8px;
+    position: relative;
+    li > a {
+      color: rgb(var(--black));
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 30px;
+      padding: 5px 8px;
+      font-size: 14px;
+      @include min-width(xxl) {
+        font-size: 20px;
+        padding: 6px 12px;
+      }
+      font-weight: 500;
+      transition-duration: 300ms;
+      display: block;
+      position: relative;
+      min-width: max-content;
+      border-bottom: 2px solid transparent;
+      span {
+        font-size: 16px;
+      }
+      &::after {
+        transition-duration: 600ms;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: rgb(var(--black));
+        opacity: 0.15;
+        &:dir(rtl) {
+          left: auto;
+          right: 0;
+        }
+      }
+      &::before {
+        transition-duration: 600ms;
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background: rgb(var(--black));
+        &:dir(rtl) {
+          left: auto;
+          right: 0;
+        }
+      }
+      &:hover {
+        &::after {
+          animation: grow 600ms ease-in-out;
+          width: 100%;
+        }
+        &::before {
+          animation: grow 600ms ease-in-out;
+          width: 100%;
+        }
+      }
+
+      &.active {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          animation: grow 600ms ease-in-out;
+          height: 100%;
+          background: rgb(var(--black));
+          opacity: 0.15;
+          &:dir(rtl) {
+            left: auto;
+            right: 0;
+          }
+        }
+        &::before {
+          transition-duration: 600ms;
+          content: "";
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 2px;
+          background: rgb(var(--black));
+          &:dir(rtl) {
+            left: auto;
+            right: 0;
+          }
+        }
+      }
+    }
+  }
+  .contact {
+    padding-top: 20px;
+    &:dir(ltr) {
+      padding-left: 34px;
+    }
+    &:dir(rtl) {
+      padding-right: 34px;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    a {
+      font-size: 18px;
+      color: rgb(var(--black));
+    }
+  }
+}
+
+.navigation-sticky {
+  position: sticky;
+  background-color: rgb(var(--primary));
+  --height: 0;
+  @media (max-width: 1200px) {
+    &:dir(ltr) {
+      transform: translateX(-120%);
+      left: 0;
+    }
+    &:dir(rtl) {
+      transform: translateX(120%);
+      right: 0;
+    }
+    transition-duration: 500ms;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    position: fixed;
+    max-width: 300px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    img {
+      margin-bottom: 20px;
+    }
+  }
+  &.opened {
+    @media (max-width: 1200px) {
+      transform: translateX(0);
+      position: fixed;
+      ul {
+        display: flex;
+        flex-direction: column;
+      }
+      background-color: rgb(var(--primary));
+    }
+  }
+  @include min-width(xl) {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    justify-content: space-between;
+    transform: translateX(0);
+  }
+  z-index: 100;
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+    gap: 8px;
+    position: relative;
+    li > a {
+      color: rgb(var(--black));
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 30px;
+      padding: 5px 8px;
+      font-size: 14px;
+      @include min-width(xxl) {
+        font-size: 20px;
+        padding: 6px 12px;
+      }
+      font-weight: 500;
+      transition-duration: 300ms;
+      display: block;
+      position: relative;
+      min-width: max-content;
+      border-bottom: 2px solid transparent;
+      span {
+        font-size: 16px;
+      }
+      &::after {
+        transition-duration: 600ms;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background: rgb(var(--black));
+        opacity: 0.15;
+        &:dir(rtl) {
+          left: auto;
+          right: 0;
+        }
+      }
+      &::before {
+        transition-duration: 600ms;
+        content: "";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background: rgb(var(--black));
+        &:dir(rtl) {
+          left: auto;
+          right: 0;
+        }
+      }
+      &:hover {
+        &::after {
+          animation: grow 600ms ease-in-out;
+          width: 100%;
+        }
+        &::before {
+          animation: grow 600ms ease-in-out;
+          width: 100%;
+        }
+      }
+
+      &.active {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          animation: grow 600ms ease-in-out;
+          height: 100%;
+          background: rgb(var(--black));
+          opacity: 0.15;
+          &:dir(rtl) {
+            left: auto;
+            right: 0;
+          }
+        }
+        &::before {
+          transition-duration: 600ms;
+          content: "";
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 2px;
+          background: rgb(var(--black));
+          &:dir(rtl) {
+            left: auto;
+            right: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.bg-shape {
+  background-color: rgb(var(--primary));
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  .circles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .circles li {
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+  }
+
+  .circles li:nth-child(1) {
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+  }
+
+  .circles li:nth-child(2) {
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+  }
+
+  .circles li:nth-child(3) {
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+  }
+
+  .circles li:nth-child(4) {
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+  }
+
+  .circles li:nth-child(5) {
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+  }
+
+  .circles li:nth-child(6) {
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+  }
+
+  .circles li:nth-child(7) {
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+  }
+
+  .circles li:nth-child(8) {
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+  }
+
+  .circles li:nth-child(9) {
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+  }
+
+  .circles li:nth-child(10) {
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+  }
+}
+.bg-gradiant {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  opacity: 0.25;
+  .out-top {
+    animation: rotate 30s linear infinite;
+    transform-origin: 13px 25px;
+  }
+  .in-top {
+    animation: rotate 15s linear infinite;
+    transform-origin: 13px 25px;
+  }
+  .out-bottom {
+    animation: rotate 35s linear infinite;
+    transform-origin: 84px 93px;
+  }
+  .in-bottom {
+    animation: rotate 25s linear infinite;
+    transform-origin: 84px 93px;
+  }
+}
+.bg-traingle {
+  position: fixed;
+  background: cover;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  opacity: 0.25;
+  z-index: -2;
+}
+
+@keyframes animate {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
+  }
+
+  100% {
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#bg-snow {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  .snowflake {
+    --size: 1vw;
+    width: var(--size);
+    height: var(--size);
+    background: rgba($color: #fff, $alpha: 0.3);
+    border-radius: 50%;
+    position: absolute;
+    top: -5vh;
+  }
+
+  @keyframes snowfall {
+    0% {
+      transform: translate3d(var(--left-ini), 0, 0);
+    }
+    100% {
+      transform: translate3d(var(--left-end), 110vh, 0);
+    }
+  }
+
+  @for $i from 1 through 50 {
+    .snowflake:nth-child(#{$i}) {
+      --size: #{random(5) * 0.2}vw;
+      --left-ini: #{random(20) - 10}vw;
+      --left-end: #{random(20) - 10}vw;
+      left: #{random(100)}vw;
+      animation: snowfall #{5 + random(10)}s linear infinite;
+      animation-delay: -#{random(10)}s;
+    }
+  }
+
+  /* added small blur every 6 snowflakes*/
+  .snowflake:nth-child(6n) {
+    filter: blur(1px);
+  }
+}
+
+#background-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+#bg-video {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.1;
+  }
+}
+.header-topbar {
+  padding: 14px 0;
+  width: 100%;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  background-color: rgb(var(--primary));
+  position: fixed;
+  img {
+    max-width: 100%;
+  }
+  .nav-icon {
+    width: 30px;
+    height: 16px;
+    z-index: 15;
+    padding: 2px;
+    top: -3px;
+    position: relative;
+    transform: rotate(0deg);
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    span {
+      display: block;
+      position: absolute;
+      height: 2px;
+      width: 100%;
+      background: rgb(var(--black));
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: 0.25s ease-in-out;
+    }
+  }
+  .nav-icon span:nth-child(1) {
+    top: 0px;
+  }
+
+  .nav-icon span:nth-child(2) {
+    top: 10px;
+  }
+
+  .nav-icon span:nth-child(3) {
+    top: 20px;
+  }
+
+  .nav-icon.open span:nth-child(1) {
+    top: 10px;
+    transform: rotate(135deg);
+    background-color: rgb(var(--white));
+  }
+
+  .nav-icon.open span:nth-child(2) {
+    opacity: 0;
+    left: -60px;
+  }
+
+  .nav-icon.open span:nth-child(3) {
+    top: 10px;
+    background-color: rgb(var(--white));
+    transform: rotate(-135deg);
+  }
+}
+
+.demos {
+  max-width: 450px;
+  transform: translateX(100%);
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 120;
+  height: 100vh;
+  transition-duration: 400ms;
+  &.opened {
+    transform: translateX(0);
+  }
+  .demo-btn {
+    padding: 12px 24px;
+    border: none;
+    position: fixed;
+    z-index: 120;
+    background-color: white;
+    transform: translateX(-99%);
+    left: 0;
+    top: 38%;
+  }
+  .demo-list {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    gap: 20px;
+    background-color: $white;
+    padding: 20px;
+    a {
+      display: block;
+      background-color: rgba($color: #ffdb67, $alpha: 0.15);
+      padding: 12px;
+      border-radius: 12px;
+      transition-duration: 200ms;
+      &:hover {
+        background-color: rgba($color: #ffdb67, $alpha: 0.5);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
+      p {
+        text-align: center;
+        margin-top: 12px;
+      }
+    }
+  }
+}
+
+// modal
+.modal-dialog {
+  overflow-y: auto;
+}
+.modal-content {
+  background-color: rgba(var(--primary), 0.8);
+  .modal-body {
+    background-color: rgb(var(--primary));
+    max-width: 1296px;
+    height: 100%;
+    border-radius: 12px;
+    margin: 30px auto;
+    position: relative;
+    padding: 16px;
+    @include min-width(md) {
+      padding: 32px;
+    }
+    @include min-width(xl) {
+      padding: 48px;
+      padding-top: 120px;
+    }
+    .btn-close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      width: 24px;
+      height: 24px;
+      @include min-width(xl) {
+        right: 48px;
+        width: 36px;
+        height: 36px;
+      }
+      border-radius: 50%;
+      color: rgb(var(--white));
+      background-color: rgb(var(--black));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition-duration: 0.3s;
+      &:hover {
+        transform: rotate(180deg);
+      }
+    }
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
+      &.bullet {
+        list-style: disc;
+      }
+      @include min-width(xl) {
+        margin-bottom: 60px;
+      }
+      gap: 12px;
+      &.list-plus {
+        li {
+          position: relative;
+          &::before {
+            content: "+"; /* Unicode for plus sign */
+            position: absolute;
+            left: -20px;
+            top: 2px;
+            color: #000; /* Change color of the plus icon */
+            font-size: 20px; /* Size of the plus icon */
+            line-height: 1; /* Align vertically with text */
+          }
+        }
+      }
+    }
+    .outcome {
+      border-bottom: 1px solid rgb(var(--black));
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+      @include min-width(xl) {
+        padding-bottom: 60px;
+        margin-bottom: 60px;
+      }
+    }
+  }
+}
+
+.right-bar {
+  padding: 20px;
+  @include min-width(xl) {
+    padding: 32px;
+    gap: 24px;
+  }
+  border-radius: 12px;
+  border: 1px solid rgba(var(--black), 0.1);
+  background-color: rgba(var(--white), 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  h6 {
+    font-size: 18px;
+  }
+}
+
+.rotate-90 {
+  transform: rotate(-90deg);
+}
+
+.topics-inner {
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  border: 1px solid rgba(var(--black), 0.1);
+  @include min-width(xl) {
+    margin-bottom: 60px;
+    padding: 40px 60px;
+    gap: 40px;
+  }
+  .topic-box {
+    padding: 16px;
+    border-radius: 12px;
+    width: 196px;
+    border: 1px solid rgba(var(--black), 0.1);
+    @include min-width(xl) {
+      padding: 24px;
+    }
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    background-color: rgba(var(--white), 0.1);
+    transition-duration: 300ms;
+    &:hover {
+      background-color: rgba(var(--black), 0.05);
+    }
+    .icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background-color: rgb(var(--black));
+      i {
+        font-size: 2rem;
+      }
+      span {
+        position: absolute;
+        top: 0;
+        right: -13px;
+        display: flex;
+        transform: translate(-50%, -50%);
+        background-color: rgb(var(--primary));
+        font-size: 14px;
+        width: 24px;
+        height: 24px;
+        align-items: center;
+        border-radius: 50%;
+        justify-content: center;
+      }
+    }
+    p {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+}
+
+.topic-index {
+  padding: 16px;
+  top: 80px;
+  border-radius: 12px;
+  background-color: rgba(var(--white), 0.1);
+  border: 1px solid rgba(var(--black), 0.1);
+  @include min-width(xl) {
+    padding: 20px;
+  }
+  .blog-topic {
+    border: 1px solid rgba(var(--black), 0.1);
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition-duration: 300ms;
+    &:hover {
+      background-color: rgba(var(--black), 0.05);
+    }
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      span {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        border-radius: 4px;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(var(--black));
+        color: rgb(var(--white));
+      }
+      p {
+        font-size: 18px;
+      }
+    }
+    &.active {
+      .list {
+        max-height: 500px;
+      }
+    }
+    .list {
+      .list-inner {
+        display: flex;
+        border-left: 1px solid rgba(var(--black), 0.1);
+        list-style-type: none;
+        padding-left: 20px;
+        margin-top: 20px;
+        margin-left: 12px;
+        flex-direction: column;
+        gap: 8px;
+        li a {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  margin-top: 40px;
+  margin-bottom: 60px;
+  @include min-width(xl) {
+    margin-top: 50px;
+    margin-bottom: 100px;
+  }
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgb(var(--white));
+    color: #000;
+    font-size: 18px;
+    font-weight: 500;
+    transition-duration: 300ms;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    &:hover {
+      background-color: rgb(var(--black));
+      color: #fff;
+    }
+  }
+}
+
+.blog-details {
+  padding-bottom: 60px;
+  @include min-width(xl) {
+    padding-bottom: 100px;
+  }
+}
+
+.details-left {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .info-box {
+    border-radius: 12px;
+    padding: 16px;
+    @include min-width(xxl) {
+      padding: 24px;
+    }
+    background-color: rgba(var(--white), 0.1);
+    border: 1px solid rgba(var(--black), 0.1);
+    h4 {
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(var(--black), 0.6);
+    }
+  }
+}
+.table-of-content {
+  padding-left: 16px;
+  border-left: 1px solid rgba(var(--black), 0.2);
+  a.active {
+    position: relative;
+    font-weight: 500;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -17px;
+      width: 2px;
+      height: 100%;
+      background-color: rgb(var(--black));
+    }
+  }
+}
+.details-container {
+  max-width: 856px;
+  margin: 0 auto;
+}
+.details-content {
+  margin-top: 80px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(var(--black), 0.15);
+  @include min-width(xl) {
+    padding: 24px;
+  }
+  @include min-width(xxl) {
+    padding: 40px;
+  }
+}
+.blog-video {
+  .youtube {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: center;
+    background-color: rgb(var(--white));
+  }
+}
+
+.quote {
+  padding: 32px 0;
+  margin-bottom: 32px;
+  border-top: 1px solid rgba(var(--black), 0.6);
+  border-bottom: 1px solid rgba(var(--black), 0.6);
+  p {
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+.share {
+  border-top: 1px solid rgba(var(--black), 0.3);
+  border-bottom: 1px solid rgba(var(--black), 0.3);
+  form {
+    border-radius: 4px;
+    padding: 4px;
+    display: flex;
+    border: 1px solid rgba(var(--black), 0.2);
+    justify-content: space-between;
+    input {
+      width: 100%;
+      background-color: transparent;
+      border: none;
+      padding: 10px;
+      &:focus {
+        outline: none;
+      }
+    }
+    button {
+      flex-shrink: 0;
+      background-color: rgb(var(--black));
+      padding: 12px 20px;
+      border-radius: 4px;
+      color: rgb(var(--white));
+      font-weight: 500;
+      font-size: 20px;
+    }
+  }
+}
+
+.next-prev {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  @include min-width(xl) {
+    gap: 60px;
+  }
+  .divider {
+    height: 66px;
+    width: 1px;
+    background-color: rgba(var(--black), 0.2);
+  }
+  .article-card {
+    display: flex;
+    align-items: center;
+    max-width: 360px;
+    gap: 16px;
+    padding: 20px 20px 20px 0;
+    p {
+      opacity: 0.6;
+    }
+    &.right {
+      padding: 20px 0 20px 20px;
+      button {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
+      }
+    }
+    transition-duration: 300ms;
+    &:hover {
+      background-color: rgb(var(--black));
+      p,
+      h5 {
+        color: rgb(var(--white));
+      }
+    }
+    border-radius: 12px;
+    border: 1px solid rgba(var(--black), 0.15);
+    background-color: rgba(var(--white), 0.1);
+    button {
+      height: 62px;
+      width: 62px;
+      border: none;
+      font-size: 1.5rem;
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-top-right-radius: 50%;
+      border-bottom-right-radius: 50%;
+    }
+  }
+}
+
+// blogs
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: rgba(var(--white), 0.1);
+  border: 1px solid rgba(var(--black), 0.1);
+  align-items: center;
+  transition-duration: 300ms;
+  .img-wrapper {
+    flex-shrink: 0;
+  }
+  img {
+    transition-duration: 300ms;
+  }
+  &:hover {
+    background-color: rgba(var(--black), 0.03);
+    img {
+      transform: scale(1.1);
+    }
+  }
+  @media (max-width: 768px) {
+    img {
+      width: 100%;
+    }
+  }
+  @include min-width(md) {
+    flex-direction: row;
+  }
+  @include min-width(xl) {
+    gap: 32px;
+  }
+  .details {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(var(--black), 0.2);
+  }
+}
+// newsletter section
+.newsletter {
+  background-color: rgba(var(--white), 0.1);
+  padding: 60px 0;
+  .content {
+    max-width: 856px;
+    margin: 0 auto;
+    form {
+      display: flex;
+      gap: 12px;
+      input {
+        width: 100%;
+        padding: 12px;
+        background-color: transparent;
+        border-radius: 4px;
+        border: 1px solid rgba(var(--black), 0.2);
+        &:focus {
+          outline: none;
+        }
+      }
+      button {
+        background-color: rgb(var(--black));
+        color: rgb(var(--white));
+        padding: 12px 20px;
+        border-radius: 4px;
+        border: none;
+        flex-shrink: 0;
+      }
+    }
+    input[type="checkbox"] {
+      accent-color: rgb(var(--black));
+      transform: scale(1.3);
+    }
+  }
+}
+
+footer {
+  background-color: rgba(var(--black), 0.06);
+  padding: 32px 0;
+  a {
+    text-decoration: underline;
+  }
+}
+.underlined {
+  text-decoration: underline;
+}
+.header-blog {
+  padding: 14px 0;
+  width: 100%;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  background-color: rgb(var(--primary));
+  position: fixed;
+  img {
+    max-width: 100%;
+  }
+}
+.connect {
+  border: 1px solid rgba(var(--black), 0.2);
+  padding: 4px;
+  display: flex;
+  margin-bottom: 40px;
+  border-radius: 4px;
+  gap: 12px;
+  input {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    border-radius: 4px;
+    border: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  button {
+    background-color: rgb(var(--black));
+    color: rgb(var(--white));
+    padding: 12px 20px;
+    border-radius: 4px;
+    border: none;
+    flex-shrink: 0;
+  }
+}
 
 

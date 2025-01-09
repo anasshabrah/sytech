@@ -7,7 +7,6 @@ import Services from "@/components/Services";
 import Attainments from "@/components/Attainments";
 import Experience from "@/components/Experience";
 import { useEffect, useState } from "react";
-import Blogs from "@/components/Blogs";
 
 export default function Home() {
   const [navOpen, setNavOpen] = useState(false);

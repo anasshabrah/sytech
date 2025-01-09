@@ -16,7 +16,7 @@ for foldername, subfolders, filenames in os.walk(root_directory):
     
     for filename in filenames:
         # Check if the file is a .ts or .tsx file
-        if filename.endswith(('.ts', '.tsx')):
+        if filename.endswith(('.ts', '.tsx', '.js', '.json', '.mjs', '.scss')):
             # Full path to the file
             file_path = os.path.join(foldername, filename)
             try:

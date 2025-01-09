@@ -6,7 +6,8 @@ import "@/public/scss/styles.scss";
 
 export const metadata: Metadata = {
   title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
-  description: "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  description:
+    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
 };
 
 type LayoutType = {
@@ -21,7 +22,7 @@ const readexPro = Readex_Pro({
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={readexPro.className}>
+      <body className={readexPro.className /* no style={{}} here */}>
         <Bootstrap>
           <GSAPAnimations />
           {children}
