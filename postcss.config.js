@@ -26,7 +26,7 @@ module.exports = {
                 /^btn-/,
                 /^text-/,
                 /^bg-/,
-                // Add more patterns as needed
+                /^swiper/,
               ],
             },
           },
