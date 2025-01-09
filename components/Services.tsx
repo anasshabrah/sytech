@@ -1,4 +1,5 @@
 // components/Services.tsx
+
 "use client";
 
 import React, { useRef } from "react";
@@ -58,25 +59,28 @@ const servicesData: Service[] = [
 ];
 
 const Services: React.FC = () => {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
     (self) => {
-      const serviceCards = self.selector(".service-card");
-
-      gsap.from(serviceCards, {
-        stagger: 0.2,
-        opacity: 0,
-        y: 50,
-        duration: 1.5,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 60%",
-          end: "top 20%",
-          toggleActions: "play none none reverse",
-        },
-      });
+      // Ensure that 'selector' exists before using it
+      if (self.selector) {
+        const serviceCards = self.selector(".service-card");
+        
+        gsap.from(serviceCards, {
+          stagger: 0.2,
+          opacity: 0,
+          y: 50,
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current!,
+            start: "top 60%",
+            end: "top 20%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      }
     },
     sectionRef
   );
