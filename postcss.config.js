@@ -1,17 +1,19 @@
 // postcss.config.js
 
+const purgecss = require('@fullhuman/postcss-purgecss');
+
 module.exports = {
-  plugins: {
-    'postcss-import': {},
-    'postcss-preset-env': {
+  plugins: [
+    require('postcss-import')(),
+    require('postcss-preset-env')({
       stage: 3,
       features: {
         'nesting-rules': true,
       },
-    },
+    }),
     ...(process.env.NODE_ENV === 'production'
-      ? {
-          '@fullhuman/postcss-purgecss': {
+      ? [
+          purgecss({
             content: [
               './app/**/*.{js,jsx,ts,tsx}',
               './components/**/*.{js,jsx,ts,tsx}',
@@ -29,11 +31,11 @@ module.exports = {
                 /^swiper/,
               ],
             },
-          },
-          'cssnano': {
+          }),
+          require('cssnano')({
             preset: 'default',
-          },
-        }
-      : {}),
-  },
+          }),
+        ]
+      : []),
+  ],
 };
