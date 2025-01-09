@@ -1,3 +1,5 @@
+// components/Attainments.tsx
+
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -88,13 +90,22 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      // Log response headers for debugging
+      const responseHeaders = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+      console.log("Response Headers:", responseHeaders);
+
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
         const text = await response.text();
-        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+        console.error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+        throw new Error(`Invalid Content-Type: ${contentType}`);
       }
 
       const data: SubmitInvestorResponse = await response.json();
+      console.log("API Response:", data);
       if (response.ok && data.success) {
         setStatus({ loading: false, success: "تم إرسال بياناتك بنجاح!", error: null });
         setFormData({ investorName: "", investorEmail: "", investorPhone: "", investmentAmount: "" });
@@ -107,6 +118,7 @@ const Attainments: React.FC = () => {
         });
       }
     } catch (err: any) {
+      console.error("Fetch Error:", err);
       setStatus({
         loading: false,
         success: null,

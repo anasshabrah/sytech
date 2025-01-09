@@ -26,11 +26,11 @@ export async function POST(
   req: NextRequest
 ): Promise<NextResponse<SubmitInvestorResponse>> {
   console.log("Received POST request to /api/submit-investor");
-  
+
   try {
     const contentType = req.headers.get("Content-Type") || "";
     console.log(`Content-Type header: ${contentType}`);
-    
+
     if (!contentType.includes("application/json")) {
       console.warn("Invalid Content-Type received");
       return NextResponse.json(
@@ -120,6 +120,9 @@ export async function POST(
       );
     }
     console.log("Postmark server token retrieved successfully");
+
+    // Log the Postmark token for debugging (ensure this is removed or secured in production)
+    console.log("Postmark Token:", postmarkToken);
 
     // Initialize Postmark client
     const client = new ServerClient(postmarkToken);
