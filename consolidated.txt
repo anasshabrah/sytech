@@ -222,11 +222,11 @@ export async function POST(
   req: NextRequest
 ): Promise<NextResponse<SubmitInvestorResponse>> {
   console.log("Received POST request to /api/submit-investor");
-  
+
   try {
     const contentType = req.headers.get("Content-Type") || "";
     console.log(`Content-Type header: ${contentType}`);
-    
+
     if (!contentType.includes("application/json")) {
       console.warn("Invalid Content-Type received");
       return NextResponse.json(
@@ -316,6 +316,9 @@ export async function POST(
       );
     }
     console.log("Postmark server token retrieved successfully");
+
+    // Log the Postmark token for debugging (ensure this is removed or secured in production)
+    console.log("Postmark Token:", postmarkToken);
 
     // Initialize Postmark client
     const client = new ServerClient(postmarkToken);
@@ -1114,6 +1117,8 @@ export default AboutMe;
 
 
 --- C:\Users\hanos\sytech\components\Attainments.tsx ---
+// components/Attainments.tsx
+
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -1204,13 +1209,22 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
+      // Define responseHeaders with an index signature
+      const responseHeaders: { [key: string]: string } = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+      console.log("Response Headers:", responseHeaders);
+
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
         const text = await response.text();
-        throw new Error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+        console.error(`Invalid Content-Type: ${contentType}\nResponse body: ${text}`);
+        throw new Error(`Invalid Content-Type: ${contentType}`);
       }
 
       const data: SubmitInvestorResponse = await response.json();
+      console.log("API Response:", data);
       if (response.ok && data.success) {
         setStatus({ loading: false, success: "تم إرسال بياناتك بنجاح!", error: null });
         setFormData({ investorName: "", investorEmail: "", investorPhone: "", investmentAmount: "" });
@@ -1223,6 +1237,7 @@ const Attainments: React.FC = () => {
         });
       }
     } catch (err: any) {
+      console.error("Fetch Error:", err);
       setStatus({
         loading: false,
         success: null,

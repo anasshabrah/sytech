@@ -4,8 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { ServerClient } from "postmark";
 import { SubmitInvestorResponse } from "@/app/types";
 
+// Define the runtime environment if necessary
 export const runtime = "nodejs";
 
+// Interface for the expected form fields
 interface InvestorFormFields {
   investorName: string;
   investorEmail: string;
@@ -13,6 +15,7 @@ interface InvestorFormFields {
   investmentAmount: string;
 }
 
+// Sanitization function to prevent XSS attacks
 const sanitize = (input: string): string => {
   return input
     .replace(/&/g, "&amp;")
@@ -22,15 +25,18 @@ const sanitize = (input: string): string => {
     .replace(/'/g, "&#039;");
 };
 
+// Main POST handler
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<SubmitInvestorResponse>> {
   console.log("Received POST request to /api/submit-investor");
 
   try {
+    // Extract and log Content-Type header
     const contentType = req.headers.get("Content-Type") || "";
     console.log(`Content-Type header: ${contentType}`);
 
+    // Validate Content-Type
     if (!contentType.includes("application/json")) {
       console.warn("Invalid Content-Type received");
       return NextResponse.json(
@@ -39,6 +45,7 @@ export async function POST(
       );
     }
 
+    // Attempt to parse JSON body
     let body: any;
     try {
       body = await req.json();
@@ -53,6 +60,7 @@ export async function POST(
 
     console.log("Original request body:", body);
 
+    // Sanitize and assign form fields
     const investorFields: InvestorFormFields = {
       investorName: sanitize(body.investorName || ""),
       investorEmail: sanitize(body.investorEmail || ""),
@@ -85,7 +93,7 @@ export async function POST(
     }
     console.log("Email format is valid");
 
-    // Validate phone number format
+    // Validate phone number format (7-14 digits, optional +)
     const phoneRegex = /^\+?\d{7,14}$/;
     if (!phoneRegex.test(investorPhone)) {
       console.warn("Validation failed: Invalid phone number format");
@@ -99,7 +107,7 @@ export async function POST(
     }
     console.log("Phone number format is valid");
 
-    // Validate investment amount
+    // Validate investment amount (numeric and minimum value)
     const investmentNum = parseFloat(investmentAmount);
     if (isNaN(investmentNum) || investmentNum < 100) {
       console.warn("Validation failed: Invalid investment amount");
@@ -110,7 +118,7 @@ export async function POST(
     }
     console.log(`Investment amount is valid: ${investmentNum}`);
 
-    // Check for Postmark token
+    // Retrieve Postmark server token from environment variables
     const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
     if (!postmarkToken) {
       console.error("Postmark server token is missing in environment variables");
@@ -121,8 +129,10 @@ export async function POST(
     }
     console.log("Postmark server token retrieved successfully");
 
-    // Log the Postmark token for debugging (ensure this is removed or secured in production)
-    console.log("Postmark Token:", postmarkToken);
+    // Conditionally log Postmark token (only in non-production)
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Postmark Token:", postmarkToken);
+    }
 
     // Initialize Postmark client
     const client = new ServerClient(postmarkToken);
@@ -130,8 +140,8 @@ export async function POST(
 
     // Prepare email content
     const emailContent = {
-      From: "info@syriatech.co",
-      To: "habrahllc@gmail.com",
+      From: "info@syriatech.co", // Replace with your verified Postmark sender
+      To: "habrahllc@gmail.com", // Replace with your recipient email
       Subject: "تقديم مستثمر جديد",
       HtmlBody: `
         <p><strong>اسم المستثمر:</strong> ${investorName}</p>
@@ -147,11 +157,12 @@ export async function POST(
       `,
       MessageStream: "outbound",
     };
+
     console.log("Email content prepared:", {
       From: emailContent.From,
       To: emailContent.To,
       Subject: emailContent.Subject,
-      // Omitting HtmlBody and TextBody for brevity and security
+      // Omitting HtmlBody and TextBody for security
     });
 
     // Send email via Postmark
@@ -163,7 +174,7 @@ export async function POST(
       console.log("Email sent successfully");
       return NextResponse.json({ success: true }, { status: 200 });
     } else {
-      console.error("Failed to send email via Postmark");
+      console.error("Failed to send email via Postmark:", sendResult.Message);
       return NextResponse.json(
         { success: false, message: "فشل في إرسال البريد الإلكتروني." },
         { status: 500 }
