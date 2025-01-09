@@ -194,7 +194,7 @@ const readexPro = Readex_Pro({
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={readexPro.className /* no style={{}} here */}>
+      <body className={readexPro.className} suppressHydrationWarning>
         <Bootstrap>
           <GSAPAnimations />
           {children}

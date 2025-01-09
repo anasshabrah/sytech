@@ -1,5 +1,4 @@
 // components/Attainments.tsx
-
 "use client";
 import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -68,6 +67,10 @@ const Attainments: React.FC = () => {
         y: 0,
         duration: 1.0,
         ease: "power2.out",
+        scrollTrigger: {
+          trigger: ".attainments",
+          start: "top 80%",
+        },
       }
     );
   }, []);
@@ -89,13 +92,6 @@ const Attainments: React.FC = () => {
         },
         body: JSON.stringify(formData),
       });
-
-      // Define responseHeaders with an index signature
-      const responseHeaders: { [key: string]: string } = {};
-      response.headers.forEach((value, key) => {
-        responseHeaders[key] = value;
-      });
-      console.log("Response Headers:", responseHeaders);
 
       const contentType = response.headers.get("Content-Type") || "";
       if (!contentType.includes("application/json")) {
@@ -128,93 +124,127 @@ const Attainments: React.FC = () => {
   };
 
   return (
-    <section id="attainments" className="attainments section position-relative pb-5 mb-5">
+    <section id="attainments" className="attainments section position-relative pb-5 mb-5" dir="rtl">
       <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
-      <form ref={formRef} onSubmit={handleSubmit} className="contact-form">
+      <form ref={formRef} onSubmit={handleSubmit} className="contact-form needs-validation" noValidate>
         <div className="row g-4 g-xl-5">
-          <div className="col-sm-6 contact-input attainments-form-group">
-            <label htmlFor="investorName">الاسم الكامل</label>
-            <input
-              type="text"
-              id="investorName"
-              name="investorName"
-              value={formData.investorName}
-              onChange={handleChange}
-              required
-              placeholder="الاسم الكريم"
-            />
+          {/* Investor Name */}
+          <div className="col-sm-6 attainments-form-group">
+            <div className="form-floating">
+              <input
+                type="text"
+                className={`form-control ${status.error && !formData.investorName ? "is-invalid" : ""}`}
+                id="investorName"
+                name="investorName"
+                value={formData.investorName}
+                onChange={handleChange}
+                placeholder="الاسم الكامل"
+                required
+              />
+              <label htmlFor="investorName">الاسم الكامل</label>
+              {status.error && !formData.investorName && (
+                <div className="invalid-feedback">الاسم الكامل مطلوب.</div>
+              )}
+            </div>
           </div>
-          <div className="col-sm-6 contact-input attainments-form-group">
-            <label htmlFor="investorEmail">البريد الإلكتروني</label>
-            <input
-              type="email"
-              id="investorEmail"
-              name="investorEmail"
-              value={formData.investorEmail}
-              onChange={handleChange}
-              required
-              placeholder="ايميلك بعد إذنك"
-            />
+
+          {/* Investor Email */}
+          <div className="col-sm-6 attainments-form-group">
+            <div className="form-floating">
+              <input
+                type="email"
+                className={`form-control ${status.error && !formData.investorEmail ? "is-invalid" : ""}`}
+                id="investorEmail"
+                name="investorEmail"
+                value={formData.investorEmail}
+                onChange={handleChange}
+                placeholder="البريد الإلكتروني"
+                required
+              />
+              <label htmlFor="investorEmail">البريد الإلكتروني</label>
+              {status.error && !formData.investorEmail && (
+                <div className="invalid-feedback">البريد الإلكتروني مطلوب.</div>
+              )}
+            </div>
           </div>
-          <div className="col-sm-6 contact-input attainments-form-group">
-            <label htmlFor="investorPhone">رقم الجوال</label>
-            <input
-              type="tel"
-              id="investorPhone"
-              name="investorPhone"
-              value={formData.investorPhone}
-              onChange={handleChange}
-              required
-              placeholder="لاتنسى مفتاح الدولة"
-            />
+
+          {/* Investor Phone */}
+          <div className="col-sm-6 attainments-form-group">
+            <div className="form-floating">
+              <input
+                type="tel"
+                className={`form-control ${status.error && !formData.investorPhone ? "is-invalid" : ""}`}
+                id="investorPhone"
+                name="investorPhone"
+                value={formData.investorPhone}
+                onChange={handleChange}
+                placeholder="رقم الجوال"
+                required
+              />
+              <label htmlFor="investorPhone">رقم الجوال</label>
+              {status.error && !formData.investorPhone && (
+                <div className="invalid-feedback">رقم الجوال مطلوب.</div>
+              )}
+            </div>
           </div>
-          <div className="col-sm-6 contact-input attainments-form-group">
-            <label htmlFor="investmentAmount">مبلغ الاستثمار المتوقع</label>
-            <input
-              type="number"
-              id="investmentAmount"
-              name="investmentAmount"
-              value={formData.investmentAmount}
-              onChange={handleChange}
-              required
-              placeholder="حدد المبلغ الأقصى بالدولار"
-            />
+
+          {/* Investment Amount */}
+          <div className="col-sm-6 attainments-form-group">
+            <div className="form-floating">
+              <input
+                type="number"
+                className={`form-control ${status.error && !formData.investmentAmount ? "is-invalid" : ""}`}
+                id="investmentAmount"
+                name="investmentAmount"
+                value={formData.investmentAmount}
+                onChange={handleChange}
+                placeholder="مبلغ الاستثمار المتوقع"
+                required
+                min="100"
+              />
+              <label htmlFor="investmentAmount">مبلغ الاستثمار المتوقع</label>
+              {status.error && !formData.investmentAmount && (
+                <div className="invalid-feedback">مبلغ الاستثمار مطلوب ويجب أن يكون 100 دولار على الأقل.</div>
+              )}
+            </div>
           </div>
+
+          {/* Status Messages */}
           {status.loading && (
             <div className="col-12">
-              <p className="message loading">جارٍ الإرسال...</p>
+              <div className="alert alert-info" role="alert">
+                جارٍ الإرسال...
+              </div>
             </div>
           )}
           {status.success && (
             <div className="col-12">
-              <p className="message success">{status.success}</p>
+              <div className="alert alert-success" role="alert">
+                {status.success}
+              </div>
             </div>
           )}
           {status.error && (
             <div className="col-12">
-              <p className="message error">{status.error}</p>
+              <div className="alert alert-danger" role="alert">
+                {status.error}
+              </div>
             </div>
           )}
+
+          {/* Submit Button */}
           <div className="col-12">
-            <button type="submit" disabled={status.loading} className="submit-btn position-relative submit-button">
-              <div className="waves-top-md">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
+            <button
+              type="submit"
+              disabled={status.loading}
+              className="btn btn-success w-100 submit-button"
+            >
               {status.loading ? "جارٍ الإرسال..." : "إرسال"}
-              <div className="waves-bottom-md">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
             </button>
           </div>
         </div>
       </form>
-      <div className="col-12">
+      <div className="col-12 mt-4">
         <Link href="#next-section" className="d-flex gap-4 align-items-center next-chapter">
           <span className="page">5/6</span>
           <span className="next">القسم التالي</span>
