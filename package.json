@@ -31,12 +31,13 @@
     "typewriter-effect": "2.21.0"
   },
   "devDependencies": {
-    "@fullhuman/postcss-purgecss": "^7.0.2",
+    "@fullhuman/postcss-purgecss": "^4.0.3",
     "@types/bootstrap": "^5.2.10",
     "@types/node": "22.10.5",
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "@types/react-modal-video": "^1.2.3",
+    "cssnano": "^7.0.6",
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.0",
     "postcss-preset-env": "^10.1.3",
