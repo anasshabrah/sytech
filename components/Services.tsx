@@ -1,3 +1,7 @@
+// components/Services.tsx
+
+"use client"; // Ensure this is a client component
+
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,38 +20,42 @@ const Services = () => {
       stagger: 0.2,
       opacity: 0,
       duration: 1.5,
+      y: 50, // Adding a slight upward animation for better effect
       scrollTrigger: {
         trigger: ".services",
-        start: "top 60%",
-        end: "top 20%",
+        start: "top 80%", // Start when the top of .services is at 80% of the viewport height
+        toggleActions: "play none none reverse", // Play animation on enter, reverse on leave
       },
     });
   });
+
   return (
     <section id="services" className="services section position-relative">
       <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
       <Swiper
-        slidesPerView={"auto"}
+        slidesPerView={1} // Default to 1 slide per view
         spaceBetween={24}
         loop={true}
         autoplay={{
           delay: 5000,
+          disableOnInteraction: false, // Continue autoplay after user interactions
         }}
         pagination={{ clickable: true, el: ".swiper-pagination" }}
         modules={[Autoplay, Pagination]}
         breakpoints={{
           768: {
-            slidesPerView: 2,
+            slidesPerView: 2, // 2 slides per view for screens >= 768px
             spaceBetween: 24,
           },
-          1550: {
-            slidesPerView: 3,
+          1200: {
+            slidesPerView: 3, // 3 slides per view for screens >= 1200px
             spaceBetween: 24,
           },
         }}
         dir="ltr"
         className="swiper service-swiper"
       >
+        {/* Swiper Slides */}
         <SwiperSlide className="overflow-visible p-3">
           <div className="service-card">
             <div className="card-inner"></div>
@@ -88,6 +96,7 @@ const Services = () => {
             </div>
           </div>
         </SwiperSlide>
+        {/* Repeat SwiperSlide for other service cards */}
         <SwiperSlide className="overflow-visible p-3">
           <div className="service-card">
             <div className="card-inner"></div>
@@ -168,14 +177,14 @@ const Services = () => {
             </div>
           </div>
         </SwiperSlide>
-
+        {/* Pagination */}
         <div className="swiper-pagination"></div>
       </Swiper>
+      {/* Next Chapter Link */}
       <div className="col-12">
         <Link href="#attainments" className="d-flex gap-4 align-items-center next-chapter">
           <span className="page">4/6</span>
           <span className="next">القسم التالي</span>
-
           <i className="ph ph-arrow-elbow-right-down"></i>
         </Link>
       </div>
