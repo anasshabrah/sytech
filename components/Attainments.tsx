@@ -90,8 +90,8 @@ const Attainments: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      // Log response headers for debugging
-      const responseHeaders = {};
+      // Define responseHeaders with an index signature
+      const responseHeaders: { [key: string]: string } = {};
       response.headers.forEach((value, key) => {
         responseHeaders[key] = value;
       });
