@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Readex_Pro } from "next/font/google";
 import Bootstrap from "@/components/Bootstrap";
 import GSAPAnimations from "@/components/GSAPAnimations";
 import "@/public/scss/styles.scss";
@@ -14,15 +13,16 @@ type LayoutType = {
   children: React.ReactNode;
 };
 
-const readexPro = Readex_Pro({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin", "arabic"],
-});
-
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={readexPro.className} suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap"
+        />
+      </head>
+      <body className="font-readex" suppressHydrationWarning>
         <Bootstrap>
           <GSAPAnimations />
           {children}

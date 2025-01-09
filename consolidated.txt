@@ -69,13 +69,13 @@ export default nextConfig;
     "glob": "^11.0.0",
     "gsap": "^3.12.5",
     "lru-cache": "^11.0.2",
-    "next": "^15.1.4",
+    "next": "15.1.4",
     "phosphor-icons": "^1.4.2",
     "postmark": "^4.0.5",
-    "react": "^18.2.0",
+    "react": "^19.0.0",
     "react-animate-height": "^3.2.3",
     "react-apexcharts": "^1.7.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^19.0.0",
     "react-intersection-observer": "^9.14.1",
     "react-modal-video": "^2.0.2",
     "sharp": "^0.33.5",
@@ -130,7 +130,7 @@ module.exports = {
                 /^btn-/,
                 /^text-/,
                 /^bg-/,
-                // Add more patterns as needed
+                /^swiper/,
               ],
             },
           },
@@ -179,7 +179,6 @@ declare module "shuffle-letters";
 
 --- C:\Users\hanos\sytech\app\layout.tsx ---
 import type { Metadata } from "next";
-import { Readex_Pro } from "next/font/google";
 import Bootstrap from "@/components/Bootstrap";
 import GSAPAnimations from "@/components/GSAPAnimations";
 import "@/public/scss/styles.scss";
@@ -194,15 +193,16 @@ type LayoutType = {
   children: React.ReactNode;
 };
 
-const readexPro = Readex_Pro({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin", "arabic"],
-});
-
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={readexPro.className} suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap"
+        />
+      </head>
+      <body className="font-readex" suppressHydrationWarning>
         <Bootstrap>
           <GSAPAnimations />
           {children}
@@ -1665,42 +1665,102 @@ export default SectionTitle;
 
 
 --- C:\Users\hanos\sytech\components\Services.tsx ---
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
-import React from "react";
+// components/Services.tsx
+"use client";
+
+import React, { useRef } from "react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
-import SectionOverlayText from "./SectionOverlayText";
+import useGSAP from "@/hooks/useGSAP";
+import gsap from "gsap";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
-gsap.registerPlugin(ScrollTrigger);
+interface Service {
+  id: number;
+  number: string;
+  title: string;
+  features: string[];
+}
 
-const Services = () => {
-  useGSAP(() => {
-    gsap.from(".service-card", {
-      stagger: 0.2,
-      opacity: 0,
-      duration: 1.5,
-      scrollTrigger: {
-        trigger: ".services",
-        start: "top 60%",
-        end: "top 20%",
-      },
-    });
-  });
+const servicesData: Service[] = [
+  {
+    id: 1,
+    number: "01",
+    title: "رائد الأعمال",
+    features: [
+      "عندك مشروع ناشيء",
+      "عندك تيم لو من شخصين",
+      "المشروع يعمل",
+      "عم يحقق أرباح أو لا مش مشكلة",
+      "قدم عرض تقديمي إلينا",
+    ],
+  },
+  {
+    id: 2,
+    number: "02",
+    title: "سيرياتك",
+    features: [
+      "بندرس عرضك التقديمي",
+      "مستشارينا بيقيموا المشروع",
+      "بنرسل مشروعك للمستثمرين",
+      "بنجمع ردود المستثمرين",
+      "يصلك إيميل قبول أو رفض",
+    ],
+  },
+  {
+    id: 3,
+    number: "03",
+    title: "المستثمر",
+    features: [
+      "بيسجل بياناته للتواصل",
+      "بنرسل له المشاريع المقترحة",
+      "بنرفق تقييمنا مع العرض التقديمي",
+      "ننتظر الرد بالقبول أو الرفض",
+      "ترتيب اجتماع مع رائد الأعمال",
+    ],
+  },
+];
+
+const Services: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    (self) => {
+      const serviceCards = self.selector(".service-card");
+
+      gsap.from(serviceCards, {
+        stagger: 0.2,
+        opacity: 0,
+        y: 50,
+        duration: 1.5,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 60%",
+          end: "top 20%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    },
+    sectionRef
+  );
+
   return (
-    <section id="services" className="services section position-relative">
+    <section ref={sectionRef} id="services" className="services section position-relative">
       <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
+
       <Swiper
         slidesPerView={"auto"}
         spaceBetween={24}
         loop={true}
         autoplay={{
           delay: 5000,
+          disableOnInteraction: false,
         }}
-        pagination={{ clickable: true, el: ".swiper-pagination" }}
+        pagination={{ clickable: true }}
         modules={[Autoplay, Pagination]}
         breakpoints={{
           768: {
@@ -1715,136 +1775,51 @@ const Services = () => {
         dir="ltr"
         className="swiper service-swiper"
       >
-        <SwiperSlide className="overflow-visible p-3">
-          <div className="service-card">
-            <div className="card-inner"></div>
-            <div className="content">
-              <div className="number-circle">
-                <div className="waves-top-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
+        {servicesData.map((service) => (
+          <SwiperSlide key={service.id} className="overflow-visible p-3">
+            <div className="service-card">
+              <div className="card-inner"></div>
+              <div className="content">
+                <div className="number-circle">
+                  <div className="waves-top-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <h2>{service.number}</h2>
+                  <div className="waves-bottom-sm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                 </div>
-                <h2>01</h2>
-                <div className="waves-bottom-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
+                <h4>{service.title}</h4>
+                <ul className="service-list">
+                  {service.features.map((feature, index) => (
+                    <li key={index}>
+                      <i className="ph ph-caret-double-right"></i> {feature}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <h4>رائد الأعمال</h4>
-              <ul className="service-list">
-                <li>
-                  <i className="ph ph-caret-double-right"></i> عندك مشروع ناشيء
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> عندك تيم لو من شخصين
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> المشروع يعمل
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> عم يحقق أرباح أو لا مش مشكلة
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> قدم عرض تقديمي إلينا
-                </li>
-              </ul>
             </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide className="overflow-visible p-3">
-          <div className="service-card">
-            <div className="card-inner"></div>
-            <div className="content">
-              <div className="number-circle">
-                <div className="waves-top-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <h2>02</h2>
-                <div className="waves-bottom-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-              <h4>سيرياتك</h4>
-              <ul className="service-list">
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بندرس عرضك التقديمي
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> مستشارينا بيقيموا المشروع
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بنرسل مشروعك للمستثمرين
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بنجمع ردود المستثمرين
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> يصلك إيميل قبول أو رفض
-                </li>
-              </ul>
-            </div>
-          </div>
-        </SwiperSlide>
-        <SwiperSlide className="overflow-visible p-3">
-          <div className="service-card">
-            <div className="card-inner"></div>
-            <div className="content">
-              <div className="number-circle">
-                <div className="waves-top-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <h2>03</h2>
-                <div className="waves-bottom-sm">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-              <h4>المستثمر</h4>
-              <ul className="service-list">
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بيسجل بياناته للتواصل
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بنرسل له المشاريع المقترحة
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> بنرفق تقييمنا مع العرض التقديمي
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> ننتظر الرد بالقبول أو الرفض
-                </li>
-                <li>
-                  <i className="ph ph-caret-double-right"></i> ترتيب اجتماع مع رائد الأعمال
-                </li>
-              </ul>
-            </div>
-          </div>
-        </SwiperSlide>
+          </SwiperSlide>
+        ))}
 
+        {/* Swiper Pagination */}
         <div className="swiper-pagination"></div>
       </Swiper>
+
       <div className="col-12">
-        <Link href="#attainments" className="d-flex gap-4 align-items-center next-chapter">
+        <a href="#attainments" className="d-flex gap-4 align-items-center next-chapter">
           <span className="page">4/6</span>
           <span className="next">القسم التالي</span>
-
-          <i className="ph ph-arrow-elbow-right-down"></i>
-        </Link>
+          <span className="icon">
+            <i className="ph ph-arrow-elbow-right-down"></i>
+          </span>
+        </a>
       </div>
     </section>
   );
@@ -1855,14 +1830,26 @@ export default Services;
 
 --- C:\Users\hanos\sytech\hooks\useGSAP.ts ---
 // hooks/useGSAP.ts
-import { useEffect } from "react";
+import { useEffect, RefObject } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const useGSAP = (animationCallback: () => void | (() => void)) => {
+gsap.registerPlugin(ScrollTrigger);
+
+const useGSAP = (
+  animationCallback: (self: gsap.Context) => void,
+  scopeRef: RefObject<HTMLElement>
+) => {
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      return animationCallback();
+    if (typeof window !== "undefined" && scopeRef.current) {
+      const context = gsap.context((self) => {
+        animationCallback(self);
+      }, scopeRef.current);
+      
+      // Cleanup function to revert animations on component unmount
+      return () => context.revert();
     }
-  }, [animationCallback]);
+  }, [animationCallback, scopeRef]);
 };
 
 export default useGSAP;
@@ -1931,6 +1918,8 @@ $gutters: (
 @import "bootstrap.scss";
 @import "phosphor-icons/src/css/icons.css";
 @import "swiper/css";
+@import "swiper/css/pagination";
+@import "swiper/css/autoplay";
 @import "swiper/css/navigation";
 @import "swiper/css/scrollbar";
 @import "mixins.scss";
