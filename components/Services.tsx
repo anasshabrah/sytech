@@ -6,9 +6,7 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
 import useGSAP from "@/hooks/useGSAP";
-import gsap from "gsap"; // Import GSAP
-
-// Import Swiper styles
+import gsap from "gsap";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
@@ -60,13 +58,10 @@ const servicesData: Service[] = [
 ];
 
 const Services: React.FC = () => {
-  // Create a ref to scope the GSAP context
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Use the updated useGSAP hook with the ref
   useGSAP(
     (self) => {
-      // Use the scoped selector to select elements within the section
       const serviceCards = self.selector(".service-card");
 
       gsap.from(serviceCards, {
@@ -76,7 +71,7 @@ const Services: React.FC = () => {
         duration: 1.5,
         ease: "power2.out",
         scrollTrigger: {
-          trigger: sectionRef.current, // Use the scoped section as the trigger
+          trigger: sectionRef.current,
           start: "top 60%",
           end: "top 20%",
           toggleActions: "play none none reverse",
