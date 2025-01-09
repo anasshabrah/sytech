@@ -138,7 +138,7 @@ export async function POST(
     const client = new ServerClient(postmarkToken);
     console.log("Postmark client initialized");
 
-    // Prepare email content
+    // Prepare email content with UTF-8 support
     const emailContent = {
       From: "info@syriatech.co", // Replace with your verified Postmark sender
       To: "habrahllc@gmail.com", // Replace with your recipient email
