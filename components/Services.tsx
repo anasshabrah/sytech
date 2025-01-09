@@ -4,13 +4,56 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import React, { useEffect } from "react";
-import { Autoplay, Pagination } from "swiper/modules";
+import React from "react";
+import { Autoplay, Pagination, Navigation, Scrollbar } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
 import SectionOverlayText from "./SectionOverlayText";
 
+// Import Swiper styles (ensure these are imported in your global SCSS or component-specific styles)
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import "swiper/css/scrollbar";
+
 gsap.registerPlugin(ScrollTrigger);
+
+const servicesData = [
+  {
+    number: "01",
+    title: "رائد الأعمال",
+    features: [
+      "عندك مشروع ناشيء",
+      "عندك تيم لو من شخصين",
+      "المشروع يعمل",
+      "عم يحقق أرباح أو لا مش مشكلة",
+      "قدم عرض تقديمي إلينا",
+    ],
+  },
+  {
+    number: "02",
+    title: "سيرياتك",
+    features: [
+      "بندرس عرضك التقديمي",
+      "مستشارينا بيقيموا المشروع",
+      "بنرسل مشروعك للمستثمرين",
+      "بنجمع ردود المستثمرين",
+      "يصلك إيميل قبول أو رفض",
+    ],
+  },
+  {
+    number: "03",
+    title: "المستثمر",
+    features: [
+      "بيسجل بياناته للتواصل",
+      "بنرسل له المشاريع المقترحة",
+      "بنرفق تقييمنا مع العرض التقديمي",
+      "ننتظر الرد بالقبول أو الرفض",
+      "ترتيب اجتماع مع رائد الأعمال",
+    ],
+  },
+  // Add more service objects as needed
+];
 
 const Services = () => {
   useGSAP(() => {
@@ -30,7 +73,7 @@ const Services = () => {
   return (
     <section id="services" className="services section position-relative">
       <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
-      
+
       {/* Scoped Swiper Container */}
       <div className="service-swiper">
         <Swiper
@@ -42,7 +85,9 @@ const Services = () => {
             disableOnInteraction: false, // Continue autoplay after user interactions
           }}
           pagination={{ clickable: true }}
-          modules={[Autoplay, Pagination]}
+          navigation={true} // Enable navigation buttons
+          scrollbar={{ draggable: true }} // Enable draggable scrollbar
+          modules={[Autoplay, Pagination, Navigation, Scrollbar]} // Include necessary modules
           breakpoints={{
             768: {
               slidesPerView: 2, // 2 slides per view for screens >= 768px
@@ -53,133 +98,42 @@ const Services = () => {
               spaceBetween: 24,
             },
           }}
-          dir="ltr"
+          dir="rtl" // Set to 'rtl' if your site uses Right-to-Left direction
           className="swiper"
         >
           {/* Swiper Slides */}
-          <SwiperSlide className="overflow-visible p-3">
-            <div className="service-card">
-              <div className="card-inner"></div>
-              <div className="content">
-                <div className="number-circle">
-                  <div className="waves-top-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+          {servicesData.map((service, index) => (
+            <SwiperSlide key={index} className="overflow-visible p-3">
+              <div className="service-card">
+                <div className="card-inner"></div>
+                <div className="content">
+                  <div className="number-circle">
+                    <div className="waves-top-sm">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <h2>{service.number}</h2>
+                    <div className="waves-bottom-sm">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
                   </div>
-                  <h2>01</h2>
-                  <div className="waves-bottom-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
+                  <h4>{service.title}</h4>
+                  <ul className="service-list">
+                    {service.features.map((feature, featIndex) => (
+                      <li key={featIndex}>
+                        <i className="ph ph-caret-double-right"></i> {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h4>رائد الأعمال</h4>
-                <ul className="service-list">
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> عندك مشروع ناشيء
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> عندك تيم لو من شخصين
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> المشروع يعمل
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> عم يحقق أرباح أو لا مش مشكلة
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> قدم عرض تقديمي إلينا
-                  </li>
-                </ul>
               </div>
-            </div>
-          </SwiperSlide>
-
-          {/* Repeat SwiperSlide for other service cards */}
-          <SwiperSlide className="overflow-visible p-3">
-            <div className="service-card">
-              <div className="card-inner"></div>
-              <div className="content">
-                <div className="number-circle">
-                  <div className="waves-top-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <h2>02</h2>
-                  <div className="waves-bottom-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-                <h4>سيرياتك</h4>
-                <ul className="service-list">
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بندرس عرضك التقديمي
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> مستشارينا بيقيموا المشروع
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بنرسل مشروعك للمستثمرين
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بنجمع ردود المستثمرين
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> يصلك إيميل قبول أو رفض
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </SwiperSlide>
-
-          <SwiperSlide className="overflow-visible p-3">
-            <div className="service-card">
-              <div className="card-inner"></div>
-              <div className="content">
-                <div className="number-circle">
-                  <div className="waves-top-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <h2>03</h2>
-                  <div className="waves-bottom-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-                <h4>المستثمر</h4>
-                <ul className="service-list">
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بيسجل بياناته للتواصل
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بنرسل له المشاريع المقترحة
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> بنرفق تقييمنا مع العرض التقديمي
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> ننتظر الرد بالقبول أو الرفض
-                  </li>
-                  <li>
-                    <i className="ph ph-caret-double-right"></i> ترتيب اجتماع مع رائد الأعمال
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </SwiperSlide>
+            </SwiperSlide>
+          ))}
 
           {/* Swiper React handles the pagination and navigation elements automatically */}
         </Swiper>
