@@ -20,7 +20,7 @@ const structuredData = {
   ],
   "contactPoint": [{
     "@type": "ContactPoint",
-    "telephone": "+1-800-555-5555",
+    "telephone": "+90-5550400545",
     "contactType": "customer service",
     "areaServed": "SY"
   }]
@@ -33,7 +33,9 @@ export const metadata: Metadata = {
   keywords: "مسرعة أعمال, استثمار, مشاريع ناشئة, سيرياتك",
   authors: [{ name: "سيرياتيك" }],
   metadataBase: new URL("https://syriatech.co"),
-  canonical: "https://syriatech.co",
+  links: [
+    { rel: 'canonical', href: 'https://syriatech.co' }
+  ],
   openGraph: {
     type: "website",
     locale: "ar_SY",
