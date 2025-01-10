@@ -33,9 +33,6 @@ export const metadata: Metadata = {
   keywords: "مسرعة أعمال, استثمار, مشاريع ناشئة, سيرياتك",
   authors: [{ name: "سيرياتيك" }],
   metadataBase: new URL("https://syriatech.co"),
-  links: [
-    { rel: 'canonical', href: 'https://syriatech.co' }
-  ],
   openGraph: {
     type: "website",
     locale: "ar_SY",
@@ -71,12 +68,14 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
     },
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
+};
+
+// Export viewport configuration separately
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 type LayoutType = {
@@ -92,6 +91,9 @@ export default function RootLayout({ children }: LayoutType) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://syriatech.co" />
 
         {/* Additional Meta Tags not handled by metadata */}
         <meta name="theme-color" content="#ffffff" />
