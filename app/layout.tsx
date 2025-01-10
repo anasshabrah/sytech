@@ -18,12 +18,14 @@ const structuredData = {
     "https://twitter.com/syriatech",
     "https://www.linkedin.com/company/syriatech"
   ],
-  "contactPoint": [{
-    "@type": "ContactPoint",
-    "telephone": "+90-5550400545",
-    "contactType": "customer service",
-    "areaServed": "SY"
-  }]
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+90-5550400545",
+      "contactType": "customer service",
+      "areaServed": "SY"
+    }
+  ]
 };
 
 export const metadata: Metadata = {
@@ -46,14 +48,14 @@ export const metadata: Metadata = {
         url: "https://syriatech.co/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "سيرياتك - مسرعة أعمال سورية",
-      },
-    ],
+        alt: "سيرياتك - مسرعة أعمال سورية"
+      }
+    ]
   },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/icon.png",
-    apple: "/icon.png",
+    apple: "/icon.png"
   },
   robots: {
     index: true,
@@ -65,9 +67,9 @@ export const metadata: Metadata = {
       noimageindex: false,
       "max-video-preview": -1,
       "max-snippet": -1,
-      "max-image-preview": "large",
-    },
-  },
+      "max-image-preview": "large"
+    }
+  }
 };
 
 // Export viewport configuration separately
@@ -75,7 +77,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
+  userScalable: false
 };
 
 type LayoutType = {
@@ -91,11 +93,9 @@ export default function RootLayout({ children }: LayoutType) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-
         {/* Canonical URL */}
         <link rel="canonical" href="https://syriatech.co" />
-
-        {/* Additional Meta Tags not handled by metadata */}
+        {/* Additional Meta Tags */}
         <meta name="theme-color" content="#ffffff" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
