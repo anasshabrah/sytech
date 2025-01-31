@@ -277,5 +277,4 @@ export const projectDetails: ProjectDetail[] = [
       },
     ],
   },
-  // ... Add other projects as needed
 ];
