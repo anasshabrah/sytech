@@ -1,8 +1,13 @@
-// styles/ProjectDetail.module.scss
-
 .mainContainer {
   width: 100%;
   background-color: transparent;
+}
+
+/* New media query for small screens to shift content down */
+@media (max-width: 768px) {
+  .mainContainer {
+    padding-top: 100px; // Adjust this value as needed
+  }
 }
 
 .projectDetailContainer {
