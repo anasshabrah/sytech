@@ -1,23 +1,30 @@
-// app/projects/[id]/page.tsx
-
-import { projectDetails, ProjectDetail } from "@/app/data/projectDetailsData";
+import type { Metadata } from "next";
+import { projectDetails } from "@/app/data/projectDetailsData";
 import ProjectHeader from "@/components/ProjectHeader";
-import styles from "@/styles/ProjectDetail.module.scss";
 import ProjectDetailClient from "./ProjectDetailClient";
+import styles from "@/styles/ProjectDetail.module.scss";
 import Link from "next/link";
 
-interface PageProps {
-  // Note: In some Next.js versions, params might be a promise.
-  params: { id: string } | Promise<{ id: string }>;
+// Force Next to only allow the IDs returned by generateStaticParams
+export const dynamicParams = false;
+
+/**
+ * 1) Return a Promise<Array<{ id: string }>>.
+ *    Ensures Next sees your route IDs as fully static.
+ */
+export async function generateStaticParams(): Promise<Array<{ id: string }>> {
+  return projectDetails.map((proj) => ({ id: proj.id }));
 }
 
-export async function generateMetadata(ctx: PageProps) {
-  const { params } = ctx;
-  // Await params in case it is a promise
-  const { id } = await params;
-
-  const project = projectDetails.find((proj) => proj.id === id);
-
+/**
+ * 2) Inline the param type for generateMetadata
+ */
+export function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Metadata {
+  const project = projectDetails.find((p) => p.id === params.id);
   if (!project) {
     return {
       title: "المشروع غير موجود",
@@ -45,23 +52,19 @@ export async function generateMetadata(ctx: PageProps) {
           url: logoUrl,
           width: 800,
           height: 600,
-          alt: `${project.name} Logo`,
-        },
+          alt: `${project.name} Logo`
+        }
       ],
-      type: "website",
-    },
+      type: "website"
+    }
   };
 }
 
-// Marking the page component as async
-export default async function ProjectDetailPage(ctx: PageProps) {
-  const { params } = ctx;
-  // Await params before using its properties
-  const { id } = await params;
-
-  const project: ProjectDetail | undefined = projectDetails.find(
-    (proj) => proj.id === id
-  );
+/**
+ * 3) Inline the param type for default Page
+ */
+export default function Page({ params }: { params: { id: string } }) {
+  const project = projectDetails.find((p) => p.id === params.id);
 
   if (!project) {
     return (
@@ -79,18 +82,13 @@ export default async function ProjectDetailPage(ctx: PageProps) {
   return (
     <>
       <ProjectHeader showNavigation={false} />
-
       <svg
         className={styles.bgGradient}
         preserveAspectRatio="xMidYMid slice"
         viewBox="10 10 80 80"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
       >
-        {/* ... SVG paths ... */}
+        {/* ...your optional svg content */}
       </svg>
-
       <main className={styles.mainContainer}>
         <ProjectDetailClient project={project} />
       </main>

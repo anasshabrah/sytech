@@ -1,16 +1,12 @@
 // app/projects/[id]/ProjectDetailClient.tsx
-
 "use client";
-
 import React, { useRef, useCallback } from "react";
 import Image from "next/image";
 import Script from "next/script";
 import gsap from "gsap";
-
 import styles from "@/styles/ProjectDetail.module.scss";
 import TeamMemberCard from "@/components/TeamMemberCard";
 import useGSAP, { SelectorFn } from "@/hooks/useGSAP";
-
 import type { ProjectDetail, ContentItem } from "@/app/data/projectDetailsData";
 
 interface ProjectDetailClientProps {
@@ -20,12 +16,16 @@ interface ProjectDetailClientProps {
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const projectDetailRef = useRef<HTMLDivElement | null>(null);
 
+  // Check for reduced motion preference
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  // Animation callback for GSAP
   const animationCallback = useCallback(
     (selector: SelectorFn) => {
+      if (!projectDetailRef.current) return;
+
       gsap.from(selector(".animate"), {
         opacity: 0,
         y: 30,
@@ -42,8 +42,10 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
     []
   );
 
+  // Initialize GSAP animations
   useGSAP(prefersReducedMotion ? () => {} : animationCallback, projectDetailRef);
 
+  // Base URL for assets
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
   const logoSrc = project.logo.startsWith("http")
     ? project.logo
@@ -51,6 +53,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
   return (
     <>
+      {/* Structured Data for SEO */}
       <Script
         id="structured-data"
         type="application/ld+json"
@@ -62,14 +65,18 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             name: project.name,
             description: project.shortDescription,
             url: `${baseUrl}/projects/${project.id}`,
-            logo: project.logo.startsWith("http") ? project.logo : `${baseUrl}${project.logo}`,
+            logo: logoSrc,
           }),
         }}
       />
 
+      {/* Main Project Detail Container */}
       <div className={styles.projectDetailContainer} ref={projectDetailRef}>
         <div className={styles.projectDetail}>
+          {/* Project Name */}
           <h1 className={`${styles.projectName} animate`}>{project.name}</h1>
+
+          {/* Logo and Description */}
           <div className={styles.logoAndDescription}>
             <Image
               src={logoSrc}
@@ -79,9 +86,12 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
               className={styles.projectLogo}
               priority
             />
-            <p className={`${styles.projectDescription} animate`}>{project.fullDescription}</p>
+            <p className={`${styles.projectDescription} animate`}>
+              {project.fullDescription}
+            </p>
           </div>
 
+          {/* Project Sections */}
           {project.sections.map((section, index) => (
             <div key={`${section.title}-${index}`} className={styles.projectSection}>
               <h2 className={`${styles.sectionTitle} animate`}>{section.title}</h2>
@@ -92,7 +102,10 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                     .map((item: ContentItem, idx: number) => {
                       if (item.type === "subheading") {
                         return (
-                          <h3 key={`${item.value}-${idx}`} className={`${styles.subHeading} animate`}>
+                          <h3
+                            key={`${item.value}-${idx}`}
+                            className={`${styles.subHeading} animate`}
+                          >
                             {item.value}
                           </h3>
                         );
@@ -113,6 +126,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             </div>
           ))}
 
+          {/* Team Section */}
           {project.team && project.team.length > 0 && (
             <div className={styles.teamSection}>
               <h2 className={`${styles.sectionTitle} animate`}>فريق العمل</h2>
