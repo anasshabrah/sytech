@@ -1,4 +1,3 @@
-// mixins
 
 @mixin min-width($breakpoint) {
   $breakpoints: map-get($grid-breakpoints, $breakpoint);

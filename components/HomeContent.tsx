@@ -11,6 +11,8 @@ import AboutMe from "@/components/AboutMe";
 import Services from "@/components/Services";
 import Attainments from "@/components/Attainments";
 import Experience from "@/components/Experience";
+import Projects from "@/components/Projects"; // Import the Projects component
+import { projects } from "@/app/data/projectsData"; // Import project data
 
 type HomeContentProps = {
   structuredData: object;
@@ -21,6 +23,7 @@ export default function HomeContent({ structuredData }: HomeContentProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Simulate loading delay if necessary
     setLoading(false);
   }, []);
 
@@ -83,6 +86,8 @@ export default function HomeContent({ structuredData }: HomeContentProps) {
             <Services />
             <Attainments />
             <Experience />
+            {/* New Our Projects Section */}
+            <Projects projects={projects} />
           </div>
         </div>
       </main>

@@ -1,7 +1,10 @@
+// components/AboutMe.tsx
+
 import Link from "next/link";
 import React from "react";
 import SectionTitle from "./SectionTitle";
 import SectionOverlayText from "./SectionOverlayText";
+
 const AboutMe = () => {
   return (
     <section id="about_me" className="about section">

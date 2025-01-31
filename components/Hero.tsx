@@ -1,3 +1,5 @@
+// components/Hero.tsx
+
 import Image from "next/image";
 import React from "react";
 import HeroImg from "@/public/images/hero.png";
@@ -9,16 +11,41 @@ import gsap from "gsap";
 
 const Hero = ({ classes }: { classes?: string }) => {
   useGSAP(() => {
-    gsap.from(".img-wrapper", { duration: 1.5, scale: 1.5, ease: "back", delay: 0.3, opacity: 0 });
-    gsap.from(".work-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
-    gsap.from(".contact-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
+    gsap.from(".img-wrapper", {
+      duration: 1.5,
+      scale: 1.5,
+      ease: "back",
+      delay: 0.3,
+      opacity: 0,
+    });
+    gsap.from(".work-btn", {
+      duration: 1.2,
+      scale: 0,
+      opacity: 0,
+      ease: "bounce",
+    });
+    gsap.from(".contact-btn", {
+      duration: 1.2,
+      scale: 0,
+      opacity: 0,
+      ease: "bounce",
+    });
 
-    const freelancer = SplitType.create(".freelancer", { types: 'words' }).words;
-    const desc = SplitType.create(".description", { types: 'words' }).words;
-    gsap.from(freelancer, { duration: 1.5, opacity: 0, ease: "bounce", stagger: 0.2 });
-    gsap.from(desc, { duration: 1, opacity: 0, stagger: 0.2 });
+    const freelancer = SplitType.create(".freelancer", { types: "words" }).words;
+    const desc = SplitType.create(".description", { types: "words" }).words;
+    gsap.from(freelancer, {
+      duration: 1.5,
+      opacity: 0,
+      ease: "bounce",
+      stagger: 0.2,
+    });
+    gsap.from(desc, {
+      duration: 1,
+      opacity: 0,
+      stagger: 0.2,
+    });
   });
-  
+
   return (
     <section id="top" className={`hero ${classes}`}>
       <div className="row gx-4 justify-content-center align-items-center">
@@ -52,7 +79,12 @@ const Hero = ({ classes }: { classes?: string }) => {
               <span></span>
               <span></span>
             </div>
-            <Image className="img-fluid rounded-circle hero-img" priority={true} src={HeroImg} alt="" />
+            <Image
+              className="img-fluid rounded-circle hero-img"
+              priority={true}
+              src={HeroImg}
+              alt=""
+            />
             <div className="waves-bottom">
               <span></span>
               <span></span>

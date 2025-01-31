@@ -179,15 +179,31 @@ declare module "shuffle-letters";
 
 
 --- C:\Users\hanos\sytech\app\layout.tsx ---
+// app/layout.tsx
+
 import type { Metadata } from "next";
 import Bootstrap from "@/components/Bootstrap";
 import GSAPAnimations from "@/components/GSAPAnimations";
 import "@/public/scss/styles.scss";
 
+// Separate viewport export
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
+// Global Metadata (excluding viewport)
 export const metadata: Metadata = {
-  title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
-  description:
-    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  // Add any global metadata here if needed
+  // For example, global Open Graph tags
+  openGraph: {
+    type: "website",
+    locale: "ar_SY",
+    url: "https://syriatech.co",
+    siteName: "سيرياتك",
+  },
 };
 
 type LayoutType = {
@@ -197,12 +213,6 @@ type LayoutType = {
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang="ar" dir="rtl">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap"
-        />
-      </head>
       <body className="font-readex" suppressHydrationWarning>
         <Bootstrap>
           <GSAPAnimations />
@@ -215,69 +225,83 @@ export default function RootLayout({ children }: LayoutType) {
 
 
 --- C:\Users\hanos\sytech\app\page.tsx ---
-"use client";
-import Header from "@/components/Header";
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import AboutMe from "@/components/AboutMe";
-import Services from "@/components/Services";
-import Attainments from "@/components/Attainments";
-import Experience from "@/components/Experience";
-import { useEffect, useState } from "react";
+// app/page.tsx
 
-export default function Home() {
-  const [navOpen, setNavOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+import type { Metadata } from "next";
+import HomeContent from "@/components/HomeContent";
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
+// Page-Specific Metadata
+export const metadata: Metadata = {
+  title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
+  description:
+    "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+  keywords: "مسرعة أعمال, استثمار, مشاريع ناشئة, سيرياتك",
+  authors: [{ name: "سيرياتيك" }],
+  openGraph: {
+    type: "website",
+    locale: "ar_SY",
+    url: "https://syriatech.co",
+    title: "سيرياتك - مسرعة أعمال سورية مساهمة خاصة",
+    description:
+      "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+    siteName: "سيرياتك",
+    images: [
+      {
+        url: "https://syriatech.co/images/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "سيرياتك - مسرعة أعمال سورية",
+      },
+    ],
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+    },
+  },
+};
 
-  if (loading) {
-    return (
-      <div className="loader-container w-100 d-flex align-items-center justify-content-center">
-        <div className="loader"></div>
-      </div>
-    );
-  }
+export default function HomePage() {
+  // Structured Data for SEO (JSON-LD)
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "سيرياتك",
+    "url": "https://syriatech.co",
+    "logo": "https://syriatech.co/logo.png",
+    "description":
+      "نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة",
+    "sameAs": [
+      "https://www.facebook.com/syriatech",
+      "https://twitter.com/syriatech",
+      "https://www.linkedin.com/company/syriatech",
+    ],
+    "contactPoint": [
+      {
+        "@type": "ContactPoint",
+        "telephone": "+90-5550400545",
+        "contactType": "customer service",
+        "areaServed": "SY",
+      },
+    ],
+  };
 
   return (
     <>
-      <Header navOpen={navOpen} setNavOpen={setNavOpen} />
-      <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
-      <svg className="bg-gradiant" preserveAspectRatio="xMidYMid slice" viewBox="10 10 80 80">
-        <path
-          fill="#9b5de5"
-          className="out-top"
-          d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z"
-        />
-        <path
-          fill="#f15bb5"
-          className="in-top"
-          d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z"
-        />
-        <path
-          fill="#00bbf9"
-          className="out-bottom"
-          d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z"
-        />
-        <path
-          fill="#00f5d4"
-          className="in-bottom"
-          d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z"
-        />
-      </svg>
-      <main className="container-fluid">
-        <div className="row gx-xxl-6">
-          <div className="col col-xl-9" data-bs-spy="scroll" data-bs-target="#navigation">
-            <Hero />
-            <AboutMe />
-            <Services />
-            <Attainments />
-            <Experience />
-          </div>
-        </div>
-      </main>
+      <HomeContent structuredData={structuredData} />
     </>
   );
 }
@@ -297,6 +321,11 @@ export interface SubmitInvestorResponse {
   message?: string;
 }
 
+export interface Project {
+  id: string; // Unique identifier for dynamic routing
+  name: string;
+  logo: string; // Path to the project logo image
+  shortDescription: string;
 
 --- C:\Users\hanos\sytech\app\api\submit-investor\route.ts ---
 // app/api/submit-investor/route.ts
@@ -645,11 +674,416 @@ export async function POST(
 }
 
 
+--- C:\Users\hanos\sytech\app\data\projectDetailsData.ts ---
+// app/data/projectDetailsData.ts
+
+export interface ProjectDetail {
+  id: string;
+  name: string;
+  logo: string;
+  shortDescription: string;
+  fullDescription: string;
+  sections: ProjectSection[];
+  team: TeamMember[];
+}
+
+export interface ProjectSection {
+  title: string;
+  content: string | string[]; // Can be a string or an array of strings for lists
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  photo?: string; // Optional: URL to the team member's photo
+}
+
+export const projectDetails: ProjectDetail[] = [
+  {
+    id: "saiks", // Matches the updated project ID in projectsData.ts
+    name: "سايكس",
+    logo: "/images/projects/syex-logo.png", // Updated to match projectsData.ts
+    shortDescription:
+      "منصة إلكترونية تربط المنتجين المحليين في سوريا بالمشتريين الدوليين، مع توفير أدوات لإدارة الأعمال والتواصل الفعّال.",
+    fullDescription:
+      "منصة سايكس الإلكترونية تهدف إلى تعزيز التجارة الإلكترونية في سوريا من خلال توفير سوق رقمي يُمكّن المنتجين المحليين من عرض منتجاتهم والتواصل مع المشترين الدوليين بشكل آمن وفعّال. تقدم المنصة أدوات متكاملة لإدارة الطلبات، المخزون، والدفع الإلكتروني، مما يسهل عملية البيع والشراء بالجملة.",
+    sections: [
+      {
+        title: "1. ملخص المشروع",
+        content:
+          "الهدف من المشروع هو إنشاء منصة إلكترونية تُمكّن المنتجين المحليين في سوريا من عرض منتجاتهم وتوفير قناة آمنة وفعالة للبيع بالجملة إلى خارج سوريا. ستكون المنصة بمثابة سوق رقمي يربط البائعين والمشترين، مع توفير أدوات لإدارة الأعمال، مثل الدفع الإلكتروني، الشحن، والتواصل بين الأطراف.",
+      },
+      {
+        title: "2. رؤية المشروع",
+        content: [
+          "تمكين المنتجين المحليين في سوريا من الوصول إلى أسواق جديدة.",
+          "تعزيز التجارة الإلكترونية كوسيلة لتحفيز الاقتصاد السوري.",
+          "تقديم حلول تقنية تسهل التجارة بين الشركات (B2B).",
+        ],
+      },
+      {
+        title: "3. القيم الأساسية",
+        content: [
+          "الشفافية: ضمان وضوح العمليات التجارية وشروط الاستخدام.",
+          "الأمان: توفير نظام دفع وشحن آمن.",
+          "الدعم المحلي: التركيز على تمكين المنتجات السورية.",
+          "سهولة الاستخدام: تصميم منصة سهلة التنقل والاستخدام.",
+        ],
+      },
+      {
+        title: "4. شرائح العملاء",
+        content: [
+          "المنتجون المحليون: الشركات والمصانع الصغيرة والمتوسطة المحلية.",
+          "المشترون الدوليون: مستوردون من دول أخرى يبحثون عن منتجات سورية بأسعار تنافسية.",
+        ],
+      },
+      {
+        title: "5. القيمة المقترحة",
+        content: [
+          "للبائعين:",
+          "• الوصول إلى جمهور أوسع خارج سوريا.",
+          "• أدوات لإدارة الطلبات، المخزون، والدفع.",
+          "• خدمة تسويقية مجانية أو مدفوعة لتعزيز مبيعاتهم.",
+          "",
+          "للمشترين:",
+          "• مجموعة واسعة من المنتجات المحلية بأسعار تنافسية.",
+          "• ضمان الجودة والشفافية في التعاملات.",
+          "• خيارات شحن مرنة وآمنة.",
+        ],
+      },
+      {
+        title: "6. قنوات التوزيع",
+        content: [
+          "المنصة الإلكترونية: موقع ويب وتطبيق جوال متاحين باللغتين العربية والإنجليزية.",
+          "وسائل التواصل الاجتماعي: حملات تسويقية على فيسبوك، إنستغرام، ولينكدإن.",
+          "البريد الإلكتروني: رسائل إخبارية دورية تحتوي على عروض ومنتجات جديدة.",
+          "الشراكات: التعاون مع غرف التجارة المحلية والمنظمات غير الحكومية لدعم المنتجين.",
+        ],
+      },
+      {
+        title: "7. العلاقات مع العملاء",
+        content: [
+          "دعم العملاء: فريق متخصص لحل المشكلات الفنية والتجارية والرد على استفساراتهم.",
+          "التقييمات والمراجعات: نظام لتقييم البائعين والمشترين لضمان الثقة.",
+        ],
+      },
+      {
+        title: "8. الإيرادات",
+        content: [
+          "عمولات البيع: نسبة مئوية من كل عملية بيع تتم عبر المنصة.",
+          "الإعلانات: مساحات إعلانية مدفوعة للبائعين الراغبين في زيادة ظهورهم.",
+          "خدمات إضافية: رسوم على الخدمات الإضافية مثل الشحن السريع أو التسويق الرقمي.",
+        ],
+      },
+      {
+        title: "9. البنية التحتية والتكنولوجيا",
+        content: [
+          "تطوير المنصة:",
+          "• تصميم واجهة مستخدم (UI) وتجربة مستخدم (UX) بسيطة وجذابة.",
+          "• بناء نظام إدارة محتوى (CMS) لتسهيل إدارة المنتجات.",
+          "• دمج بوابة دفع إلكتروني آمنة تدعم العملات المحلية والدولية.",
+          "",
+          "البنية التحتية التقنية:",
+          "• خوادم محلية ودولية لضمان استقرار المنصة.",
+          "• نظام أمان قوي لحماية بيانات المستخدمين.",
+          "• دعم فني متواصل لحل أي مشكلات تقنية.",
+        ],
+      },
+      {
+        title: "10. الشركاء الرئيسيون",
+        content: [
+          "شركات الشحن: التعاون مع شركات الشحن الدولية لتوفير خدمات توصيل فعالة.",
+          "بنوك ومؤسسات مالية: لتسهيل عمليات الدفع الإلكتروني.",
+          "غرف التجارة: للترويج للمنصة وتشجيع المنتجين المحليين على الانضمام.",
+          "منظمات غير حكومية: لدعم المشاريع الصغيرة والمتوسطة.",
+        ],
+      },
+      {
+        title: "11. التحديات والحلول",
+        content: [
+          "التحديات:",
+          "• صعوبة الوصول إلى الإنترنت في بعض المناطق.",
+          "• تحديات الشحن الدولي بسبب العقوبات.",
+          "• انعدام الثقة في التجارة الإلكترونية.",
+          "",
+          "الحلول:",
+          "• توفير تطبيق يعمل بشكل جيد حتى مع اتصال إنترنت ضعيف.",
+          "• البحث عن شركات شحن دولية تعمل في سوريا.",
+          "• بناء نظام تقييم ومراجعات لتعزيز الثقة بين الأطراف.",
+        ],
+      },
+      {
+        title: "12. الخطة الزمنية",
+        content: [
+          "المرحلة الأولى (3 أشهر): تطوير المنصة واختبارها مع مجموعة صغيرة من البائعين والمشترين.",
+          "المرحلة الثانية (6 أشهر): إطلاق المنصة رسميًا وبدء الحملات التسويقية.",
+          "المرحلة الثالثة (12 شهرًا): التوسع ليشمل كل المدن السورية والأسواق الدولية.",
+        ],
+      },
+      {
+        title: "13. المؤشرات الرئيسية للأداء (KPIs)",
+        content: [
+          "• عدد البائعين المسجلين.",
+          "• عدد الطلبات الشهرية.",
+          "• حجم المعاملات المالية على المنصة.",
+          "• مستوى رضا العملاء (بناءً على التقييمات والمراجعات).",
+          "• عدد الزوار اليوميين/الشهريين.",
+        ],
+      },
+      {
+        title: "14. التمويل",
+        content: [
+          "مصادر التمويل:",
+          "• استثمارات من رجال أعمال سوريين.",
+          "• التمويل الجماعي من الأفراد السوريين.",
+          "",
+          "ميزانية أولية لأول 12 شهرا:",
+          "• تطوير المنصة: $10,000",
+          "• التسويق: $30,000",
+          "• التشغيل (رواتب وبنية تحتية): $10,000",
+        ],
+      },
+      {
+        title: "15. الخاتمة",
+        content:
+          "إنشاء منصة سايكس الإلكترونية مثل \"علي بابا\" في سوريا يمكن أن يكون خطوة مهمة نحو تعزيز الاقتصاد المحلي وفتح فرص جديدة للمنتجين والتجار. مع التخطيط الجيد والتنفيذ الفعال، يمكن لهذه المنصة أن تصبح مركزًا رئيسيًا للتجارة الإلكترونية في المنطقة.\n\nنموذج العمل هذا قابل للتعديل بناءً على الاحتياجات المتغيرة والفرص الجديدة التي قد تظهر أثناء التنفيذ.",
+      },
+    ],
+    team: [
+      {
+        name: "أنس هبره",
+        role: "مدير المشروع",
+        photo: "/images/team/ans-habra.png", // Ensure this path is correct
+      },
+      {
+        name: "محمود الأحمد",
+        role: "المدير التقني للمشروع مع خبرة سلاسل توريد",
+        photo: "/images/team/mahmoud-ahmad.png",
+      },
+      {
+        name: "محمد بيلوني",
+        role: "مدير التسويق",
+        photo: "/images/team/mohamed-beloni.png",
+      },
+    ],
+  },
+  // ... Add other projects as needed
+];
+
+
+--- C:\Users\hanos\sytech\app\data\projectsData.ts ---
+// app/data/projectsData.ts
+
+import { Project } from "@/app/types";
+
+export const projects: Project[] = [
+  {
+    id: "saiks", // Changed from "project-1" to "saiks" to match projectDetailsData.ts
+    name: "سايكس",
+    logo: "/images/projects/syex-logo.png", // Updated path to match projectDetailsData.ts
+    shortDescription: "منصة إلكترونية تربط المنتجين السوريين بالمشترين الدوليين.",
+  },
+  // ... Add other projects as needed
+];
+
+
+--- C:\Users\hanos\sytech\app\projects\[id]\page.tsx ---
+// app/projects/[id]/page.tsx
+
+"use client"; // Enable client-side interactivity for GSAP animations
+
+import React, { useEffect, useRef } from "react";
+import { Metadata } from "next";
+import { projectDetails, ProjectDetail } from "@/app/data/projectDetailsData";
+import Image from "next/image";
+import ProjectHeader from "@/components/ProjectHeader";
+import styles from "@/styles/ProjectDetail.module.scss";
+import TeamMemberCard from "@/components/TeamMemberCard";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Head from "next/head";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface PageProps {
+  params: { id: string };
+}
+
+export const generateMetadata = ({ params }: PageProps): Metadata => {
+  const project = projectDetails.find((proj) => proj.id === params.id);
+
+  if (!project) {
+    return {
+      title: "المشروع غير موجود",
+      description: "المشروع المطلوب غير متاح.",
+      openGraph: {
+        title: "المشروع غير موجود",
+        description: "المشروع المطلوب غير متاح.",
+      },
+    };
+  }
+
+  return {
+    title: `${project.name} - سيرياتك`,
+    description: project.shortDescription,
+    openGraph: {
+      title: `${project.name} - سيرياتك`,
+      description: project.shortDescription,
+      url: `https://syriatech.co/projects/${project.id}`,
+      images: [
+        {
+          url: project.logo.startsWith("http")
+            ? project.logo
+            : `https://syriatech.co${project.logo}`,
+          width: 800,
+          height: 600,
+          alt: `${project.name} Logo`,
+        },
+      ],
+      type: "website",
+    },
+  };
+};
+
+const ProjectDetailPage = ({ params }: PageProps) => {
+  const { id } = params;
+
+  // Reference for GSAP animations
+  const projectDetailRef = useRef<HTMLDivElement | null>(null);
+
+  // Find the project based on the ID
+  const project: ProjectDetail | undefined = projectDetails.find(
+    (proj) => proj.id === id
+  );
+
+  useEffect(() => {
+    if (projectDetailRef.current) {
+      gsap.from(projectDetailRef.current.querySelectorAll("h1, h2, p, ul"), {
+        opacity: 0,
+        y: 50,
+        stagger: 0.2,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: projectDetailRef.current,
+          start: "top 80%",
+        },
+      });
+    }
+  }, [project]);
+
+  if (!project) {
+    return (
+      <>
+        <ProjectHeader />
+        <div className={styles.projectNotFound}>
+          <h1>المشروع غير موجود</h1>
+          <p>المشروع المطلوب غير متاح.</p>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {/* Structured Data for SEO */}
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Project",
+              name: project.name,
+              description: project.shortDescription,
+              url: `https://syriatech.co/projects/${project.id}`,
+              logo: `https://syriatech.co${project.logo}`,
+              // Add more structured data as needed
+            }),
+          }}
+        />
+      </Head>
+
+      {/* Background Elements */}
+      <div className="bg-shape">
+        {/* Example Background Shapes */}
+        <div className="bg-gradiant"></div>
+        <div className="grain"></div>
+        <div id="bg-snow">
+          {/* Snowflakes are generated via SCSS */}
+          {Array.from({ length: 50 }).map((_, index) => (
+            <div key={index} className="snowflake"></div>
+          ))}
+        </div>
+        <div id="bg-video">
+          <video autoPlay muted loop>
+            <source src="/videos/background-video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <canvas id="background-canvas"></canvas>
+      </div>
+
+      {/* Main Content */}
+      <ProjectHeader />
+      <div className={styles.projectDetailContainer} ref={projectDetailRef}>
+        <div className={styles.projectDetail}>
+          <h1 className={styles.projectName}>{project.name}</h1>
+          <div className={styles.logoAndDescription}>
+            <Image
+              src={project.logo}
+              alt={`${project.name} Logo`}
+              width={200}
+              height={200}
+              className={styles.projectLogo}
+            />
+            <p className={styles.projectDescription}>
+              {project.fullDescription}
+            </p>
+          </div>
+
+          {project.sections.map((section, index) => (
+            <div key={index} className={styles.projectSection}>
+              <h2 className={styles.sectionTitle}>{section.title}</h2>
+              {Array.isArray(section.content) ? (
+                <ul className={styles.sectionList}>
+                  {section.content.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.sectionContent}>{section.content}</p>
+              )}
+            </div>
+          ))}
+
+          {project.team && project.team.length > 0 && (
+            <div className={styles.teamSection}>
+              <h2 className={styles.sectionTitle}>فريق العمل</h2>
+              <div className={styles.teamGrid}>
+                {project.team.map((member, idx) => (
+                  <TeamMemberCard key={idx} member={member} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ProjectDetailPage;
+
+
 --- C:\Users\hanos\sytech\components\AboutMe.tsx ---
+// components/AboutMe.tsx
+
 import Link from "next/link";
 import React from "react";
 import SectionTitle from "./SectionTitle";
 import SectionOverlayText from "./SectionOverlayText";
+
 const AboutMe = () => {
   return (
     <section id="about_me" className="about section">
@@ -1338,11 +1772,24 @@ export default GSAPAnimations;
 
 
 --- C:\Users\hanos\sytech\components\Header.tsx ---
+// components/Header.tsx
+
+"use client";
+
 import React, { Dispatch, SetStateAction } from "react";
 import Logo from "@/public/images/logo.png";
 import Image from "next/image";
 import Link from "next/link";
-const Header = ({ setNavOpen, navOpen, classes }: { setNavOpen: Dispatch<SetStateAction<boolean>>; navOpen: boolean; classes?: string }) => {
+
+const Header = ({
+  setNavOpen,
+  navOpen,
+  classes,
+}: {
+  setNavOpen: Dispatch<SetStateAction<boolean>>;
+  navOpen: boolean;
+  classes?: string;
+}) => {
   return (
     <header className="header">
       <div className="container-fluid d-flex align-items-center justify-content-between">
@@ -1350,7 +1797,10 @@ const Header = ({ setNavOpen, navOpen, classes }: { setNavOpen: Dispatch<SetStat
           <Image src={Logo} alt="logo" />
         </Link>
 
-        <button onClick={() => setNavOpen((p) => !p)} className="bg-transparent border-0 d-xl-none">
+        <button
+          onClick={() => setNavOpen((p) => !p)}
+          className="bg-transparent border-0 d-xl-none"
+        >
           <div className={`nav-icon ${navOpen ? "open" : ""}`}>
             <span></span>
             <span></span>
@@ -1366,6 +1816,8 @@ export default Header;
 
 
 --- C:\Users\hanos\sytech\components\Hero.tsx ---
+// components/Hero.tsx
+
 import Image from "next/image";
 import React from "react";
 import HeroImg from "@/public/images/hero.png";
@@ -1377,16 +1829,41 @@ import gsap from "gsap";
 
 const Hero = ({ classes }: { classes?: string }) => {
   useGSAP(() => {
-    gsap.from(".img-wrapper", { duration: 1.5, scale: 1.5, ease: "back", delay: 0.3, opacity: 0 });
-    gsap.from(".work-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
-    gsap.from(".contact-btn", { duration: 1.2, scale: 0, opacity: 0, ease: "bounce" });
+    gsap.from(".img-wrapper", {
+      duration: 1.5,
+      scale: 1.5,
+      ease: "back",
+      delay: 0.3,
+      opacity: 0,
+    });
+    gsap.from(".work-btn", {
+      duration: 1.2,
+      scale: 0,
+      opacity: 0,
+      ease: "bounce",
+    });
+    gsap.from(".contact-btn", {
+      duration: 1.2,
+      scale: 0,
+      opacity: 0,
+      ease: "bounce",
+    });
 
-    const freelancer = SplitType.create(".freelancer", { types: 'words' }).words;
-    const desc = SplitType.create(".description", { types: 'words' }).words;
-    gsap.from(freelancer, { duration: 1.5, opacity: 0, ease: "bounce", stagger: 0.2 });
-    gsap.from(desc, { duration: 1, opacity: 0, stagger: 0.2 });
+    const freelancer = SplitType.create(".freelancer", { types: "words" }).words;
+    const desc = SplitType.create(".description", { types: "words" }).words;
+    gsap.from(freelancer, {
+      duration: 1.5,
+      opacity: 0,
+      ease: "bounce",
+      stagger: 0.2,
+    });
+    gsap.from(desc, {
+      duration: 1,
+      opacity: 0,
+      stagger: 0.2,
+    });
   });
-  
+
   return (
     <section id="top" className={`hero ${classes}`}>
       <div className="row gx-4 justify-content-center align-items-center">
@@ -1420,7 +1897,12 @@ const Hero = ({ classes }: { classes?: string }) => {
               <span></span>
               <span></span>
             </div>
-            <Image className="img-fluid rounded-circle hero-img" priority={true} src={HeroImg} alt="" />
+            <Image
+              className="img-fluid rounded-circle hero-img"
+              priority={true}
+              src={HeroImg}
+              alt=""
+            />
             <div className="waves-bottom">
               <span></span>
               <span></span>
@@ -1446,7 +1928,108 @@ const Hero = ({ classes }: { classes?: string }) => {
 export default Hero;
 
 
+--- C:\Users\hanos\sytech\components\HomeContent.tsx ---
+// components/HomeContent.tsx
+
+"use client";
+
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import Header from "@/components/Header";
+import Navigation from "@/components/Navigation";
+import Hero from "@/components/Hero";
+import AboutMe from "@/components/AboutMe";
+import Services from "@/components/Services";
+import Attainments from "@/components/Attainments";
+import Experience from "@/components/Experience";
+import Projects from "@/components/Projects"; // Import the Projects component
+import { projects } from "@/app/data/projectsData"; // Import project data
+
+type HomeContentProps = {
+  structuredData: object;
+};
+
+export default function HomeContent({ structuredData }: HomeContentProps) {
+  const [navOpen, setNavOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading delay if necessary
+    setLoading(false);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loader-container w-100 d-flex align-items-center justify-content-center">
+        <div className="loader"></div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <Head>
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://syriatech.co" />
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+      <Header navOpen={navOpen} setNavOpen={setNavOpen} />
+      <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
+      <svg
+        className="bg-gradiant"
+        preserveAspectRatio="xMidYMid slice"
+        viewBox="10 10 80 80"
+      >
+        <path
+          fill="#9b5de5"
+          className="out-top"
+          d="M37-5C25.1-14.7,5.7-19.1-9.2-10-28.5,1.8-32.7,31.1-19.8,49c15.5,21.5,52.6,22,67.2,2.3C59.4,35,53.7,8.5,37-5Z"
+        />
+        <path
+          fill="#f15bb5"
+          className="in-top"
+          d="M20.6,4.1C11.6,1.5-1.9,2.5-8,11.2-16.3,23.1-8.2,45.6,7.4,50S42.1,38.9,41,24.5C40.2,14.1,29.4,6.6,20.6,4.1Z"
+        />
+        <path
+          fill="#00bbf9"
+          className="out-bottom"
+          d="M105.9,48.6c-12.4-8.2-29.3-4.8-39.4.8-23.4,12.8-37.7,51.9-19.1,74.1s63.9,15.3,76-5.6c7.6-13.3,1.8-31.1-2.3-43.8C117.6,63.3,114.7,54.3,105.9,48.6Z"
+        />
+        <path
+          fill="#00f5d4"
+          className="in-bottom"
+          d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z"
+        />
+      </svg>
+      <main className="container-fluid">
+        <div className="row gx-xxl-6">
+          <div
+            className="col col-xl-9"
+            data-bs-spy="scroll"
+            data-bs-target="#navigation"
+          >
+            <Hero />
+            <AboutMe />
+            <Services />
+            <Attainments />
+            <Experience />
+            {/* New Our Projects Section */}
+            <Projects projects={projects} />
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}
+
+
 --- C:\Users\hanos\sytech\components\Navigation.tsx ---
+// components/Navigation.tsx
+
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import Logo from "@/public/images/logo.png";
@@ -1465,9 +2048,15 @@ const Navigation = ({
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleClassChange = (mutationsList: MutationRecord[], observer: MutationObserver) => {
+    const handleClassChange = (
+      mutationsList: MutationRecord[],
+      observer: MutationObserver
+    ) => {
       mutationsList.forEach((mutation) => {
-        if (mutation.type === "attributes" && mutation.attributeName === "class") {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "class"
+        ) {
           const target = mutation.target as HTMLElement;
           if (target.classList.contains("active")) {
             const textElement = target.querySelector(".text");
@@ -1480,7 +2069,11 @@ const Navigation = ({
     };
 
     const observer = new MutationObserver(handleClassChange);
-    const config = { attributes: true, subtree: true, attributeFilter: ["class"] };
+    const config = {
+      attributes: true,
+      subtree: true,
+      attributeFilter: ["class"],
+    };
 
     if (navRef.current) {
       observer.observe(navRef.current, config);
@@ -1492,13 +2085,26 @@ const Navigation = ({
   }, []);
 
   useGSAP(() => {
-    gsap.to(".navigation", { "--height": "100%", duration: 1, ease: "power1.inOut" });
-    gsap.from(".nav-link", { duration: 0.8, delay: 0.5, opacity: 0, stagger: 0.1 });
+    gsap.to(".navigation", {
+      "--height": "100%",
+      duration: 1,
+      ease: "power1.inOut",
+    });
+    gsap.from(".nav-link", {
+      duration: 0.8,
+      delay: 0.5,
+      opacity: 0,
+      stagger: 0.1,
+    });
   });
 
   return (
     <>
-      <nav ref={navRef} className={`navigation ${navOpen ? "opened" : ""}`} id="navigation">
+      <nav
+        ref={navRef}
+        className={`navigation ${navOpen ? "opened" : ""}`}
+        id="navigation"
+      >
         <Image src={Logo} className="mb-4 d-xl-none" alt="logo" />
         <ul>
           <li onClick={() => setNavOpen(false)} className="nav-link">
@@ -1521,39 +2127,21 @@ const Navigation = ({
               <span>04</span> <span className="text">المستثمر</span>{" "}
             </Link>
           </li>
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#fun_facts">
-              <span>05</span> <span className="text">facts</span>{" "}
-            </Link>
-          </li> */}
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#experience">
               <span>05</span> <span className="text">رائد الأعمال</span>{" "}
             </Link>
           </li>
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#projects">
-              <span>07</span> <span className="text">projects</span>{" "}
+          {/* New Projects Link */}
+          <li onClick={() => setNavOpen(false)} className="nav-link">
+            <Link href="#our-projects">
+              <span>06</span> <span className="text">مشاريعنا</span>
             </Link>
-          </li> */}
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#how_i_work">
-              <span>06</span> <span className="text">how i work</span>{" "}
-            </Link>
-          </li> */}
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#blogs">
-              <span>08</span> <span className="text">Blogs</span>{" "}
-            </Link>
-          </li> */}
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#testimonials">
-              <span>09</span> <span className="text">testimonials</span>{" "}
-            </Link>
-          </li> */}
+          </li>
+          {/* Uncomment and adjust numbering as needed for additional links */}
           {/* <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#contact">
-              <span>06</span> <span className="text">حاكينا</span>{" "}
+              <span>07</span> <span className="text">اتصل بنا</span>{" "}
             </Link>
           </li> */}
         </ul>
@@ -1564,6 +2152,104 @@ const Navigation = ({
 };
 
 export default Navigation;
+
+
+--- C:\Users\hanos\sytech\components\ProjectHeader.tsx ---
+// components/ProjectHeader.tsx
+
+"use client";
+
+import React, { useState } from "react";
+import Header from "@/components/Header";
+
+const ProjectHeader = () => {
+  const [navOpen, setNavOpen] = useState(false);
+
+  return <Header setNavOpen={setNavOpen} navOpen={navOpen} />;
+};
+
+export default ProjectHeader;
+
+
+--- C:\Users\hanos\sytech\components\Projects.tsx ---
+"use client";
+
+import React, { useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Project } from "@/app/types";
+import styles from "@/styles/Projects.module.scss"; // Ensure this SCSS module exists
+import SectionTitle from "./SectionTitle";
+import useGSAP from "@/hooks/useGSAP";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface ProjectsProps {
+  projects: Project[];
+}
+
+const Projects: React.FC<ProjectsProps> = ({ projects }) => {
+  const sectionRef = useRef<HTMLElement | null>(null);
+
+  useGSAP(
+    (self) => {
+      if (self.selector) {
+        const projectCards = self.selector(`.${styles.projectCard}`);
+        if (projectCards.length > 0) { // Ensure there are elements to animate
+          gsap.from(projectCards, {
+            stagger: 0.2,
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: sectionRef.current!,
+              start: "top 80%",
+              end: "top 60%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        }
+      }
+    },
+    sectionRef
+  );
+
+  return (
+    <section ref={sectionRef} id="our-projects" className={styles.projectsSection}>
+      <SectionTitle subtitle="تعرف على مشاريعنا" title="مشاريعنا" />
+      <div className={styles.projectsGrid}>
+        {projects.map((project) => (
+          <Link
+            key={project.id}
+            href={`/projects/${project.id}`}
+            className={styles.projectLink}
+          >
+            <div className={styles.projectCard}>
+              <div className={styles.projectImageWrapper}>
+                <Image
+                  src={project.logo}
+                  alt={`${project.name} Logo`}
+                  width={150}
+                  height={150}
+                  className={styles.projectLogo}
+                />
+              </div>
+              <h3 className={styles.projectName}>{project.name}</h3>
+              <p className={styles.projectDescription}>
+                {project.shortDescription}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default Projects;
 
 
 --- C:\Users\hanos\sytech\components\SectionOverlayText.tsx ---
@@ -1833,11 +2519,51 @@ const Services: React.FC = () => {
 export default Services;
 
 
+--- C:\Users\hanos\sytech\components\TeamMemberCard.tsx ---
+// components/TeamMemberCard.tsx
+
+"use client"; // Mark as client component if it uses client-side features
+
+import React from "react";
+import Image from "next/image";
+import styles from "@/styles/TeamMemberCard.module.scss"; // Ensure this SCSS module exists
+
+interface TeamMember {
+  name: string;
+  role: string;
+  photo?: string;
+}
+
+interface TeamMemberCardProps {
+  member: TeamMember;
+}
+
+const TeamMemberCard: React.FC<TeamMemberCardProps> = ({ member }) => {
+  return (
+    <div className={styles.card}>
+      {member.photo && (
+        <Image
+          src={member.photo}
+          alt={`${member.name} Photo`}
+          width={100}
+          height={100}
+          className={styles.photo}
+        />
+      )}
+      <h3 className={styles.name}>{member.name}</h3>
+      <p className={styles.role}>{member.role}</p>
+    </div>
+  );
+};
+
+export default TeamMemberCard;
+
+
 --- C:\Users\hanos\sytech\hooks\useGSAP.ts ---
 // hooks/useGSAP.ts
 
 import { useEffect, RefObject } from "react";
-import gsap from "gsap";
+import gsap, { Context } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -1845,2556 +2571,315 @@ gsap.registerPlugin(ScrollTrigger);
 /**
  * Custom hook to integrate GSAP animations with React components.
  *
- * @param animationCallback - A callback function that receives the GSAP context.
+ * @param animationCallback - A callback function that receives the GSAP context's selector method.
  * @param scopeRef - A ref to the DOM element that defines the scope of the animation.
  */
 const useGSAP = (
-  animationCallback: (self: gsap.Context) => void,
+  animationCallback: (selector: gsap.utils.Selector) => void,
   scopeRef: RefObject<HTMLElement | null>
 ) => {
   useEffect(() => {
-    if (typeof window !== "undefined" && scopeRef.current) {
-      const context = gsap.context((self: gsap.Context) => {
-        animationCallback(self);
-      }, scopeRef.current);
-      
-      // Cleanup function to revert animations on component unmount
-      return () => context.revert();
+    if (typeof window === "undefined" || !scopeRef.current) {
+      return;
     }
-  }, [animationCallback, scopeRef]);
+
+    // Initialize GSAP context
+    const context: Context = gsap.context(() => {
+      animationCallback((selector) => gsap.utils.selector(scopeRef.current!)(selector));
+    }, scopeRef.current);
+
+    // Cleanup function to revert animations on component unmount
+    return () => {
+      context.revert(); // Reverts all GSAP animations and ScrollTriggers within this context
+      // Removed ScrollTrigger.killAll() to avoid killing unrelated ScrollTriggers
+    };
+  }, [animationCallback, scopeRef]); // Changed dependency from scopeRef.current to scopeRef
 };
 
 export default useGSAP;
 
 
---- C:\Users\hanos\sytech\public\scss\bootstrap.scss ---
-$black: #000000;
-$yellow: #ffdb67;
-$white: #ffffff;
+--- C:\Users\hanos\sytech\styles\ProjectDetail.module.scss ---
+/* styles/ProjectDetail.module.scss */
 
-$btn-border-radius: 50px;
-$btn-padding-x: 16px;
-$btn-padding-y: 10px;
-$btn-font-size: 14px;
-$btn-font-weight: 500;
-
-$primary: $yellow;
-$secondary: #000000;
-
-// gutters
-
-$spacer: 1rem;
-$gutters: (
-  0: 0,
-  1: $spacer * 0.25,
-  2: $spacer * 0.5,
-  3: $spacer,
-  4: $spacer * 1.5,
-  5: $spacer * 3,
-  6: $spacer * 4.5,
-  7: $spacer * 6,
-  8: $spacer * 7.5,
-  9: $spacer * 9,
-  10: $spacer * 10,
-);
-
-/* libs */
-@import "bootstrap/scss/bootstrap";
-
-
---- C:\Users\hanos\sytech\public\scss\mixins.scss ---
-// mixins
-
-@mixin min-width($breakpoint) {
-  $breakpoints: map-get($grid-breakpoints, $breakpoint);
-
-  @if $breakpoints {
-    @media (min-width: $breakpoints) {
-      @content;
-    }
-  } @else {
-    @warn "No valid breakpoint found for `#{$breakpoint}`. Valid breakpoints are: #{map-keys($grid-breakpoints)}.";
-  }
+.projectDetailContainer {
+  padding: 4rem 2rem; // Adds space from the header and sides
+  background-color: #f9f9f9; // Light background for contrast
 }
 
-
---- C:\Users\hanos\sytech\public\scss\styles.scss ---
-:root {
-  --black: 0, 0, 0;
-  --primary: 255, 219, 103;
-  --white: 255, 255, 255;
+.projectDetail {
+  max-width: 1200px;
+  margin: 0 auto; // Center the content
+  background: #ffffff;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap");
-
-@import "bootstrap.scss";
-@import "phosphor-icons/src/css/icons.css";
-@import "swiper/css";
-@import "swiper/css/pagination";
-@import "swiper/css/autoplay";
-@import "swiper/css/navigation";
-@import "swiper/css/scrollbar";
-@import "mixins.scss";
-@import "../../node_modules/react-modal-video/scss/modal-video.scss";
-
-// Reset
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: rgb(var(--primary));
-  color: rgb(var(--black));
-  font-size: 16px;
-  overflow-x: hidden;
-}
-a {
-  text-decoration: none;
-  color: rgb(var(--black));
-}
-p,
-span,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: rgb(var(--black));
-  margin-bottom: 0;
-}
-@media screen and (min-width: 1400px) {
-  .btn {
-    padding: 12px 24px;
-    font-size: 18px;
-  }
-}
-.container-fluid {
-  position: relative;
-  z-index: 2;
-}
-@media screen and (min-width: 1750px) {
-  .container-fluid {
-    max-width: 1740px;
-  }
-  .navigation {
-    left: calc((100% - 1680px) / 2 + 1290px);
-    width: 360px;
-  }
+.projectName {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
 }
 
-/* HTML: <div class="loader"></div> */
-.loader-container {
-  height: 100vh;
-  .loader {
-    --R: 30px;
-    --g1: #514b82 96%, #0000;
-    --g2: #eeeeee 96%, #0000;
-    width: calc(2 * var(--R));
-    aspect-ratio: 1;
-    border-radius: 50%;
-    display: grid;
-    mask: linear-gradient(#000 0 0);
-    -webkit-mask: linear-gradient(#000 0 0);
-    animation: l30 2s infinite linear;
-  }
-  .loader::before,
-  .loader::after {
-    content: "";
-    grid-area: 1/1;
-    width: 50%;
-    background:
-      radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
-      radial-gradient(farthest-side, var(--g1)) calc(var(--R) + 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
-      radial-gradient(farthest-side, var(--g2)) calc(var(--R) + 0.5 * var(--R) - var(--R)) calc(var(--R) - 0.866 * var(--R) - var(--R)),
-      radial-gradient(farthest-side, var(--g1)) 0 calc(-1 * var(--R)),
-      radial-gradient(farthest-side, var(--g2)) calc(var(--R) - 0.5 * var(--R) - var(--R)) calc(var(--R) - 0.866 * var(--R) - var(--R)),
-      radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866 * var(--R) - var(--R)) calc(var(--R) - 0.5 * var(--R) - var(--R)),
-      radial-gradient(farthest-side, var(--g2)) calc(-1 * var(--R)) 0,
-      radial-gradient(farthest-side, var(--g1)) calc(var(--R) - 0.866 * var(--R) - var(--R)) calc(var(--R) + 0.5 * var(--R) - var(--R));
-    background-size: calc(2 * var(--R)) calc(2 * var(--R));
-    background-repeat: no-repeat;
-  }
-  .loader::after {
-    transform: rotate(180deg);
-    transform-origin: right;
-  }
-
-  @keyframes l30 {
-    100% {
-      transform: rotate(-1turn);
-    }
-  }
-}
-
-.grain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  pointer-events: none;
-  z-index: 300;
-  transform: translateZ(0);
-
-  &:before {
-    content: "";
-    top: -10rem;
-    left: -10rem;
-    width: calc(100% + 20rem);
-    height: calc(100% + 20rem);
-    z-index: 301;
-    position: fixed;
-    background-image: url(https://upload.wikimedia.org/wikipedia/commons/5/5c/Image_gaussian_noise_example.png);
-    opacity: 0.12;
-    pointer-events: none;
-    -webkit-animation: noise 1s steps(2) infinite;
-    animation: noise 1s steps(2) infinite;
-  }
-
-  @-webkit-keyframes noise {
-    to {
-      transform: translate3d(-7rem, 0, 0);
-    }
-  }
-
-  @keyframes noise {
-    0% {
-      transform: translate3d(0, 9rem, 0);
-    }
-    10% {
-      transform: translate3d(-1rem, -4rem, 0);
-    }
-    20% {
-      transform: translate3d(-8rem, 2rem, 0);
-    }
-    30% {
-      transform: translate3d(9rem, -9rem, 0);
-    }
-    40% {
-      transform: translate3d(-2rem, 7rem, 0);
-    }
-    50% {
-      transform: translate3d(-9rem, -4rem, 0);
-    }
-    60% {
-      transform: translate3d(2rem, 6rem, 0);
-    }
-    70% {
-      transform: translate3d(7rem, -8rem, 0);
-    }
-    80% {
-      transform: translate3d(-9rem, 1rem, 0);
-    }
-    90% {
-      transform: translate3d(6rem, -5rem, 0);
-    }
-    to {
-      transform: translate3d(-7rem, 0, 0);
-    }
-  }
-}
-
-.header {
-  padding: 14px 0;
-  width: 100%;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  backdrop-filter: blur(3px);
-  position: fixed;
-  img {
-    max-width: 100%;
-  }
-  .nav-icon {
-    width: 36px;
-    height: 22px;
-    position: relative;
-    transform: rotate(0deg);
-    transition: 0.5s ease-in-out;
-    cursor: pointer;
-    z-index: 15;
-    span {
-      display: block;
-      position: absolute;
-      height: 2px;
-      width: 100%;
-      background: rgb(var(--black));
-      opacity: 1;
-      left: 0;
-      transform: rotate(0deg);
-      transition: 0.25s ease-in-out;
-    }
-  }
-  .nav-icon span:nth-child(1) {
-    top: 0px;
-  }
-
-  .nav-icon span:nth-child(2) {
-    top: 10px;
-  }
-
-  .nav-icon span:nth-child(3) {
-    top: 20px;
-  }
-
-  .nav-icon.open span:nth-child(1) {
-    top: 10px;
-    transform: rotate(135deg);
-    background-color: rgb(var(--white));
-  }
-
-  .nav-icon.open span:nth-child(2) {
-    opacity: 0;
-    left: -60px;
-  }
-
-  .nav-icon.open span:nth-child(3) {
-    top: 10px;
-    transform: rotate(-135deg);
-    background-color: rgb(var(--white));
-  }
-}
-
-// navigation
-.navigation {
-  position: absolute;
-  --height: 0;
-  @media (max-width: 1200px) {
-    &:dir(ltr) {
-      transform: translateX(-100%);
-      left: 0;
-    }
-    &:dir(rtl) {
-      transform: translateX(100%);
-      right: 0;
-    }
-    transition-duration: 500ms;
-    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    padding: 20px;
-    top: 0;
-    bottom: 0;
-    max-width: 300px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-  }
-  &.opened {
-    @media (max-width: 1200px) {
-      transform: translateX(0);
-      position: fixed;
-      background-color: rgb(var(--primary));
-    }
-  }
-  @include min-width(xl) {
-    position: fixed;
-    top: 100px;
-    right: 0;
-    &:dir(rtl) {
-      left: 0;
-      right: auto;
-    }
-    display: block;
-    transform: translateX(0);
-  }
-  z-index: 100;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 100px;
-    @include min-width(xl) {
-      top: 0;
-    }
-    &:dir(ltr) {
-      left: 0;
-    }
-    &:dir(rtl) {
-      right: 0;
-    }
-    width: 2px;
-    height: var(--height);
-    background: rgb(var(--black));
-    opacity: 0.3;
-  }
-  ul {
-    list-style: none;
-    @include min-width(xl) {
-      width: 300px;
-    }
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    position: relative;
-    li > a {
-      color: rgb(var(--black));
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 30px;
-      padding-top: 6px;
-      padding-bottom: 6px;
-      font-size: 20px;
-      font-weight: 500;
-      &:dir(ltr) {
-        padding-left: 34px;
-        border-left: 2px solid transparent;
-      }
-      &:dir(rtl) {
-        padding-right: 34px;
-        border-right: 2px solid transparent;
-      }
-      transition-duration: 300ms;
-
-      display: block;
-      position: relative;
-      span {
-        font-size: 16px;
-      }
-      &::after {
-        transition-duration: 600ms;
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background: rgb(var(--black));
-        opacity: 0.15;
-        &:dir(rtl) {
-          left: auto;
-          right: 0;
-        }
-      }
-      &:hover {
-        &::after {
-          animation: grow 600ms ease-in-out;
-          width: 100%;
-        }
-        border-left: 2px solid rgb(var(--black));
-        &:dir(rtl) {
-          border-left: none;
-          border-right: 2px solid rgb(var(--black));
-        }
-      }
-
-      &.active {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          animation: grow 600ms ease-in-out;
-          height: 100%;
-          background: rgb(var(--black));
-          opacity: 0.15;
-          &:dir(rtl) {
-            left: auto;
-            right: 0;
-          }
-        }
-        border-left: 2px solid rgb(var(--black));
-        &:dir(rtl) {
-          border-left: none;
-          border-right: 2px solid rgb(var(--black));
-        }
-      }
-    }
-  }
-  .contact {
-    padding-top: 20px;
-    &:dir(ltr) {
-      padding-left: 34px;
-    }
-    &:dir(rtl) {
-      padding-right: 34px;
-    }
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    a {
-      font-size: 18px;
-      color: rgb(var(--black));
-    }
-  }
-}
-
-.nav-overlay {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 12;
-  opacity: 0;
-  transition-duration: 500ms;
-  transform: translateX(100%);
-}
-
-.navigation.opened + .nav-overlay,
-.navigation-left-bar.opened + .nav-overlay,
-.navigation-sticky.opened + .nav-overlay,
-.navigation-topbar.opened + .nav-overlay {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-// hero section
-.hero {
-  min-height: 100vh;
-  &.hero-left-bar {
-    min-height: 85vh;
-    .next-chapter {
-      @include min-width(lg) {
-        padding-top: 80px;
-      }
-      padding-bottom: 40px;
-    }
-  }
-  padding-top: 100px;
-  @include min-width(xxl) {
-    padding-top: 200px;
-  }
-  height: auto;
-  .row {
-    height: 100%;
-    &:dir(rtl) {
-      .hero-content {
-        text-align: right;
-      }
-    }
-    .hero-content {
-      padding-top: 60px;
-      padding-bottom: 60px;
-    }
-    h4 {
-      font-size: 22px;
-      @include min-width(lg) {
-        font-size: 40px;
-      }
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-    h1 {
-      font-size: 40px;
-      margin-bottom: 12px;
-      @include min-width(md) {
-        margin-bottom: 20px;
-        font-size: 44px;
-      }
-      @include min-width(xxl) {
-        font-size: 66px;
-      }
-      font-weight: 500;
-      letter-spacing: -1px;
-    }
-    p {
-      font-size: 24px;
-      font-weight: 500;
-      letter-spacing: -1px;
-      margin-bottom: 40px;
-    }
-    .img-wrapper {
-      max-height: 416px;
-      max-width: 416px;
-      position: relative;
-      &:hover {
-        .waves-top,
-        .waves-bottom {
-          opacity: 0;
-        }
-      }
-      .hero-img {
-        border: 2px solid rgb(var(--black));
-      }
-    }
-  }
-  .next-chapter {
-    padding-top: 30px;
-    @include min-width(lg) {
-      padding-top: 160px;
-    }
-  }
-}
-
-// about section
-
-.about {
-  .section-title-overlay-text {
-    top: 80px;
-  }
-  position: relative;
-  padding-top: 60px;
-  @include min-width(xl) {
-    padding-top: 120px;
-  }
-  padding-bottom: 40px;
-  z-index: 3;
-  .about-desc {
-    h2 {
-      font-size: 32px;
-      @include min-width(md) {
-        font-size: 40px;
-      }
-      margin-bottom: 28px;
-    }
-    p.desc {
-      @include min-width(xl) {
-        font-size: 20px;
-      }
-      margin-bottom: 40px;
-    }
-  }
-  .about-contact {
-    p {
-      font-size: 18px;
-      font-weight: 500;
-    }
-    a,
-    span {
-      font-size: 20px;
-      font-weight: 500;
-    }
-  }
-  .experience-card {
-    border: 1px solid rgb(var(--black));
-    width: 100%;
-    padding: 40px;
-    text-align: center;
-    transition-duration: 500ms;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgb(var(--primary));
-    position: relative;
-    z-index: 3;
-    &::before {
-      content: "";
-      position: absolute;
-      transition-duration: 500ms;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 1px solid rgb(var(--black));
-      transform: rotate(2.5deg);
-      z-index: -1;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      transition-duration: 500ms;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 1px solid rgb(var(--black));
-      transform: rotate(-2.5deg);
-      z-index: -1;
-    }
-    &:hover {
-      &::before,
-      &::after {
-        transform: rotate(0);
-        opacity: 0;
-      }
-      .numbers .number-outline-one,
-      .numbers .number-outline-two {
-        transform: rotate(0);
-        opacity: 0;
-      }
-    }
-    p {
-      font-size: 20px;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
-    }
-    .numbers {
-      z-index: 1;
-      position: relative;
-      span {
-        font-size: 200px;
-        font-weight: 700;
-        line-height: 120%;
-      }
-      .number-outline-one,
-      .number-outline-two {
-        position: absolute;
-        top: 0;
-        -webkit-text-stroke: 1px #000;
-        -webkit-text-fill-color: transparent;
-        display: flex;
-        justify-content: center;
-        transition-duration: 500ms;
-      }
-      .number-outline-one {
-        transform: rotate(6deg);
-      }
-      .number-outline-two {
-        transform: rotate(-6deg);
-      }
-    }
-  }
-  .next-chapter {
-    padding-top: 100px;
-  }
-}
-
-/* services section */
-.services {
-  margin-top: 60px;
-  @media (min-width: 992px) {
-    margin-top: 60px;
-  }
-  padding-bottom: 40px;
-  .section-title {
-    padding-top: 60px;
-  }
-  .service-swiper {
-    padding-bottom: 50px;
-  }
-  .swiper-pagination {
-    .swiper-pagination-bullet {
-      width: 12px;
-      height: 12px;
-      opacity: 0.5;
-      background-color: #fff;
-    }
-    .swiper-pagination-bullet-active {
-      opacity: 1;
-    }
-  }
-  .next-chapter {
-    margin-top: 50px;
-    @media (min-width: 992px) {
-      margin-top: 80px;
-    }
-  }
-  .service-card {
-    position: relative;
-    padding: 16px;
-    @include min-width(sm) {
-      padding: 32px;
-    }
-    @media (min-width: 1200px) {
-      padding: 50px;
-    }
-    border: 1px solid rgb(var(--black));
-    .card-inner {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgb(var(--primary));
-      z-index: 1;
-    }
-    .number-circle {
-      .waves-top-sm,
-      .waves-bottom-sm {
-        opacity: 0;
-      }
-    }
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      transition-duration: 500ms;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      border: 1px solid rgb(var(--black));
-    }
-    &:hover {
-      &::before {
-        transform: rotate(3.5deg);
-        opacity: 1;
-      }
-      &::after {
-        transform: rotate(-3.5deg);
-        opacity: 1;
-      }
-      .number-circle {
-        .waves-top-sm,
-        .waves-bottom-sm {
-          opacity: 1;
-        }
-      }
-    }
-    .content {
-      position: relative;
-      z-index: 2;
-    }
-    .number-circle {
-      margin-bottom: 40px;
-      width: 78px;
-      height: 78px;
-      border-radius: 50%;
-      background-color: rgb(var(--primary));
-      border: 1px solid rgb(var(--black));
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      h2 {
-        font-size: 32px;
-        font-weight: 500;
-      }
-    }
-    h4 {
-      font-size: 24px;
-      font-weight: 500;
-      margin-bottom: 24px;
-      padding-bottom: 8px;
-      display: inline-block;
-      border-bottom: 2px solid rgb(var(--black));
-    }
-    .service-list {
-      list-style: none;
-      padding-left: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      li {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        color: rgb(var(--black));
-        i {
-          color: #343330;
-        }
-      }
-    }
-  }
-}
-
-/* attainments */
-.attainments {
-  padding: 60px 0;
-  overflow-x: hidden;
-  @media (min-width: 992px) {
-    padding: 60px 0;
-  }
-  .section-title-overlay-text {
-    top: 60px;
-    &:dir(ltr) {
-      left: 6%;
-    }
-    &:dir(ltr) {
-      right: 6%;
-    }
-  }
-  .section-title-sm {
-    .top {
-      &:dir(ltr) {
-        padding: 20px 0 20px 32px;
-        border-left: 2px solid rgb(var(--black));
-      }
-      &:dir(rtl) {
-        padding: 20px 32px 20px 0;
-        border-right: 2px solid rgb(var(--black));
-      }
-      h2 {
-        margin-bottom: 12px;
-        font-size: 28px;
-        @include min-width(xxl) {
-          font-size: 40px;
-        }
-        font-weight: 500;
-      }
-      span {
-        @include min-width(xxl) {
-          font-size: 20px;
-        }
-      }
-    }
-    .serial {
-      color: rgba($color: #000000, $alpha: 0.5);
-      @include min-width(lg) {
-        transform: rotate(-90deg) translate(-24px, -8px);
-      }
-      transform: rotate(-90deg) translateX(-8px);
-      font-size: 28px;
-      @include min-width(lg) {
-        font-size: 40px;
-      }
-      font-weight: 500;
-      display: inline-block;
-      margin-bottom: 40px;
-    }
-  }
-
-  .skill {
-    .progress {
-      height: 3px;
-      margin-top: 8px;
-      background-color: rgb(var(--white));
-      .progress-bar {
-        background-color: rgb(var(--black));
-        transition-duration: 4s;
-        width: 0;
-        animation-timing-function: ease-in-out;
-      }
-    }
-  }
-
-  .next-chapter {
-    padding-top: 80px;
-  }
-}
-
-// components
-
-.next-chapter {
-  &:hover {
-    i {
-      animation: updown 0.5s linear alternate-reverse infinite;
-    }
-  }
-  .page {
-    color: rgba($color: #000000, $alpha: 0.5);
-    letter-spacing: -1px;
-  }
-  .next {
-    color: rgb(var(--black));
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: -1px;
-  }
-  i {
-    font-size: 24px;
-    display: block;
-    color: rgb(var(--black));
-    transform: translateY(5px);
-    align-self: flex-end;
-    transition-duration: 500ms;
-  }
-}
-
-// section title
-.section-title {
-  padding-left: 32px;
-  padding-top: 24px;
-  position: relative;
-  @include min-width(xl) {
-    padding-top: 36px;
-    padding-left: 60px;
-  }
-  padding-bottom: 20px;
-  --height: 0;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    height: var(--height);
-    width: 2px;
-    background-color: rgb(var(--black));
-  }
-  &:dir(ltr) {
-    &::before {
-      left: 0;
-    }
-  }
-  &:dir(rtl) {
-    padding-left: 0;
-    padding-right: 32px;
-    @include min-width(xl) {
-      padding-left: 0;
-      padding-right: 60px;
-    }
-    &::before {
-      right: 0;
-    }
-  }
-  h4 {
-    font-size: 16px;
-    margin-bottom: 8px;
-    @include min-width(xl) {
-      font-size: 24px;
-    }
-    font-weight: 500;
-  }
-  h2 {
-    font-size: 22px;
-    @include min-width(sm) {
-      font-size: 28px;
-    }
-    @include min-width(sm) {
-      font-size: 40px;
-    }
-    @include min-width(xl) {
-      font-size: 55px;
-    }
-    @include min-width(xxl) {
-      font-size: 80px;
-    }
-    font-weight: 600;
-  }
-  margin-bottom: 42px;
-}
-
-.section-title-overlay-text {
-  color: rgb(var(--black));
-  font-family: Poppins;
-  font-size: 35px;
-  @include min-width(sm) {
-    font-size: 80px;
-  }
-  @include min-width(lg) {
-    font-size: 100px;
-  }
-  @include min-width(xxl) {
-    font-size: 120px;
-  }
-  @media (min-width: 1800px) {
-    font-size: 160px;
-  }
-  font-style: normal;
-  font-weight: 800;
-  line-height: 120%; /* 240px */
-  text-transform: uppercase;
-  opacity: 0.05;
-  position: absolute;
-  text-align: left;
-  top: 0;
-  left: 0;
-  &:dir(rtl) {
-    left: auto;
-    right: 0;
-  }
-}
-
-/* waves */
-.waves-top {
-  transition-duration: 300ms;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  span {
-    display: block;
-    width: 100%;
-    height: 100%;
-    opacity: 0.5;
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    border-top: 1px solid rgb(var(--black));
-    animation: btnWavesTop 2.1s linear infinite;
-    &:nth-child(2) {
-      animation-delay: 0.5s;
-    }
-    &:nth-child(3) {
-      animation-delay: 1s;
-    }
-    &:nth-child(4) {
-      animation-delay: 1.5s;
-    }
-  }
-}
-.waves-bottom {
-  @extend .waves-top;
-  span {
-    border-top: none;
-    border-bottom: 1px solid rgb(var(--black));
-    animation: btnWavesBottom 2.1s linear infinite;
-  }
-}
-
-.waves-top-md {
-  @extend .waves-top;
-  span {
-    border-bottom: none;
-    border-top: 1px solid rgb(var(--black));
-    animation: btnWavesTopMd 2.1s linear infinite;
-  }
-}
-
-.waves-bottom-md {
-  @extend .waves-top;
-  span {
-    border-top: none;
-    border-bottom: 1px solid rgb(var(--black));
-    animation: btnWavesBottomMd 2.1s linear infinite;
-  }
-}
-
-.waves-top-sm {
-  @extend .waves-top;
-  span {
-    animation: btnWavesSmTop 3.2s linear infinite;
-    &:nth-child(2) {
-      animation-delay: 0.8s;
-    }
-    &:nth-child(3) {
-      animation-delay: 1.6s;
-    }
-    &:nth-child(4) {
-      animation-delay: 2.4s;
-    }
-  }
-}
-.waves-bottom-sm {
-  @extend .waves-bottom;
-  span {
-    animation: btnWavesSmBottom 3.2s linear infinite;
-    &:nth-child(2) {
-      animation-delay: 0.8s;
-    }
-    &:nth-child(3) {
-      animation-delay: 1.6s;
-    }
-    &:nth-child(4) {
-      animation-delay: 2.4s;
-    }
-  }
-}
-
-/* utilities */
-.pb-120 {
-  padding-bottom: 60px;
-  @media (min-width: 1200px) {
-    padding-bottom: 120px;
-  }
-}
-.pb-60 {
-  padding-bottom: 30px;
-  @media (min-width: 1200px) {
-    padding-bottom: 60px;
-  }
-}
-.select-none {
-  user-select: none;
-}
-.cursor-pointer {
-  cursor: pointer;
-}
-// animations
-@keyframes updown {
-  0% {
-    transform: translateY(12px);
-  }
-
-  100% {
-    transform: translateY(5px);
-  }
-}
-
-@keyframes btnWavesTop {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(-4rem);
-    opacity: 0;
-  }
-}
-
-@keyframes btnWavesBottom {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(4rem);
-    opacity: 0;
-  }
-}
-
-@keyframes btnWavesTopMd {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(-2rem);
-    opacity: 0;
-  }
-}
-
-@keyframes btnWavesBottomMd {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(2rem);
-    opacity: 0;
-  }
-}
-
-@keyframes btnWavesSmTop {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(-1rem);
-    opacity: 0;
-  }
-}
-
-@keyframes btnWavesSmBottom {
-  from {
-    transform: translateY(0);
-    opacity: 1;
-  }
-
-  to {
-    transform: translateY(1rem);
-    opacity: 0;
-  }
-}
-
-@keyframes grow {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
-}
-
-.left-bar {
-  display: none;
-  @include min-width(xl) {
-    display: flex;
-  }
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  padding: 20px;
-  border-right: 1px solid rgba($color: #000000, $alpha: 0.1);
-  background-color: rgb(var(--primary));
+.logoAndDescription {
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  z-index: 50;
-  ul {
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    li {
-      a {
-        font-size: 1.4rem;
-        width: 40px;
-        height: 40px;
-        border: 1px solid rgba($color: #000000, $alpha: 0.05);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition-duration: 500ms;
-        &:hover {
-          background-color: rgb(var(--black));
-          color: rgb(var(--white));
-        }
-      }
-    }
-  }
-}
+  margin-bottom: 3rem;
 
-// email icon
-.email-icon {
-  display: none;
-  @include min-width(xl) {
-    display: flex;
-  }
-  width: 64px;
-  height: 64px;
-
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  background-color: rgb(var(--primary));
-  position: fixed;
-  top: 0;
-  z-index: 102;
-  &:dir(ltr) {
-    right: 0;
-  }
-  &:dir(rtl) {
-    left: 0;
-  }
-  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
-  border-left: 1px solid rgba($color: #000000, $alpha: 0.1);
-}
-@keyframes goDown {
-  0% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-}
-// navigation
-.navigation-left-bar {
-  position: sticky;
-  background-color: rgb(var(--primary));
-  --height: 0;
-  border-top: 1px solid rgba($color: #000000, $alpha: 0.1);
-  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.1);
-  .scroll-down {
-    .scroll-anim {
-      height: 30px;
-      width: 20px;
-      border: 2px solid rgba($color: #000000, $alpha: 0.2);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      span {
-        display: block;
-        width: 3px;
-        background-color: rgba($color: #000000, $alpha: 0.3);
-        height: 6px;
-        animation: goDown 2.5s ease-out infinite;
-      }
-    }
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 12px;
-    @include min-width(xxl) {
-      padding: 12px 32px;
-    }
-    p {
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-    }
-  }
-
-  @media (max-width: 1200px) {
-    &:dir(ltr) {
-      transform: translateX(-120%);
-      left: 0;
-    }
-    &:dir(rtl) {
-      transform: translateX(120%);
-      right: 0;
-    }
-    transition-duration: 500ms;
-    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    padding: 20px;
-    top: 0;
-    bottom: 0;
-    position: fixed;
-    max-width: 300px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    img {
-      margin-bottom: 20px;
-    }
-  }
-  &.opened {
-    @media (max-width: 1200px) {
-      transform: translateX(0);
-      position: fixed;
-      ul {
-        display: flex;
-        flex-direction: column;
-      }
-      background-color: rgb(var(--primary));
-    }
-  }
-  @include min-width(xl) {
-    position: sticky;
-    top: 0;
-    margin-left: 81px;
-    display: flex;
-    align-items: center;
-    transform: translateX(0);
-  }
-  z-index: 100;
-  ul {
-    @include min-width(xl) {
-      border-left: 1px solid rgba($color: #000000, $alpha: 0.1);
-    }
-    list-style: none;
-    padding: 12px;
-    display: flex;
-    margin: 0;
-    gap: 8px;
-    position: relative;
-    li > a {
-      color: rgb(var(--black));
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 30px;
-      padding: 5px 8px;
-      font-size: 14px;
-      @include min-width(xxl) {
-        font-size: 20px;
-        padding: 6px 12px;
-      }
-      font-weight: 500;
-      transition-duration: 300ms;
-      display: block;
-      position: relative;
-      min-width: max-content;
-      border-bottom: 2px solid transparent;
-      span {
-        font-size: 16px;
-      }
-      &::after {
-        transition-duration: 600ms;
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background: rgb(var(--black));
-        opacity: 0.15;
-        &:dir(rtl) {
-          left: auto;
-          right: 0;
-        }
-      }
-      &::before {
-        transition-duration: 600ms;
-        content: "";
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 0;
-        height: 2px;
-        background: rgb(var(--black));
-        &:dir(rtl) {
-          left: auto;
-          right: 0;
-        }
-      }
-      &:hover {
-        &::after {
-          animation: grow 600ms ease-in-out;
-          width: 100%;
-        }
-        &::before {
-          animation: grow 600ms ease-in-out;
-          width: 100%;
-        }
-      }
-
-      &.active {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          animation: grow 600ms ease-in-out;
-          height: 100%;
-          background: rgb(var(--black));
-          opacity: 0.15;
-          &:dir(rtl) {
-            left: auto;
-            right: 0;
-          }
-        }
-        &::before {
-          transition-duration: 600ms;
-          content: "";
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 100%;
-          height: 2px;
-          background: rgb(var(--black));
-          &:dir(rtl) {
-            left: auto;
-            right: 0;
-          }
-        }
-      }
-    }
-  }
-  .contact {
-    padding-top: 20px;
-    &:dir(ltr) {
-      padding-left: 34px;
-    }
-    &:dir(rtl) {
-      padding-right: 34px;
-    }
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    a {
-      font-size: 18px;
-      color: rgb(var(--black));
-    }
-  }
-}
-
-.navigation-sticky {
-  position: sticky;
-  background-color: rgb(var(--primary));
-  --height: 0;
-  @media (max-width: 1200px) {
-    &:dir(ltr) {
-      transform: translateX(-120%);
-      left: 0;
-    }
-    &:dir(rtl) {
-      transform: translateX(120%);
-      right: 0;
-    }
-    transition-duration: 500ms;
-    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-    padding: 20px;
-    top: 0;
-    bottom: 0;
-    position: fixed;
-    max-width: 300px;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    img {
-      margin-bottom: 20px;
-    }
-  }
-  &.opened {
-    @media (max-width: 1200px) {
-      transform: translateX(0);
-      position: fixed;
-      ul {
-        display: flex;
-        flex-direction: column;
-      }
-      background-color: rgb(var(--primary));
-    }
-  }
-  @include min-width(xl) {
-    position: sticky;
-    top: 0;
-    display: flex;
-    align-items: center;
-    padding: 12px 0;
-    justify-content: space-between;
-    transform: translateX(0);
-  }
-  z-index: 100;
-  ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    margin: 0;
-    gap: 8px;
-    position: relative;
-    li > a {
-      color: rgb(var(--black));
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 30px;
-      padding: 5px 8px;
-      font-size: 14px;
-      @include min-width(xxl) {
-        font-size: 20px;
-        padding: 6px 12px;
-      }
-      font-weight: 500;
-      transition-duration: 300ms;
-      display: block;
-      position: relative;
-      min-width: max-content;
-      border-bottom: 2px solid transparent;
-      span {
-        font-size: 16px;
-      }
-      &::after {
-        transition-duration: 600ms;
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 0;
-        height: 100%;
-        background: rgb(var(--black));
-        opacity: 0.15;
-        &:dir(rtl) {
-          left: auto;
-          right: 0;
-        }
-      }
-      &::before {
-        transition-duration: 600ms;
-        content: "";
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 0;
-        height: 2px;
-        background: rgb(var(--black));
-        &:dir(rtl) {
-          left: auto;
-          right: 0;
-        }
-      }
-      &:hover {
-        &::after {
-          animation: grow 600ms ease-in-out;
-          width: 100%;
-        }
-        &::before {
-          animation: grow 600ms ease-in-out;
-          width: 100%;
-        }
-      }
-
-      &.active {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          animation: grow 600ms ease-in-out;
-          height: 100%;
-          background: rgb(var(--black));
-          opacity: 0.15;
-          &:dir(rtl) {
-            left: auto;
-            right: 0;
-          }
-        }
-        &::before {
-          transition-duration: 600ms;
-          content: "";
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 100%;
-          height: 2px;
-          background: rgb(var(--black));
-          &:dir(rtl) {
-            left: auto;
-            right: 0;
-          }
-        }
-      }
-    }
-  }
-}
-
-.bg-shape {
-  background-color: rgb(var(--primary));
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  .circles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .circles li {
-    position: absolute;
-    display: block;
-    list-style: none;
-    width: 20px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.3);
-    animation: animate 25s linear infinite;
-    bottom: -150px;
-  }
-
-  .circles li:nth-child(1) {
-    left: 25%;
-    width: 80px;
-    height: 80px;
-    animation-delay: 0s;
-  }
-
-  .circles li:nth-child(2) {
-    left: 10%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 2s;
-    animation-duration: 12s;
-  }
-
-  .circles li:nth-child(3) {
-    left: 70%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 4s;
-  }
-
-  .circles li:nth-child(4) {
-    left: 40%;
-    width: 60px;
-    height: 60px;
-    animation-delay: 0s;
-    animation-duration: 18s;
-  }
-
-  .circles li:nth-child(5) {
-    left: 65%;
-    width: 20px;
-    height: 20px;
-    animation-delay: 0s;
-  }
-
-  .circles li:nth-child(6) {
-    left: 75%;
-    width: 110px;
-    height: 110px;
-    animation-delay: 3s;
-  }
-
-  .circles li:nth-child(7) {
-    left: 35%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 7s;
-  }
-
-  .circles li:nth-child(8) {
-    left: 50%;
-    width: 25px;
-    height: 25px;
-    animation-delay: 15s;
-    animation-duration: 45s;
-  }
-
-  .circles li:nth-child(9) {
-    left: 20%;
-    width: 15px;
-    height: 15px;
-    animation-delay: 2s;
-    animation-duration: 35s;
-  }
-
-  .circles li:nth-child(10) {
-    left: 85%;
-    width: 150px;
-    height: 150px;
-    animation-delay: 0s;
-    animation-duration: 11s;
-  }
-}
-.bg-gradiant {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  opacity: 0.25;
-  .out-top {
-    animation: rotate 30s linear infinite;
-    transform-origin: 13px 25px;
-  }
-  .in-top {
-    animation: rotate 15s linear infinite;
-    transform-origin: 13px 25px;
-  }
-  .out-bottom {
-    animation: rotate 35s linear infinite;
-    transform-origin: 84px 93px;
-  }
-  .in-bottom {
-    animation: rotate 25s linear infinite;
-    transform-origin: 84px 93px;
-  }
-}
-.bg-traingle {
-  position: fixed;
-  background: cover;
-  width: auto;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  opacity: 0.25;
-  z-index: -2;
-}
-
-@keyframes animate {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-    border-radius: 0;
-  }
-
-  100% {
-    transform: translateY(-1000px) rotate(720deg);
-    opacity: 0;
-    border-radius: 50%;
-  }
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-#bg-snow {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  .snowflake {
-    --size: 1vw;
-    width: var(--size);
-    height: var(--size);
-    background: rgba($color: #fff, $alpha: 0.3);
-    border-radius: 50%;
-    position: absolute;
-    top: -5vh;
-  }
-
-  @keyframes snowfall {
-    0% {
-      transform: translate3d(var(--left-ini), 0, 0);
-    }
-    100% {
-      transform: translate3d(var(--left-end), 110vh, 0);
-    }
-  }
-
-  @for $i from 1 through 50 {
-    .snowflake:nth-child(#{$i}) {
-      --size: #{random(5) * 0.2}vw;
-      --left-ini: #{random(20) - 10}vw;
-      --left-end: #{random(20) - 10}vw;
-      left: #{random(100)}vw;
-      animation: snowfall #{5 + random(10)}s linear infinite;
-      animation-delay: -#{random(10)}s;
-    }
-  }
-
-  /* added small blur every 6 snowflakes*/
-  .snowflake:nth-child(6n) {
-    filter: blur(1px);
-  }
-}
-
-#background-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-#bg-video {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.1;
-  }
-}
-.header-topbar {
-  padding: 14px 0;
-  width: 100%;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  background-color: rgb(var(--primary));
-  position: fixed;
-  img {
-    max-width: 100%;
-  }
-  .nav-icon {
-    width: 30px;
-    height: 16px;
-    z-index: 15;
-    padding: 2px;
-    top: -3px;
-    position: relative;
-    transform: rotate(0deg);
-    transition: 0.5s ease-in-out;
-    cursor: pointer;
-    span {
-      display: block;
-      position: absolute;
-      height: 2px;
-      width: 100%;
-      background: rgb(var(--black));
-      opacity: 1;
-      left: 0;
-      transform: rotate(0deg);
-      transition: 0.25s ease-in-out;
-    }
-  }
-  .nav-icon span:nth-child(1) {
-    top: 0px;
-  }
-
-  .nav-icon span:nth-child(2) {
-    top: 10px;
-  }
-
-  .nav-icon span:nth-child(3) {
-    top: 20px;
-  }
-
-  .nav-icon.open span:nth-child(1) {
-    top: 10px;
-    transform: rotate(135deg);
-    background-color: rgb(var(--white));
-  }
-
-  .nav-icon.open span:nth-child(2) {
-    opacity: 0;
-    left: -60px;
-  }
-
-  .nav-icon.open span:nth-child(3) {
-    top: 10px;
-    background-color: rgb(var(--white));
-    transform: rotate(-135deg);
-  }
-}
-
-.demos {
-  max-width: 450px;
-  transform: translateX(100%);
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 120;
-  height: 100vh;
-  transition-duration: 400ms;
-  &.opened {
-    transform: translateX(0);
-  }
-  .demo-btn {
-    padding: 12px 24px;
-    border: none;
-    position: fixed;
-    z-index: 120;
-    background-color: white;
-    transform: translateX(-99%);
-    left: 0;
-    top: 38%;
-  }
-  .demo-list {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow-y: auto;
-    gap: 20px;
-    background-color: $white;
-    padding: 20px;
-    a {
-      display: block;
-      background-color: rgba($color: #ffdb67, $alpha: 0.15);
-      padding: 12px;
-      border-radius: 12px;
-      transition-duration: 200ms;
-      &:hover {
-        background-color: rgba($color: #ffdb67, $alpha: 0.5);
-      }
-      img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 12px;
-      }
-      p {
-        text-align: center;
-        margin-top: 12px;
-      }
-    }
-  }
-}
-
-// modal
-.modal-dialog {
-  overflow-y: auto;
-}
-.modal-content {
-  background-color: rgba(var(--primary), 0.8);
-  .modal-body {
-    background-color: rgb(var(--primary));
-    max-width: 1296px;
-    height: 100%;
-    border-radius: 12px;
-    margin: 30px auto;
-    position: relative;
-    padding: 16px;
-    @include min-width(md) {
-      padding: 32px;
-    }
-    @include min-width(xl) {
-      padding: 48px;
-      padding-top: 120px;
-    }
-    .btn-close {
-      position: absolute;
-      top: 30px;
-      right: 30px;
-      width: 24px;
-      height: 24px;
-      @include min-width(xl) {
-        right: 48px;
-        width: 36px;
-        height: 36px;
-      }
-      border-radius: 50%;
-      color: rgb(var(--white));
-      background-color: rgb(var(--black));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition-duration: 0.3s;
-      &:hover {
-        transform: rotate(180deg);
-      }
-    }
-    ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 40px;
-      &.bullet {
-        list-style: disc;
-      }
-      @include min-width(xl) {
-        margin-bottom: 60px;
-      }
-      gap: 12px;
-      &.list-plus {
-        li {
-          position: relative;
-          &::before {
-            content: "+"; /* Unicode for plus sign */
-            position: absolute;
-            left: -20px;
-            top: 2px;
-            color: #000; /* Change color of the plus icon */
-            font-size: 20px; /* Size of the plus icon */
-            line-height: 1; /* Align vertically with text */
-          }
-        }
-      }
-    }
-    .outcome {
-      border-bottom: 1px solid rgb(var(--black));
-      padding-bottom: 40px;
-      margin-bottom: 40px;
-      @include min-width(xl) {
-        padding-bottom: 60px;
-        margin-bottom: 60px;
-      }
-    }
-  }
-}
-
-.right-bar {
-  padding: 20px;
-  @include min-width(xl) {
-    padding: 32px;
-    gap: 24px;
-  }
-  border-radius: 12px;
-  border: 1px solid rgba(var(--black), 0.1);
-  background-color: rgba(var(--white), 0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  h6 {
-    font-size: 18px;
-  }
-}
-
-.rotate-90 {
-  transform: rotate(-90deg);
-}
-
-.topics-inner {
-  padding: 20px;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-  border: 1px solid rgba(var(--black), 0.1);
-  @include min-width(xl) {
-    margin-bottom: 60px;
-    padding: 40px 60px;
-    gap: 40px;
-  }
-  .topic-box {
-    padding: 16px;
-    border-radius: 12px;
-    width: 196px;
-    border: 1px solid rgba(var(--black), 0.1);
-    @include min-width(xl) {
-      padding: 24px;
-    }
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-    background-color: rgba(var(--white), 0.1);
-    transition-duration: 300ms;
-    &:hover {
-      background-color: rgba(var(--black), 0.05);
-    }
-    .icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      background-color: rgb(var(--black));
-      i {
-        font-size: 2rem;
-      }
-      span {
-        position: absolute;
-        top: 0;
-        right: -13px;
-        display: flex;
-        transform: translate(-50%, -50%);
-        background-color: rgb(var(--primary));
-        font-size: 14px;
-        width: 24px;
-        height: 24px;
-        align-items: center;
-        border-radius: 50%;
-        justify-content: center;
-      }
-    }
-    p {
-      font-size: 20px;
-      font-weight: 500;
-    }
-  }
-}
-
-.topic-index {
-  padding: 16px;
-  top: 80px;
-  border-radius: 12px;
-  background-color: rgba(var(--white), 0.1);
-  border: 1px solid rgba(var(--black), 0.1);
-  @include min-width(xl) {
-    padding: 20px;
-  }
-  .blog-topic {
-    border: 1px solid rgba(var(--black), 0.1);
-    padding: 12px;
-    cursor: pointer;
-    border-radius: 12px;
-    transition-duration: 300ms;
-    &:hover {
-      background-color: rgba(var(--black), 0.05);
-    }
-    .title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      span {
-        width: 28px;
-        height: 28px;
-        display: flex;
-        border-radius: 4px;
-        align-items: center;
-        justify-content: center;
-        background-color: rgb(var(--black));
-        color: rgb(var(--white));
-      }
-      p {
-        font-size: 18px;
-      }
-    }
-    &.active {
-      .list {
-        max-height: 500px;
-      }
-    }
-    .list {
-      .list-inner {
-        display: flex;
-        border-left: 1px solid rgba(var(--black), 0.1);
-        list-style-type: none;
-        padding-left: 20px;
-        margin-top: 20px;
-        margin-left: 12px;
-        flex-direction: column;
-        gap: 8px;
-        li a {
-          font-size: 14px;
-        }
-      }
-    }
-  }
-}
-
-.pagination {
-  margin-top: 40px;
-  margin-bottom: 60px;
-  @include min-width(xl) {
-    margin-top: 50px;
-    margin-bottom: 100px;
-  }
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: rgb(var(--white));
-    color: #000;
-    font-size: 18px;
-    font-weight: 500;
-    transition-duration: 300ms;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    &:hover {
-      background-color: rgb(var(--black));
-      color: #fff;
-    }
-  }
-}
-
-.blog-details {
-  padding-bottom: 60px;
-  @include min-width(xl) {
-    padding-bottom: 100px;
-  }
-}
-
-.details-left {
-  position: sticky;
-  top: 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  .info-box {
-    border-radius: 12px;
-    padding: 16px;
-    @include min-width(xxl) {
-      padding: 24px;
-    }
-    background-color: rgba(var(--white), 0.1);
-    border: 1px solid rgba(var(--black), 0.1);
-    h4 {
-      padding-bottom: 16px;
-      margin-bottom: 16px;
-      border-bottom: 1px solid rgba(var(--black), 0.6);
-    }
-  }
-}
-.table-of-content {
-  padding-left: 16px;
-  border-left: 1px solid rgba(var(--black), 0.2);
-  a.active {
-    position: relative;
-    font-weight: 500;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -17px;
-      width: 2px;
-      height: 100%;
-      background-color: rgb(var(--black));
-    }
-  }
-}
-.details-container {
-  max-width: 856px;
-  margin: 0 auto;
-}
-.details-content {
-  margin-top: 80px;
-  padding: 12px;
-  border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(var(--black), 0.15);
-  @include min-width(xl) {
-    padding: 24px;
-  }
-  @include min-width(xxl) {
-    padding: 40px;
-  }
-}
-.blog-video {
-  .youtube {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    justify-content: center;
-    background-color: rgb(var(--white));
-  }
-}
-
-.quote {
-  padding: 32px 0;
-  margin-bottom: 32px;
-  border-top: 1px solid rgba(var(--black), 0.6);
-  border-bottom: 1px solid rgba(var(--black), 0.6);
-  p {
-    font-size: 24px;
-    font-weight: 500;
-  }
-}
-.share {
-  border-top: 1px solid rgba(var(--black), 0.3);
-  border-bottom: 1px solid rgba(var(--black), 0.3);
-  form {
-    border-radius: 4px;
-    padding: 4px;
-    display: flex;
-    border: 1px solid rgba(var(--black), 0.2);
-    justify-content: space-between;
-    input {
-      width: 100%;
-      background-color: transparent;
-      border: none;
-      padding: 10px;
-      &:focus {
-        outline: none;
-      }
-    }
-    button {
-      flex-shrink: 0;
-      background-color: rgb(var(--black));
-      padding: 12px 20px;
-      border-radius: 4px;
-      color: rgb(var(--white));
-      font-weight: 500;
-      font-size: 20px;
-    }
-  }
-}
-
-.next-prev {
-  margin-top: 40px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-  @include min-width(xl) {
-    gap: 60px;
-  }
-  .divider {
-    height: 66px;
-    width: 1px;
-    background-color: rgba(var(--black), 0.2);
-  }
-  .article-card {
-    display: flex;
-    align-items: center;
-    max-width: 360px;
-    gap: 16px;
-    padding: 20px 20px 20px 0;
-    p {
-      opacity: 0.6;
-    }
-    &.right {
-      padding: 20px 0 20px 20px;
-      button {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 50%;
-        border-bottom-left-radius: 50%;
-      }
-    }
-    transition-duration: 300ms;
-    &:hover {
-      background-color: rgb(var(--black));
-      p,
-      h5 {
-        color: rgb(var(--white));
-      }
-    }
-    border-radius: 12px;
-    border: 1px solid rgba(var(--black), 0.15);
-    background-color: rgba(var(--white), 0.1);
-    button {
-      height: 62px;
-      width: 62px;
-      border: none;
-      font-size: 1.5rem;
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: center;
-      border-top-right-radius: 50%;
-      border-bottom-right-radius: 50%;
-    }
-  }
-}
-
-// blogs
-.blog-card {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 12px;
-  border-radius: 12px;
-  background-color: rgba(var(--white), 0.1);
-  border: 1px solid rgba(var(--black), 0.1);
-  align-items: center;
-  transition-duration: 300ms;
-  .img-wrapper {
-    flex-shrink: 0;
-  }
-  img {
-    transition-duration: 300ms;
-  }
-  &:hover {
-    background-color: rgba(var(--black), 0.03);
-    img {
-      transform: scale(1.1);
-    }
-  }
-  @media (max-width: 768px) {
-    img {
-      width: 100%;
-    }
-  }
-  @include min-width(md) {
+  @media (min-width: 768px) {
     flex-direction: row;
-  }
-  @include min-width(xl) {
-    gap: 32px;
-  }
-  .details {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(var(--black), 0.2);
-  }
-}
-// newsletter section
-.newsletter {
-  background-color: rgba(var(--white), 0.1);
-  padding: 60px 0;
-  .content {
-    max-width: 856px;
-    margin: 0 auto;
-    form {
-      display: flex;
-      gap: 12px;
-      input {
-        width: 100%;
-        padding: 12px;
-        background-color: transparent;
-        border-radius: 4px;
-        border: 1px solid rgba(var(--black), 0.2);
-        &:focus {
-          outline: none;
-        }
-      }
-      button {
-        background-color: rgb(var(--black));
-        color: rgb(var(--white));
-        padding: 12px 20px;
-        border-radius: 4px;
-        border: none;
-        flex-shrink: 0;
-      }
-    }
-    input[type="checkbox"] {
-      accent-color: rgb(var(--black));
-      transform: scale(1.3);
-    }
+    align-items: flex-start;
+    gap: 2rem;
   }
 }
 
-footer {
-  background-color: rgba(var(--black), 0.06);
-  padding: 32px 0;
-  a {
-    text-decoration: underline;
+.projectLogo {
+  border-radius: 12px;
+  object-fit: contain;
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
   }
 }
-.underlined {
-  text-decoration: underline;
+
+.projectDescription {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+  max-width: 800px;
 }
-.header-blog {
-  padding: 14px 0;
-  width: 100%;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  background-color: rgb(var(--primary));
-  position: fixed;
-  img {
-    max-width: 100%;
+
+.projectSection {
+  margin-bottom: 2.5rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  color: #222;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.sectionContent {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap; // Preserves line breaks
+}
+
+.sectionList {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  color: #555;
+
+  li {
+    margin-bottom: 0.5rem;
   }
 }
-.connect {
-  border: 1px solid rgba(var(--black), 0.2);
-  padding: 4px;
-  display: flex;
-  margin-bottom: 40px;
-  border-radius: 4px;
-  gap: 12px;
-  input {
+
+.teamSection {
+  margin-top: 3rem;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.projectNotFound {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #777;
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .projectDetailContainer {
+    padding: 2rem 1rem;
+  }
+
+  .projectDetail {
+    padding: 2rem 1rem;
+  }
+
+  .projectName {
+    font-size: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .projectDescription {
+    font-size: 1rem;
+  }
+}
+
+
+--- C:\Users\hanos\sytech\styles\Projects.module.scss ---
+/* styles/Projects.module.scss */
+
+.projectsSection {
+  padding: 4rem 2rem;
+  background-color: transparent; // Background already set to transparent
+  position: relative;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #333;
+}
+
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.projectLink {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.projectCard {
+  background: rgba(255, 255, 255, 0.8); // Semi-transparent background for better integration
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 12px;
-    background-color: transparent;
-    border-radius: 4px;
-    border: none;
-    &:focus {
-      outline: none;
-    }
+    height: 100%;
+    background: linear-gradient(135deg, rgba(155, 93, 229, 0.2), rgba(0, 187, 249, 0.2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
-  button {
-    background-color: rgb(var(--black));
-    color: rgb(var(--white));
-    padding: 12px 20px;
-    border-radius: 4px;
-    border: none;
-    flex-shrink: 0;
+
+  &:hover:after {
+    opacity: 1;
   }
+}
+
+.projectImageWrapper {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
+  width: 150px; // Ensures the wrapper is square
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent; // Set to transparent
+}
+
+.projectLogo {
+  border-radius: 12px; // Rounded corners
+  object-fit: contain; // Changed from cover to contain
+  width: 100%;
+  height: 100%;
+  background-color: transparent; // Set to transparent
+}
+
+.projectName {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.projectDescription {
+  font-size: 1rem;
+  color: #555;
+  min-height: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .projectsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .projectCard {
+    padding: 1.5rem 1rem;
+  }
+
+  .projectName {
+    font-size: 1.5rem;
+  }
+
+  .projectDescription {
+    font-size: 0.9rem;
+    min-height: 50px;
+  }
+}
+
+
+--- C:\Users\hanos\sytech\styles\TeamMemberCard.module.scss ---
+/* styles/TeamMemberCard.module.scss */
+
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.photo {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.name {
+  font-size: 1.2rem;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.role {
+  font-size: 1rem;
+  color: #555;
 }
 
 
