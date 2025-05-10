@@ -37,7 +37,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects }) => {
         });
       }
     },
-    { scope: sectionRef }
+    sectionRef
   );
 
   return (
