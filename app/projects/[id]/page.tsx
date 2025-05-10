@@ -1,3 +1,4 @@
+// app/projects/[id]/page.tsx
 import type { Metadata } from "next";
 import { projectDetails } from "@/app/data/projectDetailsData";
 import ProjectHeader from "@/components/ProjectHeader";
@@ -5,26 +6,24 @@ import ProjectDetailClient from "./ProjectDetailClient";
 import styles from "@/styles/ProjectDetail.module.scss";
 import Link from "next/link";
 
-// Force Next to only allow the IDs returned by generateStaticParams
-export const dynamicParams = false;
-
-/**
- * 1) Return a Promise<Array<{ id: string }>>.
- *    Ensures Next sees your route IDs as fully static.
- */
-export async function generateStaticParams(): Promise<Array<{ id: string }>> {
-  return projectDetails.map((proj) => ({ id: proj.id }));
+/** Route params shape */
+interface PageProps {
+  params: {
+    id: string;
+  };
 }
 
-/**
- * 2) Inline the param type for generateMetadata
- */
-export function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Metadata {
+export const dynamicParams = false;
+
+/* ---------- STATIC PARAMS ---------- */
+export function generateStaticParams(): PageProps["params"][] {
+  return projectDetails.map(({ id }) => ({ id }));
+}
+
+/* ---------- PAGE METADATA ---------- */
+export function generateMetadata({ params }: PageProps): Metadata {
   const project = projectDetails.find((p) => p.id === params.id);
+
   if (!project) {
     return {
       title: "المشروع غير موجود",
@@ -52,24 +51,22 @@ export function generateMetadata({
           url: logoUrl,
           width: 800,
           height: 600,
-          alt: `${project.name} Logo`
-        }
+          alt: `${project.name} Logo`,
+        },
       ],
-      type: "website"
-    }
+      type: "website",
+    },
   };
 }
 
-/**
- * 3) Inline the param type for default Page
- */
-export default function Page({ params }: { params: { id: string } }) {
+/* ---------- PAGE COMPONENT ---------- */
+export default function ProjectPage({ params }: PageProps) {
   const project = projectDetails.find((p) => p.id === params.id);
 
   if (!project) {
     return (
       <>
-        <ProjectHeader showNavigation={false} />
+        <ProjectHeader />
         <div className={styles.projectNotFound}>
           <h1>المشروع غير موجود</h1>
           <p>المشروع المطلوب غير متاح.</p>
@@ -81,14 +78,12 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <ProjectHeader showNavigation={false} />
+      <ProjectHeader />
       <svg
         className={styles.bgGradient}
         preserveAspectRatio="xMidYMid slice"
         viewBox="10 10 80 80"
-      >
-        {/* ...your optional svg content */}
-      </svg>
+      />
       <main className={styles.mainContainer}>
         <ProjectDetailClient project={project} />
       </main>

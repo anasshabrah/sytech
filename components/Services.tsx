@@ -1,7 +1,4 @@
-// components/Services.tsx
-
 "use client";
-
 import React, { useRef } from "react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -62,9 +59,9 @@ const Services: React.FC = () => {
   const shouldLoop = servicesData.length > 3;
 
   useGSAP(
-    (self) => {
-      if (!self.selector || !sectionRef.current) return;
-      const cards = self.selector(".service-card");
+    (selector) => {
+      if (!sectionRef.current) return;
+      const cards = selector(".service-card");
       if (cards.length === 0) return;
 
       gsap.from(cards, {
@@ -74,7 +71,7 @@ const Services: React.FC = () => {
         duration: 1.5,
         ease: "power2.out",
         scrollTrigger: {
-          trigger: sectionRef.current!,
+          trigger: sectionRef.current,
           start: "top 60%",
           end: "top 20%",
           toggleActions: "play none none reverse",

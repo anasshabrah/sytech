@@ -1,10 +1,9 @@
 "use client";
-
 import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Project } from "@/app/types";
-import styles from "@/styles/Projects.module.scss"; // Ensure this SCSS module exists
+import styles from "@/styles/Projects.module.scss";
 import SectionTitle from "./SectionTitle";
 import useGSAP from "@/hooks/useGSAP";
 import gsap from "gsap";
@@ -20,24 +19,22 @@ const Projects: React.FC<ProjectsProps> = ({ projects }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
 
   useGSAP(
-    (self) => {
-      if (self.selector) {
-        const projectCards = self.selector(`.${styles.projectCard}`);
-        if (projectCards.length > 0) { // Ensure there are elements to animate
-          gsap.from(projectCards, {
-            stagger: 0.2,
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: sectionRef.current!,
-              start: "top 80%",
-              end: "top 60%",
-              toggleActions: "play none none reverse",
-            },
-          });
-        }
+    (selector) => {
+      const projectCards = selector(`.${styles.projectCard}`);
+      if (projectCards.length > 0) {
+        gsap.from(projectCards, {
+          stagger: 0.2,
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current!,
+            start: "top 80%",
+            end: "top 60%",
+            toggleActions: "play none none reverse",
+          },
+        });
       }
     },
     sectionRef
