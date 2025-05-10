@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-
-// next.config.js (CommonJS)
 const nextConfig = {
   // Keep trailing slashes on all routes
   trailingSlash: true,
@@ -21,5 +19,5 @@ const nextConfig = {
   },
 };
 
-// Export using CommonJS for Vercel compatibility
-module.exports = nextConfig;
+// Export using ESM syntax so `module` isn’t used in an ES module file
+export default nextConfig;
