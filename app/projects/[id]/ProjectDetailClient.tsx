@@ -1,5 +1,3 @@
-// app/projects/[id]/ProjectDetailClient.tsx
-
 "use client";
 import React, { useRef, useCallback } from "react";
 import Image from "next/image";
@@ -17,12 +15,10 @@ interface ProjectDetailClientProps {
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const projectDetailRef = useRef<HTMLDivElement | null>(null);
 
-  // Check for reduced motion preference
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Animation callback for GSAP
   const animationCallback = useCallback(
     (selector: SelectorFn) => {
       if (!projectDetailRef.current) return;
@@ -43,10 +39,8 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
     []
   );
 
-  // Initialize GSAP animations
   useGSAP(prefersReducedMotion ? () => {} : animationCallback, projectDetailRef);
 
-  // Base URL for assets
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
   const logoSrc = project.logo.startsWith("http")
     ? project.logo
@@ -54,7 +48,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
 
   return (
     <>
-      {/* Structured Data for SEO */}
       <Script
         id="structured-data"
         type="application/ld+json"
@@ -71,28 +64,37 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
         }}
       />
 
-      {/* Main Project Detail Container */}
       <div className={styles.projectDetailContainer} ref={projectDetailRef}>
         <div className={styles.projectDetail}>
-          {/* Project Name */}
           <h1 className={`${styles.projectName} animate`}>{project.name}</h1>
 
-          {/* Logo and Description */}
           <div className={styles.logoAndDescription}>
-            <Image
-              src={logoSrc}
-              alt={`${project.name} Logo`}
-              width={200}
-              height={200}
-              className={styles.projectLogo}
-              priority
-            />
+            {project.url ? (
+              <a href={project.url} target="_blank" rel="noopener noreferrer">
+                <Image
+                  src={logoSrc}
+                  alt={`${project.name} Logo`}
+                  width={200}
+                  height={200}
+                  className={styles.projectLogo}
+                  priority
+                />
+              </a>
+            ) : (
+              <Image
+                src={logoSrc}
+                alt={`${project.name} Logo`}
+                width={200}
+                height={200}
+                className={styles.projectLogo}
+                priority
+              />
+            )}
             <p className={`${styles.projectDescription} animate`}>
               {project.fullDescription}
             </p>
           </div>
 
-          {/* Project Sections */}
           {project.sections.map((section, index) => (
             <div key={`${section.title}-${index}`} className={styles.projectSection}>
               <h2 className={`${styles.sectionTitle} animate`}>{section.title}</h2>
@@ -127,7 +129,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             </div>
           ))}
 
-          {/* Team Section */}
           {project.team && project.team.length > 0 && (
             <div className={styles.teamSection}>
               <h2 className={`${styles.sectionTitle} animate`}>فريق العمل</h2>

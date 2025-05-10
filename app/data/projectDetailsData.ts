@@ -24,6 +24,7 @@ export interface ProjectDetail {
   fullDescription: string;
   sections: ProjectSection[];
   team: TeamMember[];
+  url?: string;
 }
 
 // Cast the imported JSON to our ProjectDetail[] type:
