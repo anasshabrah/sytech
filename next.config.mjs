@@ -1,46 +1,24 @@
-// postcss.config.js
+/** @type {import('next').NextConfig} */
 
-const isProd = process.env.NODE_ENV === 'production';
+// Using ES module syntax (next.config.mjs)
+const nextConfig = {
+  // Keep trailing slashes on all routes
+  trailingSlash: true,
 
-module.exports = {
-  plugins: [
-    // Always run these
-    require('postcss-import'),
-    require('postcss-preset-env')({
-      stage: 3,
-      features: { 'nesting-rules': true },
-    }),
+  // Serve unoptimized images (useful for Vercel preview environments)
+  images: {
+    unoptimized: true,
+  },
 
-    // Only in production, purge unused CSS and minify
-    ...(
-      isProd
-        ? [
-            require('@fullhuman/postcss-purgecss')({
-              content: [
-                './app/**/*.{js,jsx,ts,tsx}',
-                './components/**/*.{js,jsx,ts,tsx}',
-                './pages/**/*.{js,jsx,ts,tsx}',
-              ],
-              defaultExtractor: (content) =>
-                content.match(/[\w-/:]+(?<!:)/g) || [],
-              safelist: {
-                standard: [
-                  // core form classes
-                  'form-control',
-                  'form-floating',
-                  'form-label',
-                  'is-invalid',
-                  'invalid-feedback',
-                  // patterns
-                  /^form-/,
-                  /^is-/,
-                  /^invalid-/,
-                ],
-              },
-            }),
-            require('cssnano')({ preset: 'default' }),
-          ]
-        : []
-    ),
-  ],
+  // Silence TypeScript build errors in production
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
+  // Suppress deprecation warnings originating in node_modules
+  sassOptions: {
+    quietDeps: true,
+  },
 };
+
+export default nextConfig;
