@@ -1,5 +1,8 @@
+// postcss.config.js
+
 const isProd = process.env.NODE_ENV === 'production';
-const purgecss = require('@fullhuman/postcss-purgecss');
+// Pull in the default export so purgecss is actually a function
+const purgecss = require('@fullhuman/postcss-purgecss').default;
 
 module.exports = {
   plugins: [
@@ -8,7 +11,8 @@ module.exports = {
       stage: 3,
       features: { 'nesting-rules': true },
     }),
-    // In production only, run PurgeCSS + cssnano
+
+    // In production only, purge unused CSS and minify
     ...(isProd
       ? [
           purgecss({
@@ -33,6 +37,8 @@ module.exports = {
               ],
             },
           }),
+
+          // Then minify
           require('cssnano')({ preset: 'default' }),
         ]
       : []),
