@@ -1,39 +1,41 @@
-// postcss.config.js
-
 const purgecss = require('@fullhuman/postcss-purgecss');
+
+const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
   plugins: {
-    'postcss-import': {}, // Allows using @import in CSS
-    'postcss-preset-env': { // Enables modern CSS features
+    'postcss-import': {}, 
+    'postcss-preset-env': {
       stage: 3,
-      features: {
-        'nesting-rules': true,
-      },
+      features: { 'nesting-rules': true },
     },
-    ...(process.env.NODE_ENV === 'production' ? { // Only include these plugins in production
-      '@fullhuman/postcss-purgecss': { // Removes unused CSS
-        content: [
-          './app/**/*.{js,jsx,ts,tsx}',
-          './components/**/*.{js,jsx,ts,tsx}',
-          './pages/**/*.{js,jsx,ts,tsx}',
-        ],
-        defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
-        safelist: { // Prevents specific classes from being purged
-          standard: [
-            'active',
-            'opened',
-            /^nav-/,
-            /^btn-/,
-            /^text-/,
-            /^bg-/,
-            /^swiper/,
-          ],
-        },
-      },
-      'cssnano': { // Minifies CSS
-        preset: 'default',
-      },
-    } : {}),
+    // only purge in production
+    ...(isProd
+      ? {
+          '@fullhuman/postcss-purgecss': {
+            content: [
+              './app/**/*.{js,jsx,ts,tsx}',
+              './components/**/*.{js,jsx,ts,tsx}',
+              './pages/**/*.{js,jsx,ts,tsx}',
+            ],
+            defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || [],
+            safelist: {
+              standard: [
+                // core form classes
+                'form-control',
+                'form-floating',
+                'form-label',
+                'is-invalid',
+                'invalid-feedback',
+                // anything that starts with these
+                /^form-/,
+                /^is-/,
+                /^invalid-/,
+              ],
+            },
+          },
+          cssnano: { preset: 'default' },
+        }
+      : {}),
   },
 };

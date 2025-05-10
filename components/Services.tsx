@@ -8,9 +8,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
 import useGSAP from "@/hooks/useGSAP";
 import gsap from "gsap";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/autoplay";
 
 interface Service {
   id: number;
@@ -61,38 +58,44 @@ const servicesData: Service[] = [
 const Services: React.FC = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
 
+  // Only loop if we have more than 3 slides
+  const shouldLoop = servicesData.length > 3;
+
   useGSAP(
     (self) => {
-      // Ensure that 'selector' exists before using it
-      if (self.selector) {
-        const serviceCards = self.selector(".service-card");
-        
-        gsap.from(serviceCards, {
-          stagger: 0.2,
-          opacity: 0,
-          y: 50,
-          duration: 1.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current!,
-            start: "top 60%",
-            end: "top 20%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }
+      if (!self.selector || !sectionRef.current) return;
+      const cards = self.selector(".service-card");
+      if (cards.length === 0) return;
+
+      gsap.from(cards, {
+        stagger: 0.2,
+        opacity: 0,
+        y: 50,
+        duration: 1.5,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current!,
+          start: "top 60%",
+          end: "top 20%",
+          toggleActions: "play none none reverse",
+        },
+      });
     },
     sectionRef
   );
 
   return (
-    <section ref={sectionRef} id="services" className="services section position-relative">
+    <section
+      ref={sectionRef}
+      id="services"
+      className="services section position-relative"
+    >
       <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
 
       <Swiper
-        slidesPerView={"auto"}
+        slidesPerView="auto"
         spaceBetween={24}
-        loop={true}
+        loop={shouldLoop}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
@@ -100,14 +103,9 @@ const Services: React.FC = () => {
         pagination={{ clickable: true }}
         modules={[Autoplay, Pagination]}
         breakpoints={{
-          768: {
-            slidesPerView: 2,
-            spaceBetween: 24,
-          },
-          1550: {
-            slidesPerView: 3,
-            spaceBetween: 24,
-          },
+          0: { slidesPerView: 1, spaceBetween: 24 },
+          768: { slidesPerView: 2, spaceBetween: 24 },
+          1550: { slidesPerView: 3, spaceBetween: 24 },
         }}
         dir="ltr"
         className="swiper service-swiper"
@@ -115,28 +113,28 @@ const Services: React.FC = () => {
         {servicesData.map((service) => (
           <SwiperSlide key={service.id} className="overflow-visible p-3">
             <div className="service-card">
-              <div className="card-inner"></div>
+              <div className="card-inner" />
               <div className="content">
                 <div className="number-circle">
                   <div className="waves-top-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span />
+                    <span />
+                    <span />
+                    <span />
                   </div>
                   <h2>{service.number}</h2>
                   <div className="waves-bottom-sm">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span />
+                    <span />
+                    <span />
+                    <span />
                   </div>
                 </div>
                 <h4>{service.title}</h4>
                 <ul className="service-list">
-                  {service.features.map((feature, index) => (
-                    <li key={index}>
-                      <i className="ph ph-caret-double-right"></i> {feature}
+                  {service.features.map((feature, idx) => (
+                    <li key={idx}>
+                      <i className="ph ph-caret-double-right" /> {feature}
                     </li>
                   ))}
                 </ul>
@@ -145,8 +143,7 @@ const Services: React.FC = () => {
           </SwiperSlide>
         ))}
 
-        {/* Swiper Pagination */}
-        <div className="swiper-pagination"></div>
+        <div className="swiper-pagination" />
       </Swiper>
 
       <div className="col-12">

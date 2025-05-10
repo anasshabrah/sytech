@@ -1,0 +1,26 @@
+@use "sass:map";
+
+// Default Bootstrap 5 breakpoints:
+$breakpoints: (
+  xs:   0,
+  sm:   576px,
+  md:   768px,
+  lg:   992px,
+  xl:   1200px,
+  xxl:  1400px,
+);
+
+// Mixin for a “min-width” media-query.
+// Usage: @include min-width(md) { … }
+@mixin min-width($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+
+  @if $value == null {
+    @error "Unknown breakpoint `#{$breakpoint}`. " +
+           "Valid keys are #{map.keys($breakpoints)}.";
+  }
+
+  @media (min-width: $value) {
+    @content;
+  }
+}

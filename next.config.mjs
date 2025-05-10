@@ -8,6 +8,9 @@ const nextConfig = {
     // Silence the route-type bug
     ignoreBuildErrors: true,
   },
+  sassOptions: {
+    quietDeps: true,
+  },
 };
 
 export default nextConfig;

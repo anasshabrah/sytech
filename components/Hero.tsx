@@ -62,11 +62,18 @@ const Hero = ({ classes }: { classes?: string }) => {
             />
             <p className="description">مسرعة أعمال سورية مساهمة خاصة</p>
           </div>
-          <div className="d-flex gap-4">
-            <Link href="#attainments" className="btn work-btn text-capitalize btn-secondary">
+          {/* Responsive stack on mobile, row on md+ */}
+          <div className="d-flex flex-column flex-md-row gap-3">
+            <Link
+              href="#attainments"
+              className="btn work-btn text-capitalize btn-secondary w-100 w-md-auto"
+            >
               سجل كمستثمر
             </Link>
-            <Link href="#experience" className="btn contact-btn text-capitalize btn-outline-secondary">
+            <Link
+              href="#experience"
+              className="btn contact-btn text-capitalize btn-outline-secondary w-100 w-md-auto"
+            >
               قدم مشروعك
             </Link>
           </div>
@@ -74,27 +81,24 @@ const Hero = ({ classes }: { classes?: string }) => {
         <div className="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4 d-flex justify-content-center">
           <div className="img-wrapper">
             <div className="waves-top">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+              <span></span><span></span><span></span><span></span>
             </div>
             <Image
               className="img-fluid rounded-circle hero-img"
-              priority={true}
+              priority
               src={HeroImg}
-              alt=""
+              alt="Hero illustration"
             />
             <div className="waves-bottom">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+              <span></span><span></span><span></span><span></span>
             </div>
           </div>
         </div>
         <div className="col-12">
-          <Link href="#about_me" className="d-flex gap-4 align-items-center next-chapter mt-5">
+          <Link
+            href="#about_me"
+            className="d-flex gap-4 align-items-center next-chapter mt-5"
+          >
             <span className="page">2/6</span>
             <span className="next">القسم التالي</span>
             <span className="icon">

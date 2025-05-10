@@ -1,13 +1,9 @@
-// hooks/useGSAP.ts
-
 import { useEffect, RefObject } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Define a type alias for our selector function.
-// We return an array of Elements.
 export type SelectorFn = (query: string) => Element[];
 
 const useGSAP = (
@@ -15,29 +11,32 @@ const useGSAP = (
   scopeRef: RefObject<HTMLElement | null>
 ) => {
   useEffect(() => {
-    if (typeof window === "undefined" || !scopeRef.current) {
-      return;
-    }
+    if (typeof window === "undefined" || !scopeRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReducedMotion) {
-      return;
-    }
-
-    // Create a context using gsap.context
     const context = gsap.context(() => {
-      // Convert the NodeList to an array using Array.from()
-      animationCallback((query: string) =>
-        Array.from(gsap.utils.selector(scopeRef.current!)(query))
-      );
+      const selector: SelectorFn = (query) =>
+        Array.from(gsap.utils.selector(scopeRef.current!)(query));
+
+      animationCallback(selector);
+
+      selector(".animate-me").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+          },
+          y: 100,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+      });
     }, scopeRef.current);
 
     return () => {
       context.revert();
-      // Annotate trigger as any to avoid implicit any error.
-      ScrollTrigger.getAll().forEach((trigger: any) => trigger.kill());
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, [animationCallback, scopeRef]);
 };
