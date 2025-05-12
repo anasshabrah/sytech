@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from "react";
+// components/SectionTitle.tsx
+
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -21,7 +23,7 @@ const SectionTitle = ({ title, subtitle }: Props) => {
       y: 50,
       scrollTrigger: {
         trigger: element,
-        start: "top bottom", // adjust as needed
+        start: "top bottom",
       },
     });
 
@@ -30,14 +32,14 @@ const SectionTitle = ({ title, subtitle }: Props) => {
       delay: 0.5,
       scrollTrigger: {
         trigger: element,
-        start: "top bottom", // adjust as needed
+        start: "top bottom",
       },
     });
 
     return () => {
       fromAnimation.kill();
       toAnimation.kill();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Clean up all ScrollTriggers
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   });
 

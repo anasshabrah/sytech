@@ -18,10 +18,7 @@ const Navigation = ({
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleClassChange = (
-      mutationsList: MutationRecord[],
-      observer: MutationObserver
-    ) => {
+    const handleClassChange = (mutationsList: MutationRecord[]) => {
       mutationsList.forEach((mutation) => {
         if (
           mutation.type === "attributes" &&
@@ -79,41 +76,34 @@ const Navigation = ({
         <ul>
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#top" className="active">
-              <span>01</span> <span className="text">المقدمة</span>{" "}
+              <span>01</span> <span className="text">المقدمة</span>
             </Link>
           </li>
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#about_me">
-              <span>02</span> <span className="text">من نحن</span>{" "}
+              <span>02</span> <span className="text">من نحن</span>
             </Link>
           </li>
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#services">
-              <span>03</span> <span className="text">شو بنعمل</span>{" "}
+              <span>03</span> <span className="text">شو بنعمل</span>
             </Link>
           </li>
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#attainments">
-              <span>04</span> <span className="text">المستثمر</span>{" "}
+              <span>04</span> <span className="text">المستثمر</span>
             </Link>
           </li>
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#experience">
-              <span>05</span> <span className="text">رائد الأعمال</span>{" "}
+              <span>05</span> <span className="text">رائد الأعمال</span>
             </Link>
           </li>
-          {/* New Projects Link */}
           <li onClick={() => setNavOpen(false)} className="nav-link">
             <Link href="#our-projects">
               <span>06</span> <span className="text">مشاريعنا</span>
             </Link>
           </li>
-          {/* Uncomment and adjust numbering as needed for additional links */}
-          {/* <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#contact">
-              <span>07</span> <span className="text">اتصل بنا</span>{" "}
-            </Link>
-          </li> */}
         </ul>
       </nav>
       <div onClick={() => setNavOpen(false)} className="nav-overlay d-xl-none"></div>

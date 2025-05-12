@@ -46,7 +46,7 @@ export async function POST(
     }
 
     // Attempt to parse JSON body
-    let body: any;
+    let body: Partial<InvestorFormFields>;
     try {
       body = await req.json();
       console.log("Request body parsed successfully");

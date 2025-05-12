@@ -1,5 +1,4 @@
 // app/types.ts
-import { StaticImageData } from 'next/image';
 
 export interface TableOfContentsItem {
   id: string;
@@ -12,8 +11,8 @@ export interface SubmitInvestorResponse {
 }
 
 export interface Project {
-  id: string; // Unique identifier for dynamic routing
+  id: string;
   name: string;
-  logo: string; // Path to the project logo image
+  logo: string;
   shortDescription: string;
 }

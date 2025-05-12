@@ -2,8 +2,8 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
 import Head from "next/head";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
@@ -11,8 +11,8 @@ import AboutMe from "@/components/AboutMe";
 import Services from "@/components/Services";
 import Attainments from "@/components/Attainments";
 import Experience from "@/components/Experience";
-import Projects from "@/components/Projects"; // Import the Projects component
-import { projects } from "@/app/data/projectsData"; // Import project data
+import Projects from "@/components/Projects";
+import { projects } from "@/app/data/projectsData";
 
 type HomeContentProps = {
   structuredData: object;
@@ -20,20 +20,6 @@ type HomeContentProps = {
 
 export default function HomeContent({ structuredData }: HomeContentProps) {
   const [navOpen, setNavOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading delay if necessary
-    setLoading(false);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="loader-container w-100 d-flex align-items-center justify-content-center">
-        <div className="loader"></div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -46,8 +32,10 @@ export default function HomeContent({ structuredData }: HomeContentProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </Head>
+
       <Header navOpen={navOpen} setNavOpen={setNavOpen} />
       <Navigation setNavOpen={setNavOpen} navOpen={navOpen} />
+
       <svg
         className="bg-gradiant"
         preserveAspectRatio="xMidYMid slice"
@@ -74,6 +62,7 @@ export default function HomeContent({ structuredData }: HomeContentProps) {
           d="M102,67.1c-9.6-6.1-22-3.1-29.5,2-15.4,10.7-19.6,37.5-7.6,47.8s35.9,3.9,44.5-12.5C115.5,92.6,113.9,74.6,102,67.1Z"
         />
       </svg>
+
       <main className="container-fluid">
         <div className="row gx-xxl-6">
           <div
@@ -86,7 +75,6 @@ export default function HomeContent({ structuredData }: HomeContentProps) {
             <Services />
             <Attainments />
             <Experience />
-            {/* New Our Projects Section */}
             <Projects projects={projects} />
           </div>
         </div>

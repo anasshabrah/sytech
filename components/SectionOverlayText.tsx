@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from "react";
+// components/SectionOverlayText.tsx
+
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -22,12 +24,12 @@ const SectionOverlayText = ({ text }: { text: string }) => {
           end: "bottom top",
           scrub: true,
         },
-      },
+      }
     );
 
     return () => {
       anim.kill();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Clean up all ScrollTriggers
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   });
 

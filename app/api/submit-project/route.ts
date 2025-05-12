@@ -8,6 +8,16 @@ interface SubmitProjectResponse {
   message?: string;
 }
 
+// Utility to sanitize input to prevent XSS
+const sanitize = (input: string): string => {
+  return input
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<SubmitProjectResponse>> {
@@ -19,7 +29,15 @@ export async function POST(
     const phone = formData.get("phone")?.toString().trim() || "";
     const linkedin = formData.get("linkedin")?.toString().trim() || "";
     const website = formData.get("website")?.toString().trim() || "";
-    const pitchDeck = formData.get("pitchDeck") as File | null;
+
+    const file = formData.get("pitchDeck");
+    if (!(file instanceof File)) {
+      return NextResponse.json(
+        { success: false, message: "الملف غير صالح." },
+        { status: 400 }
+      );
+    }
+    const pitchDeck = file;
 
     // Basic required fields check
     if (!fullName || !email || !phone || !linkedin || !website || !pitchDeck) {
@@ -51,7 +69,7 @@ export async function POST(
       );
     }
 
-    // Allowed file types and size checks
+    // File type and size check
     if (pitchDeck.type !== "application/pdf") {
       return NextResponse.json(
         {
@@ -73,16 +91,15 @@ export async function POST(
       );
     }
 
-    // Convert file to Base64 so we can attach it to an email
+    // Convert file to base64
     const arrayBuffer = await pitchDeck.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const base64File = buffer.toString("base64");
 
+    // Get Postmark token
     const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
     if (!postmarkToken) {
-      console.error(
-        "POSTMARK_SERVER_TOKEN is not defined in environment variables."
-      );
+      console.error("POSTMARK_SERVER_TOKEN is not defined in environment variables.");
       return NextResponse.json(
         { success: false, message: "Internal Server Error." },
         { status: 500 }
@@ -90,15 +107,6 @@ export async function POST(
     }
 
     const client = new ServerClient(postmarkToken);
-
-    const sanitize = (input: string): string => {
-      return input
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    };
 
     const sendResult = await client.sendEmail({
       From: "info@syriatech.co",
@@ -108,12 +116,8 @@ export async function POST(
         <p><strong>الاسم الكامل:</strong> ${sanitize(fullName)}</p>
         <p><strong>البريد الإلكتروني:</strong> ${sanitize(email)}</p>
         <p><strong>رقم الهاتف:</strong> ${sanitize(phone)}</p>
-        <p><strong>ملف لينكدإن:</strong> <a href="${sanitize(
-          linkedin
-        )}">${sanitize(linkedin)}</a></p>
-        <p><strong>الموقع الإلكتروني أو موقع الشركة:</strong> <a href="${sanitize(
-          website
-        )}">${sanitize(website)}</a></p>
+        <p><strong>ملف لينكدإن:</strong> <a href="${sanitize(linkedin)}">${sanitize(linkedin)}</a></p>
+        <p><strong>الموقع الإلكتروني أو موقع الشركة:</strong> <a href="${sanitize(website)}">${sanitize(website)}</a></p>
       `,
       TextBody: `
         الاسم الكامل: ${sanitize(fullName)}
@@ -127,7 +131,7 @@ export async function POST(
           Name: pitchDeck.name || "pitch-deck.pdf",
           Content: base64File,
           ContentType: pitchDeck.type || "application/pdf",
-          ContentID: "pitch-deck",
+          ContentID: null,
         },
       ],
     });
@@ -141,7 +145,7 @@ export async function POST(
         { status: 500 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in submit-project API:", error);
     return NextResponse.json(
       { success: false, message: "حدث خطأ أثناء معالجة الطلب." },

@@ -38,12 +38,6 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ar" dir="rtl">
-      <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
-      </head>
       <body className="font-readex" suppressHydrationWarning>
         <ClientLayout>
           {children}

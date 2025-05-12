@@ -1,3 +1,5 @@
+// components/ContactForm.tsx
+
 "use client";
 
 import React, { useRef } from "react";
@@ -24,6 +26,9 @@ interface ContactFormProps {
   nextPageNumber?: string;
 }
 
+// Define a safe value type for form values
+type FormValue = string | File | null;
+
 export default function ContactForm({
   fields,
   endpoint,
@@ -33,37 +38,43 @@ export default function ContactForm({
   nextPageNumber,
 }: ContactFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
+
   const { values, errors, handleChange, setErrors } = useFormState(
-    fields.reduce(
+    fields.reduce<Record<string, FormValue>>(
       (acc, f) => ({ ...acc, [f.name]: f.type === "file" ? null : "" }),
-      {} as Record<string, any>
+      {}
     )
   );
-  const { loading, success, error, submit } = useSubmit();
 
+  const { loading, success, error, submit } = useSubmit();
   useScrollReveal(formRef, ".form-group");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
+
     fields.forEach((f) => {
       const v = values[f.name];
+
       if (f.required && !v) {
         newErrors[f.name] = "مطلوب";
       } else if (
         f.type === "email" &&
+        typeof v === "string" &&
         v &&
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
       ) {
         newErrors[f.name] = "بريد غير صالح";
       } else if (
         f.type === "tel" &&
+        typeof v === "string" &&
         v &&
         !/^\+?\d{7,14}$/.test(v)
       ) {
         newErrors[f.name] = "هاتف غير صالح";
       } else if (
         f.type === "number" &&
+        typeof v === "string" &&
         f.min !== undefined &&
         v &&
         parseFloat(v) < f.min
@@ -72,23 +83,25 @@ export default function ContactForm({
       } else if (
         f.type === "file" &&
         f.accept &&
-        v &&
-        (v as File).type !== f.accept
+        v instanceof File &&
+        v.type !== f.accept
       ) {
         newErrors[f.name] = "نوع ملف غير مدعوم";
       }
     });
+
     setErrors(newErrors);
     if (Object.keys(newErrors).length) return;
 
     let body: BodyInit;
     const hasFile = fields.some((f) => f.type === "file");
+
     if (hasFile) {
       const fm = new FormData();
       Object.entries(values).forEach(([k, v]) => {
-        if (v) fm.append(k, v as any);
+        if (v !== null) fm.append(k, v);
       });
-      body = fm as any;
+      body = fm;
     } else {
       body = JSON.stringify(values);
     }
@@ -128,7 +141,7 @@ export default function ContactForm({
                   type={f.type}
                   id={f.name}
                   name={f.name}
-                  value={values[f.name] || ""}
+                  value={typeof values[f.name] === "string" ? values[f.name] : ""}
                   onChange={handleChange}
                   placeholder=" "
                   min={f.min}
