@@ -19,7 +19,7 @@ const Attainments: React.FC = () => {
   return (
     <section
       id="attainments"
-      className="attainments section position-relative pb-5 mb-5"
+      className="attainments section position-relative"
       dir="rtl"
     >
       <SectionTitle subtitle="بدك تصير مستثمر مساهم؟" title="عبيلنا النموذج" />
