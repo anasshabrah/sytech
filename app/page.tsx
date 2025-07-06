@@ -37,7 +37,7 @@ export default function HomePage() {
     '@type': 'Organization',
     name: 'سيرياتك',
     url: 'https://syriatech.co',
-    logo: 'https://syriatech.co/logo.png',
+    logo: 'https://syriatech.co/images/logo.png',
     description:
       'نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة',
     sameAs: [
