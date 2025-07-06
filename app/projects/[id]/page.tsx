@@ -50,11 +50,13 @@ export async function generateMetadata({
   };
 }
 
-// the page component now treats params as a promise
-export default async function ProjectPage(
-  props: { params: Promise<Params> }
-) {
-  const { id } = await props.params;
+// the page component now receives params directly
+export default async function ProjectPage({
+  params,
+}: {
+  params: Params;
+}) {
+  const { id } = params;
   const project = projectDetails.find((p) => p.id === id);
 
   if (!project) {
