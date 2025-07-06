@@ -50,13 +50,13 @@ export async function generateMetadata({
   };
 }
 
-// the page component now receives params directly
+// page component must declare `params` as a Promise to satisfy Next.js 15’s PageProps
 export default async function ProjectPage({
   params,
 }: {
-  params: Params;
+  params: Promise<Params>;
 }) {
-  const { id } = params;
+  const { id } = await params;
   const project = projectDetails.find((p) => p.id === id);
 
   if (!project) {
@@ -69,7 +69,7 @@ export default async function ProjectPage({
           aria-label="العودة إلى المشاريع"
           className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
         >
-          <span>⤴ العودة إلى المشاريع</span>
+          ⤴ العودة إلى المشاريع
         </Link>
       </div>
     );
