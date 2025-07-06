@@ -2,6 +2,7 @@
 import Head from "next/head";
 import Hero from "./Hero";
 import AboutMe from "./AboutMe";
+import Founder from "./Founder";
 import Services from "./Services";
 import Projects from "./Projects";
 import { projects } from "@/app/data/projectsData";
@@ -20,10 +21,13 @@ export default function HomeContent({ structuredData }: { structuredData: object
       {/* Hero full-width section */}
       <Hero />
 
-      {/* AboutMe inside container */}
+      {/* About Section */}
       <main className="container px-4">
         <AboutMe />
       </main>
+
+      {/* Founder Section */}
+      <Founder />
 
       {/* Services section full-width */}
       <Services />
