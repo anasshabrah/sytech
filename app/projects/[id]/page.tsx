@@ -4,16 +4,16 @@ import { projectDetails } from '@/app/data/projectDetailsData'
 import ProjectDetailClient from './ProjectDetailClient'
 import Link from 'next/link'
 
-type Params = { id: string }
+interface Params {
+  id: string
+}
 
 export const dynamicParams = false
 
-// SSG: one entry per project id
 export async function generateStaticParams(): Promise<Params[]> {
   return projectDetails.map(({ id }) => ({ id }))
 }
 
-// Metadata for SEO
 export async function generateMetadata({
   params,
 }: {
@@ -48,11 +48,10 @@ export async function generateMetadata({
   }
 }
 
-// **The only change here**: use Next’s PageProps<Params>, which defines
-// `params: Promise<Params>` for you under the hood.
+// ⚠️ Here’s the fix: PageProps expects a Promise<T> type parameter
 export default async function ProjectPage({
   params,
-}: PageProps<Params>) {
+}: PageProps<Promise<Params>>) {
   const { id } = await params
   const project = projectDetails.find((p) => p.id === id)
 
