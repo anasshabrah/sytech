@@ -10,6 +10,7 @@ interface PageProps {
 
 export const dynamicParams = false;
 
+// ✅ FIXED: Now returns a Promise as required by Next.js
 export async function generateStaticParams(): Promise<PageProps["params"][]> {
   return projectDetails.map(({ id }) => ({ id }));
 }
