@@ -12,21 +12,24 @@ export interface WaveProps {
   offsetClass?: string;
 }
 
-const VARIANTS: Record<NonNullable<WaveProps['variant']>, { viewBox: string; path: string; height: string }> = {
+const VARIANTS: Record<
+  NonNullable<WaveProps['variant']>,
+  { viewBox: string; path: string; height: string }
+> = {
   geometric: {
-    viewBox: '0 0 1200 40',
-    path: 'M0,40 C200,0 400,80 600,40 C800,0 1000,80 1200,40 L1200,0 L0,0 Z',
-    height: 'h-8',
+    viewBox: '0 0 1200 120',
+    path: 'M0,0 C300,120 900,0 1200,100 L1200,0 L0,0 Z',
+    height: 'h-12',
   },
   hero: {
-    viewBox: '0 0 1200 40',
-    path: 'M0,40 C300,0 900,80 1200,40 L1200,0 L0,0 Z',
-    height: 'h-8',
+    viewBox: '0 0 1200 120',
+    path: 'M0,0 C400,100 800,20 1200,100 L1200,0 L0,0 Z',
+    height: 'h-12',
   },
   smooth: {
-    viewBox: '0 0 1440 80',
-    path: 'M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z',
-    height: 'h-16',
+    viewBox: '0 0 1200 120',
+    path: 'M0,0 C300,80 900,40 1200,100 L1200,0 L0,0 Z',
+    height: 'h-12',
   },
 };
 
@@ -41,7 +44,7 @@ export default function Wave({
 }: WaveProps) {
   const selected = variant ? VARIANTS[variant] : null;
   const resolvedPath = path || selected?.path || '';
-  const resolvedViewBox = viewBox || selected?.viewBox || '0 0 1440 80';
+  const resolvedViewBox = viewBox || selected?.viewBox || '0 0 1200 120';
   const resolvedHeight = height || selected?.height || 'h-12';
 
   return (
