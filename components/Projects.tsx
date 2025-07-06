@@ -51,10 +51,10 @@ export default function Projects({ projects }) {
                     className="h-20 w-20 object-contain transition group-hover:scale-110"
                   />
                 </div>
-                <h3 className="mb-2 text-center text-lg font-semibold text-brand-600">
+                <h3 className="mb-2 text-center text-lg font-semibold text-primary-dark">
                   {name}
                 </h3>
-                <p className="text-center text-sm text-dark/70">
+                <p className="text-center text-sm text-primary-dark/70">
                   {shortDescription}
                 </p>
               </article>
@@ -66,7 +66,7 @@ export default function Projects({ projects }) {
           <Link
             href="#hero"
             aria-label="العودة للأعلى"
-            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+            className="scroll-link border-dark/10 text-primary-dark hover:bg-brand-50"
           >
             <span>⤴ العودة للأعلى</span>
           </Link>
