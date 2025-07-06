@@ -1,39 +1,39 @@
 // app/projects/[id]/page.tsx
-import type { Metadata, PageProps } from 'next'
-import { projectDetails } from '@/app/data/projectDetailsData'
-import ProjectDetailClient from './ProjectDetailClient'
-import Link from 'next/link'
+import type { Metadata } from "next";
+import { projectDetails } from "@/app/data/projectDetailsData";
+import ProjectDetailClient from "./ProjectDetailClient";
+import Link from "next/link";
 
 interface Params {
-  id: string
+  id: string;
 }
 
-export const dynamicParams = false
+export const dynamicParams = false;
 
 export async function generateStaticParams(): Promise<Params[]> {
-  return projectDetails.map(({ id }) => ({ id }))
+  return projectDetails.map(({ id }) => ({ id }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Params
+  params: Params;
 }): Promise<Metadata> {
-  const project = projectDetails.find((p) => p.id === params.id)
+  const project = projectDetails.find((p) => p.id === params.id);
   if (!project) {
     return {
-      title: 'المشروع غير موجود',
-      description: 'المشروع المطلوب غير متاح.',
+      title: "المشروع غير موجود",
+      description: "المشروع المطلوب غير متاح.",
       openGraph: {
-        title: 'المشروع غير موجود',
-        description: 'المشروع المطلوب غير متاح.',
+        title: "المشروع غير موجود",
+        description: "المشروع المطلوب غير متاح.",
       },
-    }
+    };
   }
 
-  const logoUrl = project.logo.startsWith('http')
+  const logoUrl = project.logo.startsWith("http")
     ? project.logo
-    : `https://syriatech.co${project.logo}`
+    : `https://syriatech.co${project.logo}`;
 
   return {
     title: `${project.name} - سيرياتك`,
@@ -43,17 +43,19 @@ export async function generateMetadata({
       description: project.shortDescription,
       url: `https://syriatech.co/projects/${params.id}`,
       images: [{ url: logoUrl, width: 800, height: 600, alt: project.name }],
-      type: 'website',
+      type: "website",
     },
-  }
+  };
 }
 
-// ⚠️ Here’s the fix: PageProps expects a Promise<T> type parameter
 export default async function ProjectPage({
   params,
-}: PageProps<Promise<Params>>) {
-  const { id } = await params
-  const project = projectDetails.find((p) => p.id === id)
+}: {
+  params: Promise<Params>;
+}) {
+  // Next.js 15 now passes params as a Promise
+  const { id } = await params;
+  const project = projectDetails.find((p) => p.id === id);
 
   if (!project) {
     return (
@@ -68,12 +70,12 @@ export default async function ProjectPage({
           <span>⤴ العودة إلى المشاريع</span>
         </Link>
       </div>
-    )
+    );
   }
 
   return (
     <main>
       <ProjectDetailClient project={project} />
     </main>
-  )
+  );
 }
