@@ -58,6 +58,7 @@ const servicesData = [
     features: [
       "دمج قنوات دفع متعددة",
       "تأمين تجربة مستخدم سلسة وآمنة",
+      "التوافق مع بوابات الدفع العالمية",
     ],
   },
   {
@@ -67,6 +68,7 @@ const servicesData = [
     features: [
       "تتبع وتحليل سلوك العملاء",
       "ربط CRM مع متجرك الإلكتروني",
+      "تخصيص حملات لزيادة ولاء العملاء",
     ],
   },
   {
@@ -76,6 +78,7 @@ const servicesData = [
     features: [
       "استراتيجيات تسويق مربحة",
       "تحليل الحملات وتحسين النتائج",
+      "إدارة الحملات على وسائل التواصل الاجتماعي",
     ],
   },
   {
@@ -85,6 +88,7 @@ const servicesData = [
     features: [
       "تدريب الفرق على إدارة المتاجر",
       "تعليم SEO وتجربة المستخدم",
+      "تعزيز مهارات التواصل والتعاون",
     ],
   },
   {
@@ -94,12 +98,13 @@ const servicesData = [
     features: [
       "تطوير منصات التبرعات",
       "تحسين الظهور الرقمي وزيادة الوصول",
+      "إستراتيجية جذب المتبرعين",
     ],
   },
 ];
 
 export default function Services() {
-  const sectionRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const shouldLoop = servicesData.length > 3;
 
   useGSAP(
@@ -150,7 +155,7 @@ export default function Services() {
                 </span>
                 <h4 className="mb-4 text-xl font-bold text-primary-dark">{title}</h4>
                 <ul className="space-y-2">
-                  {features.map(f => (
+                  {features.map((f) => (
                     <li key={f} className="flex items-start gap-2 text-sm text-primary-dark">
                       <i className="ph ph-check text-brand-500" /> {f}
                     </li>
