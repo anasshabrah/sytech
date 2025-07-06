@@ -1,0 +1,96 @@
+/*  ================  Global styles  ================  */
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  --------  Design-token variables  --------  */
+:root {
+  --primary-dark:      #06332E;
+  --primary-dark-90:   #06332EE6;
+  --accent-gold:       #786329;
+  --accent-gold-light: #B9A779;
+
+  --neutral-bg:        #FAFAF9;
+  --neutral-fg:        #1A1A1A;
+
+  --deep-red:          #9C1C1F;
+  --success-green:     #006B3F;
+  --black:             #000000;
+  --white:             #FFFFFF;
+
+  --font-readex:       'Readex Pro';
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  @apply bg-neutral-bg text-neutral-fg font-readex antialiased overflow-x-hidden;
+}
+
+/*  ================  Re-usable component classes  ================  */
+@layer utilities {
+  .bg-pattern {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--accent-gold-light) 0,
+      var(--accent-gold-light) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center
+           rounded-full text-sm font-semibold transition
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn text-white bg-primary-dark hover:bg-primary-dark-90;
+    background: linear-gradient(135deg, #06332E 0%, #0B4A41 100%);
+  }
+
+  .btn-secondary {
+    @apply btn text-primary-dark border-2 border-accent-gold hover:bg-accent-gold hover:text-white;
+    background: linear-gradient(to right, #B9A779 0%, #D6C79E 100%);
+  }
+
+  .badge-error {
+    @apply inline-block rounded-full bg-deep-red/10 px-2 py-1 text-xs font-semibold text-deep-red;
+  }
+  .badge-success {
+    @apply inline-block rounded-full bg-success-green/10 px-2 py-1 text-xs font-semibold text-success-green;
+  }
+
+  .heading-border {
+    @apply relative after:absolute after:right-0 after:bottom-0
+           after:h-1 after:w-16 after:rounded-full after:bg-accent-gold;
+  }
+
+  .scroll-link {
+    @apply inline-flex items-center justify-center 
+           rounded-full border px-5 py-2 
+           text-sm md:text-base font-medium 
+           transition opacity-90 hover:opacity-100 
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .scroll-link-white {
+    @apply scroll-link text-white opacity-80 border-white border-opacity-50 focus-visible:outline-[rgba(255,255,255,0.8)];
+  }
+}
+
+.section-title h4 {
+  @apply mb-1 text-sm font-semibold text-accent-gold text-opacity-80;
+}
+.section-title h2 {
+  @apply heading-border mb-2 text-3xl font-extrabold tracking-tight md:text-4xl;
+}

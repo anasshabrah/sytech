@@ -1,37 +1,43 @@
-// components/Header.tsx
+// components/Hero.tsx
+'use client';
 
-"use client";
+import Link from 'next/link';
+import Image from 'next/image';
+import { FC } from 'react';
 
-import React, { Dispatch, SetStateAction } from "react";
-import Logo from "@/public/images/logo.png";
-import Image from "next/image";
-import Link from "next/link";
-
-const Header = ({
-  setNavOpen,
-  navOpen,
-  classes,
-}: {
-  setNavOpen: Dispatch<SetStateAction<boolean>>;
+interface HeaderProps {
   navOpen: boolean;
-  classes?: string;
-}) => {
+  setNavOpen: (open: boolean) => void;
+}
+
+const Header: FC<HeaderProps> = ({ navOpen, setNavOpen }) => {
   return (
-    <header className="header">
-      <div className="container-fluid d-flex align-items-center justify-content-between">
-        <Link href="/" className={classes}>
-          <Image src={Logo} alt="logo" />
+    <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
+      <div className="container mx-auto flex items-center justify-between py-4 px-safe">
+        {/* Logo on the right for RTL */}
+        <Link href="/" aria-label="سيرياتك Home">
+          <Image src="/logo.svg" alt="سيرياتك Logo" width={40} height={40} />
         </Link>
 
+        {/* Hamburger / Close */}
         <button
-          onClick={() => setNavOpen((p) => !p)}
-          className="bg-transparent border-0 d-xl-none"
+          onClick={() => setNavOpen(!navOpen)}
+          aria-label={navOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+          className="text-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bronze"
         >
-          <div className={`nav-icon ${navOpen ? "open" : ""}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+          {navOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
         </button>
       </div>
     </header>

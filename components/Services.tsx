@@ -1,80 +1,66 @@
+// components/Services.tsx
 "use client";
-import React, { useRef } from "react";
+
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
+import { useRef } from "react";
 import useGSAP from "@/hooks/useGSAP";
 import gsap from "gsap";
+import Link from "next/link";
+import Wave from "@/components/Wave";
 
-interface Service {
-  id: number;
-  number: string;
-  title: string;
-  features: string[];
-}
-
-const servicesData: Service[] = [
+const servicesData = [
   {
     id: 1,
     number: "01",
-    title: "رائد الأعمال",
+    title: "تطوير التطبيقات",
     features: [
-      "عندك مشروع ناشيء",
-      "عندك تيم لو من شخصين",
-      "المشروع يعمل",
-      "عم يحقق أرباح أو لا مش مشكلة",
-      "قدم عرض تقديمي إلينا",
+      "تصميم واجهات استخدام مخصصة",
+      "تطوير تطبيقات iOS و Android",
+      "ربط الواجهة مع الخوادم",
+      "استخدام أحدث التقنيات والأطر",
     ],
   },
   {
     id: 2,
     number: "02",
-    title: "سيرياتك",
+    title: "تطوير المواقع الإلكترونية",
     features: [
-      "بندرس عرضك التقديمي",
-      "مستشارينا بيقيموا المشروع",
-      "بنرسل مشروعك للمستثمرين",
-      "بنجمع ردود المستثمرين",
-      "يصلك إيميل قبول أو رفض",
+      "مواقع سريعة ومتجاوبة",
+      "تصميم عصري وتجربة مستخدم ممتازة",
+      "لوحات تحكم مخصصة",
+      "تحسين محركات البحث (SEO)",
     ],
   },
   {
     id: 3,
     number: "03",
-    title: "المستثمر",
+    title: "التجارة الإلكترونية",
     features: [
-      "بيسجل بياناته للتواصل",
-      "بنرسل له المشاريع المقترحة",
-      "بنرفق تقييمنا مع العرض التقديمي",
-      "ننتظر الرد بالقبول أو الرفض",
-      "ترتيب اجتماع مع رائد الأعمال",
+      "متاجر إلكترونية متكاملة",
+      "أنظمة دفع آمنة",
+      "إدارة المنتجات والمخزون",
+      "دعم للشحن والخصومات والعروض",
     ],
   },
-];
+] as const;
 
-const Services: React.FC = () => {
-  const sectionRef = useRef<HTMLElement | null>(null);
-
-  // Only loop if we have more than 3 slides
+export default function Services() {
+  const sectionRef = useRef<HTMLElement>(null);
   const shouldLoop = servicesData.length > 3;
 
   useGSAP(
     (selector) => {
-      if (!sectionRef.current) return;
-      const cards = selector(".service-card");
-      if (cards.length === 0) return;
-
-      gsap.from(cards, {
-        stagger: 0.2,
+      gsap.from(selector(".service-card"), {
         opacity: 0,
         y: 50,
-        duration: 1.5,
+        stagger: 0.2,
+        duration: 1,
         ease: "power2.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 60%",
-          end: "top 20%",
-          toggleActions: "play none none reverse",
+          start: "top 80%",
         },
       });
     },
@@ -82,78 +68,60 @@ const Services: React.FC = () => {
   );
 
   return (
-    <section
-      ref={sectionRef}
-      id="services"
-      className="services section position-relative"
-    >
-      <SectionTitle subtitle="رح اشرحلك خطوات شغلنا" title="كيف بنشتغل" />
+    <section ref={sectionRef} id="services" className="relative py-20 overflow-hidden">
+      {/* Decorative full-width wave */}
+      <Wave variant="hero" flip />
 
-      <Swiper
-        slidesPerView="auto"
-        spaceBetween={24}
-        loop={shouldLoop}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: false,
-        }}
-        pagination={{ clickable: true }}
-        modules={[Autoplay, Pagination]}
-        breakpoints={{
-          0: { slidesPerView: 1, spaceBetween: 24 },
-          768: { slidesPerView: 2, spaceBetween: 24 },
-          1550: { slidesPerView: 3, spaceBetween: 24 },
-        }}
-        dir="ltr"
-        className="swiper service-swiper"
-      >
-        {servicesData.map((service) => (
-          <SwiperSlide key={service.id} className="overflow-visible p-3">
-            <div className="service-card">
-              <div className="card-inner" />
-              <div className="content">
-                <div className="number-circle">
-                  <div className="waves-top-sm">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                  <h2>{service.number}</h2>
-                  <div className="waves-bottom-sm">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                </div>
-                <h4>{service.title}</h4>
-                <ul className="service-list">
-                  {service.features.map((feature, idx) => (
-                    <li key={idx}>
-                      <i className="ph ph-caret-double-right" /> {feature}
+      {/* Constrained content */}
+      <div className="container mx-auto px-4 relative z-10">
+        <SectionTitle subtitle="خدماتنا الرقمية المتميزة" title="ماذا نقدم؟" />
+
+        <Swiper
+          slidesPerView="auto"
+          spaceBetween={24}
+          loop={shouldLoop}
+          autoplay={{ delay: 4500, disableOnInteraction: false }}
+          pagination={{ clickable: true }}
+          modules={[Autoplay, Pagination]}
+          breakpoints={{
+            0: { slidesPerView: 1, spaceBetween: 24 },
+            768: { slidesPerView: 2, spaceBetween: 24 },
+            1280: { slidesPerView: 3, spaceBetween: 24 },
+          }}
+          dir="rtl"
+          className="service-swiper"
+        >
+          {servicesData.map(({ id, number, title, features }) => (
+            <SwiperSlide key={id} className="p-3">
+              <article className="service-card relative overflow-hidden rounded-3xl bg-base p-8 shadow-md ring-1 ring-brand-100">
+                <div className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-brand-50" />
+                <span className="relative z-10 mb-4 block text-5xl font-black text-brand-500">
+                  {number}
+                </span>
+                <h4 className="mb-4 text-xl font-bold text-dark">{title}</h4>
+                <ul className="space-y-2">
+                  {features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm">
+                      <i className="ph ph-check text-brand-500" /> {f}
                     </li>
                   ))}
                 </ul>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
+              </article>
+            </SwiperSlide>
+          ))}
+          <div className="swiper-pagination !bottom-0 !relative mt-12" />
+        </Swiper>
 
-        <div className="swiper-pagination" />
-      </Swiper>
-
-      <div className="col-12">
-        <a href="#attainments" className="d-flex gap-4 align-items-center next-chapter">
-          <span className="page">4/6</span>
-          <span className="next">القسم التالي</span>
-          <span className="icon">
-            <i className="ph ph-arrow-elbow-right-down"></i>
-          </span>
-        </a>
+        <div className="mt-16 text-center">
+          <Link
+            href="#our-projects"
+            aria-label="انتقل إلى المشاريع"
+            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+          >
+            <span>⤵ تعرف على مشاريعنا</span>
+          </Link>
+        </div>
       </div>
     </section>
   );
-};
-
-export default Services;
+}

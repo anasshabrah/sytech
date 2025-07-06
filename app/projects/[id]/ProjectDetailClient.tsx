@@ -1,12 +1,16 @@
-"use client";
+// app/projects/[id]/ProjectDetailClient.tsx
+'use client';
+
 import React, { useRef, useCallback } from "react";
 import Image from "next/image";
 import Script from "next/script";
+import Link from "next/link";
 import gsap from "gsap";
-import styles from "@/styles/ProjectDetail.module.scss";
-import TeamMemberCard from "@/components/TeamMemberCard";
 import useGSAP, { SelectorFn } from "@/hooks/useGSAP";
+import { ChevronDown } from "lucide-react";
 import type { ProjectDetail, ContentItem } from "@/app/data/projectDetailsData";
+import TeamMemberCard from '@/components/TeamMemberCard';
+import Wave from '@/components/Wave';
 
 interface ProjectDetailClientProps {
   project: ProjectDetail;
@@ -22,7 +26,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
   const animationCallback = useCallback(
     (selector: SelectorFn) => {
       if (!projectDetailRef.current) return;
-
       gsap.from(selector(".animate"), {
         opacity: 0,
         y: 30,
@@ -64,11 +67,23 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
         }}
       />
 
-      <div className={styles.projectDetailContainer} ref={projectDetailRef}>
-        <div className={styles.projectDetail}>
-          <h1 className={`${styles.projectName} animate`}>{project.name}</h1>
+      <div className="relative bg-neutral-bg overflow-hidden">
+        {/* Top wave */}
+        <Wave
+          viewBox="0 0 1440 80"
+          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
+          height="h-16"
+        />
 
-          <div className={styles.logoAndDescription}>
+        {/* Background dots */}
+        <div className="absolute inset-0 bg-pattern-dots opacity-5 pointer-events-none z-0" />
+
+        {/* Main content */}
+        <div ref={projectDetailRef} className="relative z-10 max-w-[800px] mx-auto py-16 px-4">
+          <h1 className="animate mb-6 text-center text-3xl font-bold">{project.name}</h1>
+
+          {/* Logo and description */}
+          <div className="mb-12 flex flex-col items-center gap-4">
             {project.url ? (
               <a href={project.url} target="_blank" rel="noopener noreferrer">
                 <Image
@@ -76,7 +91,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                   alt={`${project.name} Logo`}
                   width={200}
                   height={200}
-                  className={styles.projectLogo}
+                  className="h-48 w-48 object-contain rounded-full"
                   priority
                 />
               </a>
@@ -86,60 +101,76 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
                 alt={`${project.name} Logo`}
                 width={200}
                 height={200}
-                className={styles.projectLogo}
+                className="h-48 w-48 object-contain rounded-full"
                 priority
               />
             )}
-            <p className={`${styles.projectDescription} animate`}>
+            <p className="animate text-base leading-7 text-center">
               {project.fullDescription}
             </p>
           </div>
 
-          {project.sections.map((section, index) => (
-            <div key={`${section.title}-${index}`} className={styles.projectSection}>
-              <h2 className={`${styles.sectionTitle} animate`}>{section.title}</h2>
-              {Array.isArray(section.content) ? (
-                <ul className={styles.sectionList}>
-                  {section.content
-                    .filter((item: ContentItem) => item.value.trim() !== "")
-                    .map((item: ContentItem, idx: number) => {
-                      if (item.type === "subheading") {
-                        return (
-                          <h3
-                            key={`${item.value}-${idx}`}
-                            className={`${styles.subHeading} animate`}
-                          >
+          {/* Sectioned content */}
+          {project.sections.map((section, idx) => (
+            <details
+              key={section.title}
+              className="mb-6 group bg-white rounded-xl p-4 shadow"
+              open={idx === 0}
+            >
+              <summary className="flex justify-between cursor-pointer px-2 py-3 text-lg font-semibold animate">
+                {section.title}
+                <ChevronDown className="h-5 w-5 transition-transform duration-300 group-open:rotate-180" />
+              </summary>
+              <div className="mt-2 pl-4 space-y-2 animate">
+                {Array.isArray(section.content)
+                  ? (section.content as ContentItem[])
+                      .filter(item => item.value.trim() !== "")
+                      .map((item, i) =>
+                        item.type === "subheading" ? (
+                          <h3 key={i} className="mt-4 text-base font-semibold">
                             {item.value}
                           </h3>
-                        );
-                      } else {
-                        return (
-                          <li key={`${item.value}-${idx}`} className="animate">
-                            {item.value}
-                          </li>
-                        );
-                      }
-                    })}
-                </ul>
-              ) : (
-                <p className={`${styles.sectionContent} animate`}>
-                  {(section.content as ContentItem).value}
-                </p>
-              )}
-            </div>
+                        ) : (
+                          <p key={i}>{item.value}</p>
+                        )
+                      )
+                  : <p>{(section.content as ContentItem).value}</p>}
+              </div>
+            </details>
           ))}
 
-          {project.team && project.team.length > 0 && (
-            <div className={styles.teamSection}>
-              <h2 className={`${styles.sectionTitle} animate`}>فريق العمل</h2>
-              <div className={styles.teamGrid}>
-                {project.team.map((member) => (
+          {/* Team members */}
+          {project.team?.length ? (
+            <div className="mt-16">
+              <h2 className="animate mb-4 text-lg font-semibold">فريق العمل</h2>
+              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {project.team.map(member => (
                   <TeamMemberCard key={member.id} member={member} />
                 ))}
               </div>
             </div>
-          )}
+          ) : null}
+
+          {/* Back link */}
+          <div className="mt-16 text-center">
+            <Link
+              href="/projects"
+              aria-label="⤴ العودة إلى المشاريع"
+              className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+            >
+              <span>⤴ العودة إلى المشاريع</span>
+            </Link>
+          </div>
         </div>
+
+        {/* Bottom wave */}
+        <Wave
+          viewBox="0 0 1440 80"
+          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
+          height="h-16"
+          top={false}
+          flip
+        />
       </div>
     </>
   );

@@ -1,114 +1,106 @@
 // components/Hero.tsx
+'use client';
 
-import Image from "next/image";
-import React from "react";
-import HeroImg from "@/public/images/hero.png";
-import Typewriter from "typewriter-effect";
-import Link from "next/link";
-import { useGSAP } from "@gsap/react";
-import SplitType from "split-type";
-import gsap from "gsap";
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import SplitType from 'split-type';
+import heroImg from '@/public/images/hero.png';
+import Wave from '@/components/Wave';
 
-const Hero = ({ classes }: { classes?: string }) => {
+export default function Hero() {
+  const [navOpen, setNavOpen] = useState(false);
+
   useGSAP(() => {
-    gsap.from(".img-wrapper", {
-      duration: 1.5,
-      scale: 1.5,
-      ease: "back",
-      delay: 0.3,
+    gsap.from('.hero-img', {
       opacity: 0,
-    });
-    gsap.from(".work-btn", {
-      duration: 1.2,
-      scale: 0,
-      opacity: 0,
-      ease: "bounce",
-    });
-    gsap.from(".contact-btn", {
-      duration: 1.2,
-      scale: 0,
-      opacity: 0,
-      ease: "bounce",
+      scale: 1.2,
+      duration: 1,
+      ease: 'power2.out',
     });
 
-    const freelancer = SplitType.create(".freelancer", { types: "words" }).words;
-    const desc = SplitType.create(".description", { types: "words" }).words;
-    gsap.from(freelancer, {
-      duration: 1.5,
+    const words = new SplitType('.hero-headline', { types: 'words' }).words;
+    gsap.from(words, {
       opacity: 0,
-      ease: "bounce",
-      stagger: 0.2,
+      y: 20,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: 'power4.out',
     });
-    gsap.from(desc, {
-      duration: 1,
-      opacity: 0,
-      stagger: 0.2,
-    });
-  });
+  }, []);
 
   return (
-    <section id="top" className={`hero ${classes}`}>
-      <div className="row gx-4 justify-content-center align-items-center">
-        <div className="col-12 col-md-6 col-xl-6 hero-content">
-          <div>
-            <h4 className="text-uppercase freelancer">سيرياتك</h4>
-            <Typewriter
-              component={"h1"}
-              options={{
-                strings: ["رائد أعمال طموح", "مستثمر ذكي", "مشروع ناجح"],
-                autoStart: true,
-                loop: true,
-              }}
-            />
-            <p className="description">مسرعة أعمال سورية مساهمة خاصة</p>
-          </div>
-          {/* Responsive stack on mobile, row on md+ */}
-          <div className="d-flex flex-column flex-md-row gap-3">
-            <Link
-              href="#attainments"
-              className="btn work-btn text-capitalize btn-secondary w-100 w-md-auto"
-            >
-              سجل كمستثمر
-            </Link>
-            <Link
-              href="#experience"
-              className="btn contact-btn text-capitalize btn-outline-secondary w-100 w-md-auto"
-            >
-              قدم مشروعك
-            </Link>
-          </div>
-        </div>
-        <div className="col-12 col-md-5 offset-md-1 offset-xxl-2 col-xl-4 d-flex justify-content-center">
-          <div className="img-wrapper">
-            <div className="waves-top">
-              <span></span><span></span><span></span><span></span>
-            </div>
-            <Image
-              className="img-fluid rounded-circle hero-img"
-              priority
-              src={HeroImg}
-              alt="Hero illustration"
-            />
-            <div className="waves-bottom">
-              <span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-        </div>
-        <div className="col-12">
-          <Link
-            href="#about_me"
-            className="d-flex gap-4 align-items-center next-chapter mt-5"
-          >
-            <span className="page">2/6</span>
-            <span className="next">القسم التالي</span>
-            <span className="icon">
-              <i className="ph ph-arrow-elbow-right-down"></i>
-            </span>
+    <>
+      {/* Navigation Header */}
+      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
+        <div className="max-w-screen-2xl mx-auto flex items-center justify-between py-4 px-safe">
+          <Link href="/" aria-label="سيرياتك Home">
+            <Image src="/logo.svg" alt="سيرياتك Logo" width={40} height={40} />
           </Link>
+          <button
+            onClick={() => setNavOpen(!navOpen)}
+            aria-label={navOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+            className="text-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bronze"
+          >
+            {navOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
         </div>
-      </div>
-    </section>
-  );
-};
+      </header>
 
-export default Hero;
+      {/* Full-width Hero Section */}
+      <section
+        id="hero"
+        className="relative mt-20 overflow-hidden bg-[radial-gradient(circle_at_80%_20%,var(--golden-bronze)_0%,transparent_70%)] py-20"
+      >
+        {/* Bottom hero wave */}
+        <Wave variant="hero" top={false} flip />
+
+        {/* Content container */}
+        <div className="relative z-10 max-w-screen-2xl mx-auto flex flex-col-reverse md:flex-row items-center gap-16 px-safe">
+          <div className="z-10 w-full md:w-1/2 max-w-2xl bg-black/40 backdrop-blur-sm p-8 rounded-2xl text-white text-center md:text-right border border-accent-gold-light shadow-lg">
+            <h4 className="mb-2 text-sm tracking-widest text-golden-bronze uppercase">
+              سيرياتك
+            </h4>
+            <h1 className="hero-headline mb-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-snug text-primary-dark">
+              <span className="inline-block">سيرياتك - تحول رقمي فعّال</span>
+            </h1>
+            <p className="mb-6 text-lg leading-relaxed text-accent-gold">
+              شركة تطوير رقمي مختصة ببناء التطبيقات، المواقع، ومنصات التجارة الإلكترونية الحديثة.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+              <Link href="#services" className="btn-primary px-6 py-3 w-full sm:w-auto">
+                خدماتنا
+              </Link>
+              <Link href="#our-projects" className="btn-secondary px-6 py-3 w-full sm:w-auto">
+                مشاريعنا
+              </Link>
+            </div>
+          </div>
+          <div className="relative w-full md:w-1/2 flex justify-center">
+            <Image
+              src={heroImg}
+              alt="رسم توضيحي لريادة الأعمال الرقمية"
+              className="hero-img w-64 sm:w-72 md:w-80 rounded-full object-cover shadow-2xl transition-transform hover:scale-110"
+              priority
+            />
+            <div className="absolute inset-0 -z-10 rounded-full bg-golden-bronze/10 blur-3xl" />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

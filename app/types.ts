@@ -5,11 +5,6 @@ export interface TableOfContentsItem {
   title: string;
 }
 
-export interface SubmitInvestorResponse {
-  success: boolean;
-  message?: string;
-}
-
 export interface Project {
   id: string;
   name: string;

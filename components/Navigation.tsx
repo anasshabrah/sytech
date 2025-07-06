@@ -1,112 +1,66 @@
 // components/Navigation.tsx
+'use client';
 
-import Image from "next/image";
-import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import Logo from "@/public/images/logo.png";
-import Link from "next/link";
-import shuffleLetters from "shuffle-letters";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import type { NavProps } from './Header.types';
 
-const Navigation = ({
-  setNavOpen,
-  navOpen,
-}: {
-  setNavOpen: Dispatch<SetStateAction<boolean>>;
-  navOpen: boolean;
-}) => {
-  const navRef = useRef<HTMLElement>(null);
+const links = [
+  { href: '/',              label: 'الرئيسية' },
+  { href: '#about_me',      label: 'تعرف علينا' },
+  { href: '#services',      label: 'الخدمات' },
+  { href: '#our-projects',  label: 'المشاريع' },
+] as const;
 
+/**
+ *  Sliding side‑drawer + page‑overlay
+ *  • Closes on Esc key or overlay click
+ *  • Locks body‑scroll when open
+ */
+const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
+  /* ─────  Escape‑key & scroll‑lock handling  ───── */
   useEffect(() => {
-    const handleClassChange = (mutationsList: MutationRecord[]) => {
-      mutationsList.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "class"
-        ) {
-          const target = mutation.target as HTMLElement;
-          if (target.classList.contains("active")) {
-            const textElement = target.querySelector(".text");
-            if (textElement) {
-              shuffleLetters(textElement, { iterations: 5 });
-            }
-          }
-        }
-      });
-    };
-
-    const observer = new MutationObserver(handleClassChange);
-    const config = {
-      attributes: true,
-      subtree: true,
-      attributeFilter: ["class"],
-    };
-
-    if (navRef.current) {
-      observer.observe(navRef.current, config);
+    const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setNavOpen(false);
+    if (navOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', onKeyDown);
+    } else {
+      document.body.style.overflow = '';
     }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  useGSAP(() => {
-    gsap.to(".navigation", {
-      "--height": "100%",
-      duration: 1,
-      ease: "power1.inOut",
-    });
-    gsap.from(".nav-link", {
-      duration: 0.8,
-      delay: 0.5,
-      opacity: 0,
-      stagger: 0.1,
-    });
-  });
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [navOpen, setNavOpen]);
 
   return (
     <>
-      <nav
-        ref={navRef}
-        className={`navigation ${navOpen ? "opened" : ""}`}
-        id="navigation"
+      {/* Overlay */}
+      {navOpen && (
+        <button
+          aria-label="إغلاق القائمة"
+          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
+          onClick={() => setNavOpen(false)}
+        />
+      )}
+
+      {/* Side drawer */}
+      <aside
+        id="primary-navigation"
+        className={`fixed inset-y-0 right-0 z-50 w-72 transform bg-base shadow-lg transition-transform duration-300 ${
+          navOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
       >
-        <Image src={Logo} className="mb-4 d-xl-none" alt="logo" />
-        <ul>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#top" className="active">
-              <span>01</span> <span className="text">المقدمة</span>
+        <nav className="flex h-full flex-col gap-4 p-8 text-lg font-medium" aria-label="التنقل الرئيسي">
+          {links.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setNavOpen(false)}
+              className="rounded-lg px-3 py-2 transition hover:bg-golden-bronze/10 hover:text-golden-bronze"
+            >
+              {label}
             </Link>
-          </li>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#about_me">
-              <span>02</span> <span className="text">من نحن</span>
-            </Link>
-          </li>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#services">
-              <span>03</span> <span className="text">شو بنعمل</span>
-            </Link>
-          </li>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#attainments">
-              <span>04</span> <span className="text">المستثمر</span>
-            </Link>
-          </li>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#experience">
-              <span>05</span> <span className="text">رائد الأعمال</span>
-            </Link>
-          </li>
-          <li onClick={() => setNavOpen(false)} className="nav-link">
-            <Link href="#our-projects">
-              <span>06</span> <span className="text">مشاريعنا</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <div onClick={() => setNavOpen(false)} className="nav-overlay d-xl-none"></div>
+          ))}
+        </nav>
+      </aside>
     </>
   );
 };

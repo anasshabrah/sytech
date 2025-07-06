@@ -1,54 +1,34 @@
 // components/SectionTitle.tsx
-
-import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-type Props = {
-  subtitle: string;
-  title: string;
-};
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SectionTitle = ({ title, subtitle }: Props) => {
-  const sectionTitleRef = useRef(null);
+type Props = { subtitle: string; title: string };
+
+export default function SectionTitle({ subtitle, title }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    const element = sectionTitleRef.current;
-
-    const fromAnimation = gsap.from(element, {
+    if (!ref.current) return;
+    gsap.from(ref.current, {
       opacity: 0,
-      y: 50,
+      y: 40,
+      duration: 1,
+      ease: 'power2.out',
       scrollTrigger: {
-        trigger: element,
-        start: "top bottom",
+        trigger: ref.current,
+        start: 'top 80%',
       },
     });
-
-    const toAnimation = gsap.to(element, {
-      "--height": "100%",
-      delay: 0.5,
-      scrollTrigger: {
-        trigger: element,
-        start: "top bottom",
-      },
-    });
-
-    return () => {
-      fromAnimation.kill();
-      toAnimation.kill();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
   });
 
   return (
-    <div ref={sectionTitleRef} className="section-title text-capitalize">
-      <h4>{subtitle}</h4>
+    <div ref={ref} className="section-title mb-12 text-right">
+      <h4 className="mb-1 text-sm font-semibold text-brand-500">{subtitle}</h4>
       <h2>{title}</h2>
     </div>
   );
-};
-
-export default SectionTitle;
+}

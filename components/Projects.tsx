@@ -1,75 +1,80 @@
+// components/Projects.tsx
 "use client";
-import React, { useRef } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
-import { Project } from "@/app/types";
-import styles from "@/styles/Projects.module.scss";
-import SectionTitle from "./SectionTitle";
-import useGSAP from "@/hooks/useGSAP";
+import { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SectionTitle from "./SectionTitle";
+import useGSAP from "@/hooks/useGSAP";
+import Wave from "@/components/Wave";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface ProjectsProps {
-  projects: Project[];
-}
-
-const Projects: React.FC<ProjectsProps> = ({ projects }) => {
-  const sectionRef = useRef<HTMLElement | null>(null);
+export default function Projects({ projects }) {
+  const ref = useRef<HTMLElement>(null);
 
   useGSAP(
     (selector) => {
-      const projectCards = selector(`.${styles.projectCard}`);
-      if (projectCards.length > 0) {
-        gsap.from(projectCards, {
-          stagger: 0.2,
-          opacity: 0,
-          y: 50,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current!,
-            start: "top 80%",
-            end: "top 60%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }
+      gsap.from(selector(".project-card"), {
+        opacity: 0,
+        y: 60,
+        stagger: 0.15,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ref.current, start: "top 80%" },
+      });
     },
-    sectionRef
+    ref
   );
 
   return (
-    <section ref={sectionRef} id="our-projects" className={styles.projectsSection}>
-      <SectionTitle subtitle="تعرف على مشاريعنا" title="مشاريعنا" />
-      <div className={styles.projectsGrid}>
-        {projects.map((project) => (
+    <section ref={ref} id="our-projects" className="relative py-20 bg-base overflow-hidden">
+      {/* Top geometric wave */}
+      <Wave variant="geometric" offsetClass="-top-1" />
+
+      {/* Constrained content */}
+      <div className="container mx-auto px-4 relative z-10">
+        <SectionTitle subtitle="تعرف على مشاريعنا" title="مشاريعنا" />
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-10">
+          {projects.map(({ id, name, logo, shortDescription }) => (
+            <Link key={id} href={`/projects/${id}`} className="project-card group">
+              <article className="flex h-full flex-col items-center rounded-2xl bg-base p-8 shadow ring-1 ring-brand-100 transition transform hover:-translate-y-1 hover:shadow-lg hover:scale-105 hover:rotate-1">
+                <div className="mb-4">
+                  <Image
+                    src={logo}
+                    alt={`${name} Logo`}
+                    width={120}
+                    height={120}
+                    className="h-20 w-20 object-contain transition group-hover:scale-110"
+                  />
+                </div>
+                <h3 className="mb-2 text-center text-lg font-semibold text-brand-600">
+                  {name}
+                </h3>
+                <p className="text-center text-sm text-dark/70">
+                  {shortDescription}
+                </p>
+              </article>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
           <Link
-            key={project.id}
-            href={`/projects/${project.id}`}
-            className={styles.projectLink}
+            href="#hero"
+            aria-label="العودة للأعلى"
+            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
           >
-            <div className={styles.projectCard}>
-              <div className={styles.projectImageWrapper}>
-                <Image
-                  src={project.logo}
-                  alt={`${project.name} Logo`}
-                  width={150}
-                  height={150}
-                  className={styles.projectLogo}
-                />
-              </div>
-              <h3 className={styles.projectName}>{project.name}</h3>
-              <p className={styles.projectDescription}>
-                {project.shortDescription}
-              </p>
-            </div>
+            <span>⤴ العودة للأعلى</span>
           </Link>
-        ))}
+        </div>
       </div>
+
+      {/* Bottom geometric wave */}
+      <Wave variant="geometric" top={false} flip offsetClass="-bottom-1" />
     </section>
   );
-};
-
-export default Projects;
+}

@@ -1,30 +1,20 @@
+// components/ClientLayout.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import Bootstrap from "./Bootstrap";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-export default function ClientLayout({ children }: Props) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  useEffect(() => setHydrated(true), []);
 
   if (!hydrated) {
     return (
-      <div className="loader-container w-100 d-flex align-items-center justify-content-center">
-        <div className="loader"></div>
+      <div className="grid h-screen place-items-center">
+        <span className="animate-ping rounded-full bg-secondary/20 p-8" />
       </div>
     );
   }
 
-  return (
-    <Bootstrap>
-      {children}
-    </Bootstrap>
-  );
+  return <>{children}</>;
 }
