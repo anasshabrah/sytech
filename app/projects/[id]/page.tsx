@@ -1,25 +1,22 @@
-// app/projects/[id]/page.tsx
 import type { Metadata } from "next";
 import { projectDetails } from "@/app/data/projectDetailsData";
 import ProjectDetailClient from "./ProjectDetailClient";
 import Link from "next/link";
 
-interface Params {
-  id: string;
-}
-
 export const dynamicParams = false;
 
-export async function generateStaticParams(): Promise<Params[]> {
+export async function generateStaticParams() {
   return projectDetails.map(({ id }) => ({ id }));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Params;
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const project = projectDetails.find((p) => p.id === params.id);
+  const { id } = await params;
+  const project = projectDetails.find((p) => p.id === id);
+
   if (!project) {
     return {
       title: "المشروع غير موجود",
@@ -41,7 +38,7 @@ export async function generateMetadata({
     openGraph: {
       title: `${project.name} - سيرياتك`,
       description: project.shortDescription,
-      url: `https://syriatech.co/projects/${params.id}`,
+      url: `https://syriatech.co/projects/${id}`,
       images: [{ url: logoUrl, width: 800, height: 600, alt: project.name }],
       type: "website",
     },
@@ -51,9 +48,8 @@ export async function generateMetadata({
 export default async function ProjectPage({
   params,
 }: {
-  params: Promise<Params>;
+  params: Promise<{ id: string }>;
 }) {
-  // Next.js 15 now passes params as a Promise
   const { id } = await params;
   const project = projectDetails.find((p) => p.id === id);
 
