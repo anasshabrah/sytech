@@ -54,7 +54,7 @@ export default function Wave({
       <svg
         viewBox={resolvedViewBox}
         xmlns="http://www.w3.org/2000/svg"
-        className={`w-full h-full ${flip ? 'scale-x-[-1]' : ''}`}
+        className={`w-full h-full text-accent-gold ${flip ? 'scale-x-[-1]' : ''}`}
         preserveAspectRatio="none"
       >
         <path d={resolvedPath} fill="currentColor" />
