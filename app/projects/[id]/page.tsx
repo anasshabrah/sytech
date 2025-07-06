@@ -10,7 +10,7 @@ interface PageProps {
 
 export const dynamicParams = false;
 
-export function generateStaticParams(): PageProps["params"][] {
+export async function generateStaticParams(): Promise<PageProps["params"][]> {
   return projectDetails.map(({ id }) => ({ id }));
 }
 
@@ -22,10 +22,11 @@ export function generateMetadata({ params }: PageProps): Metadata {
       description: "المشروع المطلوب غير متاح.",
       openGraph: {
         title: "المشروع غير موجود",
-        description: "الم المشروع المطلوب غير متاح.",
+        description: "المشروع المطلوب غير متاح.",
       },
     };
   }
+
   const logoUrl = project.logo.startsWith("http")
     ? project.logo
     : `https://syriatech.co${project.logo}`;
