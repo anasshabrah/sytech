@@ -37,7 +37,7 @@ export default function Hero() {
       <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between py-4 px-safe">
           <Link href="/" aria-label="سيرياتك Home">
-            <Image src="/images/logo.png" alt="سيرياتك Logo" width={40} height={40} />
+            <Image src="/images/logo.png" alt="سيرياتك Logo" height={90} style={{ width: 'auto' }} priority />
           </Link>
           <button
             onClick={() => setNavOpen(!navOpen)}
