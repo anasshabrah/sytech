@@ -4,18 +4,23 @@ import { projectDetails } from "@/app/data/projectDetailsData";
 import ProjectDetailClient from "./ProjectDetailClient";
 import Link from "next/link";
 
-interface PageProps {
-  params: { id: string };
+interface Params {
+  id: string;
 }
 
 export const dynamicParams = false;
 
-// ✅ FIXED: Now returns a Promise as required by Next.js
-export async function generateStaticParams(): Promise<PageProps["params"][]> {
+// static params for SSG:
+export async function generateStaticParams(): Promise<Params[]> {
   return projectDetails.map(({ id }) => ({ id }));
 }
 
-export function generateMetadata({ params }: PageProps): Metadata {
+// metadata can now await params
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
   const project = projectDetails.find((p) => p.id === params.id);
   if (!project) {
     return {
@@ -38,15 +43,21 @@ export function generateMetadata({ params }: PageProps): Metadata {
     openGraph: {
       title: `${project.name} - سيرياتك`,
       description: project.shortDescription,
-      url: `https://syriatech.co/projects/${project.id}`,
+      url: `https://syriatech.co/projects/${params.id}`,
       images: [{ url: logoUrl, width: 800, height: 600, alt: project.name }],
       type: "website",
     },
   };
 }
 
-export default function ProjectPage({ params }: PageProps) {
-  const project = projectDetails.find((p) => p.id === params.id);
+// the page component now treats params as a promise
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<Params>;
+}) {
+  const { id } = await params;
+  const project = projectDetails.find((p) => p.id === id);
 
   if (!project) {
     return (

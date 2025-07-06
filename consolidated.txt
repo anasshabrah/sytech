@@ -1,0 +1,1648 @@
+--- C:\Users\hanos\sytech\next-env.d.ts ---
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+--- C:\Users\hanos\sytech\next.config.js ---
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'syriatech.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+};
+
+module.exports = nextConfig;
+
+--- C:\Users\hanos\sytech\postcss.config.js ---
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {},
+  },
+};
+
+--- C:\Users\hanos\sytech\tailwind.config.js ---
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: 'class',
+  content: [
+    './app/**/*.{js,jsx,ts,tsx}',
+    './components/**/*.{js,jsx,ts,tsx}',
+    './pages/**/*.{js,jsx,ts,tsx}',
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '1rem',
+        sm:      '1.5rem',
+        lg:      '2rem',
+      },
+      screens: {
+        lg: '1280px',
+        xl: '1440px',
+      },
+    },
+    extend: {
+      colors: {
+        // Custom color variables mapped to Tailwind utility names
+        'neutral-bg':        'var(--neutral-bg)',
+        'neutral-fg':        'var(--neutral-fg)',
+        'primary-dark':      'var(--primary-dark)',
+        'primary-dark-90':   'var(--primary-dark-90)',
+        'accent-gold':       'var(--accent-gold)',
+        'accent-gold-light': 'var(--accent-gold-light)',
+        'deep-red':          'var(--deep-red)',
+        'success-green':     'var(--success-green)',
+        base:                'var(--neutral-bg)',
+        dark:                'var(--neutral-fg)',
+        black:               'var(--black)',
+        white:               'var(--white)',
+      },
+      fontFamily: {
+        readex: ['var(--font-readex)', 'sans-serif'],
+      },
+      transitionTimingFunction: {
+        'out-back': 'cubic-bezier(0.34,1.56,0.64,1)',
+      },
+      keyframes: {
+        'fade-up': {
+          '0%':   { opacity: 0, transform: 'translateY(30px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-up': 'fade-up 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards',
+      },
+    },
+  },
+  safelist: ['swiper-pagination-bullet-active'],
+  plugins: [require('@tailwindcss/forms')],
+};
+
+
+--- C:\Users\hanos\sytech\app\layout.tsx ---
+// app/layout.tsx
+import '@/styles/globals.css';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
+import 'swiper/css/navigation';
+import 'swiper/css/scrollbar';
+
+import type { Metadata } from 'next';
+import ClientLayout from '@/components/ClientLayout';
+import BackgroundGradient from '@/components/BackgroundGradient';
+import { defaultSEO } from '@/lib/seo';
+import { Cairo } from 'next/font/google';
+
+const cairo = Cairo({
+  subsets: ['arabic'],
+  weight: ['400', '500', '700', '800'],
+  variable: '--font-cairo',
+  display: 'swap',
+});
+
+type RootLayoutProps = { children: React.ReactNode };
+
+export const metadata: Metadata = { ...defaultSEO };
+
+export default function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <html lang="ar" dir="rtl" className={cairo.variable}>
+      <body>
+        <ClientLayout>
+          <BackgroundGradient />
+          {children}
+        </ClientLayout>
+      </body>
+    </html>
+  );
+}
+
+--- C:\Users\hanos\sytech\app\page.tsx ---
+// app/page.tsx
+import type { Metadata } from 'next';
+import HomeContent from '@/components/HomeContent';
+import { defaultSEO } from '@/lib/seo';
+
+export const metadata: Metadata = {
+  ...defaultSEO,
+  title: 'سيرياتك - مسرعة أعمال سورية مساهمة خاصة',
+  description:
+    'نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة',
+  authors: [{ name: 'سيرياتك' }],
+  openGraph: {
+    ...defaultSEO.openGraph,
+    title: 'سيرياتك - مسرعة أعمال سورية مساهمة خاصة',
+    description:
+      'نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة',
+    images: [
+      {
+        url: 'https://syriatech.co/images/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'سيرياتك - مسرعة أعمال سورية',
+      },
+    ],
+  },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
+  robots: { index: true, follow: true },
+};
+
+export default function HomePage() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'سيرياتك',
+    url: 'https://syriatech.co',
+    logo: 'https://syriatech.co/logo.png',
+    description:
+      'نجمع أصحاب الطموح والمشاريع الناشئة مع المستثمرين المساهمين في سيرياتك المساهمة الخاصة',
+    sameAs: [
+      'https://www.facebook.com/syriatech',
+      'https://twitter.com/syriatech',
+      'https://www.linkedin.com/company/syriatech',
+    ],
+  };
+
+  return (
+    <>
+      <HomeContent structuredData={structuredData} />
+    </>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\app\types.ts ---
+// app/types.ts
+
+export interface TableOfContentsItem {
+  id: string;
+  title: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  logo: string;
+  shortDescription: string;
+}
+
+
+--- C:\Users\hanos\sytech\app\data\projectDetailsData.ts ---
+import rawDetails from './projects.json';
+
+export type ContentItem =
+  | { type: 'text'; value: string }
+  | { type: 'subheading'; value: string };
+
+export interface ProjectSection {
+  title: string;
+  content: ContentItem | ContentItem[];
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  photo?: string;
+}
+
+export interface ProjectDetail {
+  id: string;
+  name: string;
+  logo: string;
+  shortDescription: string;
+  fullDescription: string;
+  sections: ProjectSection[];
+  team: TeamMember[];
+  url?: string;
+}
+
+// Cast the imported JSON to our ProjectDetail[] type:
+export const projectDetails = rawDetails as ProjectDetail[];
+
+
+--- C:\Users\hanos\sytech\app\data\projectsData.ts ---
+import { projectDetails } from './projectDetailsData';
+import type { Project } from '@/app/types';
+
+export const projects: Project[] = projectDetails.map(
+  ({ id, name, logo, shortDescription, url }) => ({
+    id,
+    name,
+    logo,
+    shortDescription,
+    url,
+  })
+);
+
+--- C:\Users\hanos\sytech\app\projects\[id]\page.tsx ---
+// app/projects/[id]/page.tsx
+import type { Metadata } from "next";
+import { projectDetails } from "@/app/data/projectDetailsData";
+import ProjectDetailClient from "./ProjectDetailClient";
+import Link from "next/link";
+
+interface PageProps {
+  params: { id: string };
+}
+
+export const dynamicParams = false;
+
+// ✅ FIXED: Now returns a Promise as required by Next.js
+export async function generateStaticParams(): Promise<PageProps["params"][]> {
+  return projectDetails.map(({ id }) => ({ id }));
+}
+
+export function generateMetadata({ params }: PageProps): Metadata {
+  const project = projectDetails.find((p) => p.id === params.id);
+  if (!project) {
+    return {
+      title: "المشروع غير موجود",
+      description: "المشروع المطلوب غير متاح.",
+      openGraph: {
+        title: "المشروع غير موجود",
+        description: "المشروع المطلوب غير متاح.",
+      },
+    };
+  }
+
+  const logoUrl = project.logo.startsWith("http")
+    ? project.logo
+    : `https://syriatech.co${project.logo}`;
+
+  return {
+    title: `${project.name} - سيرياتك`,
+    description: project.shortDescription,
+    openGraph: {
+      title: `${project.name} - سيرياتك`,
+      description: project.shortDescription,
+      url: `https://syriatech.co/projects/${project.id}`,
+      images: [{ url: logoUrl, width: 800, height: 600, alt: project.name }],
+      type: "website",
+    },
+  };
+}
+
+export default function ProjectPage({ params }: PageProps) {
+  const project = projectDetails.find((p) => p.id === params.id);
+
+  if (!project) {
+    return (
+      <div className="py-20 px-4 text-center">
+        <h2 className="text-2xl font-bold mb-4">المشروع غير موجود</h2>
+        <p className="mb-6">المشروع المطلوب غير متاح.</p>
+        <Link
+          href="/projects"
+          aria-label="العودة إلى المشاريع"
+          className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+        >
+          <span>⤴ العودة إلى المشاريع</span>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <main>
+      <ProjectDetailClient project={project} />
+    </main>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\app\projects\[id]\ProjectDetailClient.tsx ---
+// app/projects/[id]/ProjectDetailClient.tsx
+'use client';
+
+import React, { useRef, useCallback } from "react";
+import Image from "next/image";
+import Script from "next/script";
+import Link from "next/link";
+import gsap from "gsap";
+import useGSAP, { SelectorFn } from "@/hooks/useGSAP";
+import { ChevronDown } from "lucide-react";
+import type { ProjectDetail, ContentItem } from "@/app/data/projectDetailsData";
+import TeamMemberCard from '@/components/TeamMemberCard';
+import Wave from '@/components/Wave';
+
+interface ProjectDetailClientProps {
+  project: ProjectDetail;
+}
+
+export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
+  const projectDetailRef = useRef<HTMLDivElement | null>(null);
+
+  const prefersReducedMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const animationCallback = useCallback(
+    (selector: SelectorFn) => {
+      if (!projectDetailRef.current) return;
+      gsap.from(selector(".animate"), {
+        opacity: 0,
+        y: 30,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power1.out",
+        scrollTrigger: {
+          trigger: projectDetailRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+    },
+    []
+  );
+
+  useGSAP(prefersReducedMotion ? () => {} : animationCallback, projectDetailRef);
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+  const logoSrc = project.logo.startsWith("http")
+    ? project.logo
+    : `${baseUrl}${project.logo}`;
+
+  return (
+    <>
+      <Script
+        id="structured-data"
+        type="application/ld+json"
+        strategy="lazyOnload"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: project.name,
+            description: project.shortDescription,
+            url: `${baseUrl}/projects/${project.id}`,
+            logo: logoSrc,
+          }),
+        }}
+      />
+
+      <div className="relative bg-neutral-bg overflow-hidden">
+        {/* Top wave */}
+        <Wave
+          viewBox="0 0 1440 80"
+          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
+          height="h-16"
+        />
+
+        {/* Background dots */}
+        <div className="absolute inset-0 bg-pattern-dots opacity-5 pointer-events-none z-0" />
+
+        {/* Main content */}
+        <div ref={projectDetailRef} className="relative z-10 max-w-[800px] mx-auto py-16 px-4">
+          <h1 className="animate mb-6 text-center text-3xl font-bold">{project.name}</h1>
+
+          {/* Logo and description */}
+          <div className="mb-12 flex flex-col items-center gap-4">
+            {project.url ? (
+              <a href={project.url} target="_blank" rel="noopener noreferrer">
+                <Image
+                  src={logoSrc}
+                  alt={`${project.name} Logo`}
+                  width={200}
+                  height={200}
+                  className="h-48 w-48 object-contain rounded-full"
+                  priority
+                />
+              </a>
+            ) : (
+              <Image
+                src={logoSrc}
+                alt={`${project.name} Logo`}
+                width={200}
+                height={200}
+                className="h-48 w-48 object-contain rounded-full"
+                priority
+              />
+            )}
+            <p className="animate text-base leading-7 text-center">
+              {project.fullDescription}
+            </p>
+          </div>
+
+          {/* Sectioned content */}
+          {project.sections.map((section, idx) => (
+            <details
+              key={section.title}
+              className="mb-6 group bg-white rounded-xl p-4 shadow"
+              open={idx === 0}
+            >
+              <summary className="flex justify-between cursor-pointer px-2 py-3 text-lg font-semibold animate">
+                {section.title}
+                <ChevronDown className="h-5 w-5 transition-transform duration-300 group-open:rotate-180" />
+              </summary>
+              <div className="mt-2 pl-4 space-y-2 animate">
+                {Array.isArray(section.content)
+                  ? (section.content as ContentItem[])
+                      .filter(item => item.value.trim() !== "")
+                      .map((item, i) =>
+                        item.type === "subheading" ? (
+                          <h3 key={i} className="mt-4 text-base font-semibold">
+                            {item.value}
+                          </h3>
+                        ) : (
+                          <p key={i}>{item.value}</p>
+                        )
+                      )
+                  : <p>{(section.content as ContentItem).value}</p>}
+              </div>
+            </details>
+          ))}
+
+          {/* Team members */}
+          {project.team?.length ? (
+            <div className="mt-16">
+              <h2 className="animate mb-4 text-lg font-semibold">فريق العمل</h2>
+              <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                {project.team.map(member => (
+                  <TeamMemberCard key={member.id} member={member} />
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {/* Back link */}
+          <div className="mt-16 text-center">
+            <Link
+              href="/projects"
+              aria-label="⤴ العودة إلى المشاريع"
+              className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+            >
+              <span>⤴ العودة إلى المشاريع</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom wave */}
+        <Wave
+          viewBox="0 0 1440 80"
+          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
+          height="h-16"
+          top={false}
+          flip
+        />
+      </div>
+    </>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\AboutMe.tsx ---
+// components/AboutMe.tsx
+'use client';
+import Link from 'next/link';
+import SectionTitle from './SectionTitle';
+
+export default function AboutMe() {
+  return (
+    <section id="about_me" className="py-24">
+      <SectionTitle subtitle="كلمتين نظاف" title="تعرف علينا" />
+
+      <div className="mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row-reverse">
+        <div className="mx-auto w-72 shrink-0 rounded-3xl bg-base p-10 text-center shadow-lg ring-1 ring-brand-100 lg:mx-0">
+          <span className="mb-2 block text-6xl font-extrabold text-brand-500 drop-shadow-sm">
+            10
+          </span>
+          <p className="font-medium tracking-wide text-dark/70">سنوات الخبرة</p>
+        </div>
+
+        <article className="flex-1 space-y-6 leading-8">
+          <h2 className="text-3xl font-bold text-brand-600">أنا أنس هبره وهذه سيرياتك</h2>
+          <p>
+            سيرياتك شركة تطوير رقمي سورية خاصة مساهمة، متخصصة في بناء الحلول الرقمية للمؤسسات الناشئة
+            والريادية. نعمل على تطوير تطبيقات الهواتف الذكية، المواقع الإلكترونية الحديثة، ومنصات التجارة
+            الإلكترونية، مع تقديم الاستشارات التقنية والدعم اللوجستي والتصميمي لضمان نجاح المشروع.
+          </p>
+
+          <ul className="grid gap-6 sm:grid-cols-2">
+            <li>
+              <p className="text-sm font-semibold text-dark/50">العنوان</p>
+              حماة، سوريا
+            </li>
+            <li>
+              <p className="text-sm font-semibold text-dark/50">رئيس مجلس الإدارة</p>
+              أنس هبره
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <div className="mt-16 text-center">
+        <Link
+          href="#services"
+          aria-label="انتقل إلى القسم التالي"
+          className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+        >
+          <span>⤵ تعرف على خدماتنا</span>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\BackgroundGradient.tsx ---
+// components/BackgroundGradient.tsx
+export default function BackgroundGradient() {
+  return (
+    <div
+      aria-hidden
+      className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_80%_20%,var(--golden-bronze)_0%,transparent_50%)]"
+    />
+  );
+}
+
+--- C:\Users\hanos\sytech\components\ClientLayout.tsx ---
+// components/ClientLayout.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => setHydrated(true), []);
+
+  if (!hydrated) {
+    return (
+      <div className="grid h-screen place-items-center">
+        <span className="animate-ping rounded-full bg-secondary/20 p-8" />
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
+--- C:\Users\hanos\sytech\components\Header.tsx ---
+// components/Hero.tsx
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+import { FC } from 'react';
+
+interface HeaderProps {
+  navOpen: boolean;
+  setNavOpen: (open: boolean) => void;
+}
+
+const Header: FC<HeaderProps> = ({ navOpen, setNavOpen }) => {
+  return (
+    <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
+      <div className="container mx-auto flex items-center justify-between py-4 px-safe">
+        {/* Logo on the right for RTL */}
+        <Link href="/" aria-label="سيرياتك Home">
+          <Image src="/logo.svg" alt="سيرياتك Logo" width={40} height={40} />
+        </Link>
+
+        {/* Hamburger / Close */}
+        <button
+          onClick={() => setNavOpen(!navOpen)}
+          aria-label={navOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+          className="text-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bronze"
+        >
+          {navOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
+
+
+--- C:\Users\hanos\sytech\components\Header.types.ts ---
+// components/Header.types.ts
+export interface NavProps {
+  navOpen: boolean;
+  setNavOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+--- C:\Users\hanos\sytech\components\Hero.tsx ---
+// components/Hero.tsx
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import SplitType from 'split-type';
+import heroImg from '@/public/images/hero.png';
+import Wave from '@/components/Wave';
+
+export default function Hero() {
+  const [navOpen, setNavOpen] = useState(false);
+
+  useGSAP(() => {
+    gsap.from('.hero-img', {
+      opacity: 0,
+      scale: 1.2,
+      duration: 1,
+      ease: 'power2.out',
+    });
+
+    const words = new SplitType('.hero-headline', { types: 'words' }).words;
+    gsap.from(words, {
+      opacity: 0,
+      y: 20,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: 'power4.out',
+    });
+  }, []);
+
+  return (
+    <>
+      {/* Navigation Header */}
+      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
+        <div className="max-w-screen-2xl mx-auto flex items-center justify-between py-4 px-safe">
+          <Link href="/" aria-label="سيرياتك Home">
+            <Image src="/logo.svg" alt="سيرياتك Logo" width={40} height={40} />
+          </Link>
+          <button
+            onClick={() => setNavOpen(!navOpen)}
+            aria-label={navOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
+            className="text-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bronze"
+          >
+            {navOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
+                   viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        </div>
+      </header>
+
+      {/* Full-width Hero Section */}
+      <section
+        id="hero"
+        className="relative mt-20 overflow-hidden bg-[radial-gradient(circle_at_80%_20%,var(--golden-bronze)_0%,transparent_70%)] py-20"
+      >
+        {/* Bottom hero wave */}
+        <Wave variant="hero" top={false} flip />
+
+        {/* Content container */}
+        <div className="relative z-10 max-w-screen-2xl mx-auto flex flex-col-reverse md:flex-row items-center gap-16 px-safe">
+          <div className="z-10 w-full md:w-1/2 max-w-2xl bg-black/40 backdrop-blur-sm p-8 rounded-2xl text-white text-center md:text-right border border-accent-gold-light shadow-lg">
+            <h4 className="mb-2 text-sm tracking-widest text-golden-bronze uppercase">
+              سيرياتك
+            </h4>
+            <h1 className="hero-headline mb-4 text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-snug text-primary-dark">
+              <span className="inline-block">سيرياتك - تحول رقمي فعّال</span>
+            </h1>
+            <p className="mb-6 text-lg leading-relaxed text-accent-gold">
+              شركة تطوير رقمي مختصة ببناء التطبيقات، المواقع، ومنصات التجارة الإلكترونية الحديثة.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+              <Link href="#services" className="btn-primary px-6 py-3 w-full sm:w-auto">
+                خدماتنا
+              </Link>
+              <Link href="#our-projects" className="btn-secondary px-6 py-3 w-full sm:w-auto">
+                مشاريعنا
+              </Link>
+            </div>
+          </div>
+          <div className="relative w-full md:w-1/2 flex justify-center">
+            <Image
+              src={heroImg}
+              alt="رسم توضيحي لريادة الأعمال الرقمية"
+              className="hero-img w-64 sm:w-72 md:w-80 rounded-full object-cover shadow-2xl transition-transform hover:scale-110"
+              priority
+            />
+            <div className="absolute inset-0 -z-10 rounded-full bg-golden-bronze/10 blur-3xl" />
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\HomeContent.tsx ---
+// components/HomeContent.tsx
+import Head from "next/head";
+import Hero from "./Hero";
+import AboutMe from "./AboutMe";
+import Services from "./Services";
+import Projects from "./Projects";
+import { projects } from "@/app/data/projectsData";
+
+export default function HomeContent({ structuredData }: { structuredData: object }) {
+  return (
+    <>
+      <Head>
+        <link rel="canonical" href="https://syriatech.co" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+
+      {/* Hero full-width section */}
+      <Hero />
+
+      {/* AboutMe inside container */}
+      <main className="container px-4">
+        <AboutMe />
+      </main>
+
+      {/* Services section full-width */}
+      <Services />
+
+      {/* Projects section full-width */}
+      <Projects projects={projects} />
+    </>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\Navigation.tsx ---
+// components/Navigation.tsx
+'use client';
+
+import React, { useEffect } from 'react';
+import Link from 'next/link';
+import type { NavProps } from './Header.types';
+
+const links = [
+  { href: '/',              label: 'الرئيسية' },
+  { href: '#about_me',      label: 'تعرف علينا' },
+  { href: '#services',      label: 'الخدمات' },
+  { href: '#our-projects',  label: 'المشاريع' },
+] as const;
+
+/**
+ *  Sliding side‑drawer + page‑overlay
+ *  • Closes on Esc key or overlay click
+ *  • Locks body‑scroll when open
+ */
+const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
+  /* ─────  Escape‑key & scroll‑lock handling  ───── */
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setNavOpen(false);
+    if (navOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', onKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [navOpen, setNavOpen]);
+
+  return (
+    <>
+      {/* Overlay */}
+      {navOpen && (
+        <button
+          aria-label="إغلاق القائمة"
+          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden"
+          onClick={() => setNavOpen(false)}
+        />
+      )}
+
+      {/* Side drawer */}
+      <aside
+        id="primary-navigation"
+        className={`fixed inset-y-0 right-0 z-50 w-72 transform bg-base shadow-lg transition-transform duration-300 ${
+          navOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <nav className="flex h-full flex-col gap-4 p-8 text-lg font-medium" aria-label="التنقل الرئيسي">
+          {links.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setNavOpen(false)}
+              className="rounded-lg px-3 py-2 transition hover:bg-golden-bronze/10 hover:text-golden-bronze"
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
+  );
+};
+
+export default Navigation;
+
+
+--- C:\Users\hanos\sytech\components\Projects.tsx ---
+// components/Projects.tsx
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SectionTitle from "./SectionTitle";
+import useGSAP from "@/hooks/useGSAP";
+import Wave from "@/components/Wave";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default function Projects({ projects }) {
+  const ref = useRef<HTMLElement>(null);
+
+  useGSAP(
+    (selector) => {
+      gsap.from(selector(".project-card"), {
+        opacity: 0,
+        y: 60,
+        stagger: 0.15,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ref.current, start: "top 80%" },
+      });
+    },
+    ref
+  );
+
+  return (
+    <section ref={ref} id="our-projects" className="relative py-20 bg-base overflow-hidden">
+      {/* Top geometric wave */}
+      <Wave variant="geometric" offsetClass="-top-1" />
+
+      {/* Constrained content */}
+      <div className="container mx-auto px-4 relative z-10">
+        <SectionTitle subtitle="تعرف على مشاريعنا" title="مشاريعنا" />
+
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-10">
+          {projects.map(({ id, name, logo, shortDescription }) => (
+            <Link key={id} href={`/projects/${id}`} className="project-card group">
+              <article className="flex h-full flex-col items-center rounded-2xl bg-base p-8 shadow ring-1 ring-brand-100 transition transform hover:-translate-y-1 hover:shadow-lg hover:scale-105 hover:rotate-1">
+                <div className="mb-4">
+                  <Image
+                    src={logo}
+                    alt={`${name} Logo`}
+                    width={120}
+                    height={120}
+                    className="h-20 w-20 object-contain transition group-hover:scale-110"
+                  />
+                </div>
+                <h3 className="mb-2 text-center text-lg font-semibold text-brand-600">
+                  {name}
+                </h3>
+                <p className="text-center text-sm text-dark/70">
+                  {shortDescription}
+                </p>
+              </article>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link
+            href="#hero"
+            aria-label="العودة للأعلى"
+            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+          >
+            <span>⤴ العودة للأعلى</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Bottom geometric wave */}
+      <Wave variant="geometric" top={false} flip offsetClass="-bottom-1" />
+    </section>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\SectionOverlayText.tsx ---
+// components/SectionOverlayText.tsx
+
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const SectionOverlayText = ({ text }: { text: string }) => {
+  const sectionTitleRef = useRef(null);
+
+  useGSAP(() => {
+    const element = sectionTitleRef.current;
+
+    const anim = gsap.fromTo(
+      element,
+      { y: "50%" },
+      {
+        y: "-50%",
+        scrollTrigger: {
+          trigger: ".about",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+        },
+      }
+    );
+
+    return () => {
+      anim.kill();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  });
+
+  return (
+    <span ref={sectionTitleRef} className="section-title-overlay-text">
+      {text}
+    </span>
+  );
+};
+
+export default SectionOverlayText;
+
+
+--- C:\Users\hanos\sytech\components\SectionTitle.tsx ---
+// components/SectionTitle.tsx
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
+
+type Props = { subtitle: string; title: string };
+
+export default function SectionTitle({ subtitle, title }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!ref.current) return;
+    gsap.from(ref.current, {
+      opacity: 0,
+      y: 40,
+      duration: 1,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: ref.current,
+        start: 'top 80%',
+      },
+    });
+  });
+
+  return (
+    <div ref={ref} className="section-title mb-12 text-right">
+      <h4 className="mb-1 text-sm font-semibold text-brand-500">{subtitle}</h4>
+      <h2>{title}</h2>
+    </div>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\Services.tsx ---
+// components/Services.tsx
+"use client";
+
+import { Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SectionTitle from "./SectionTitle";
+import { useRef } from "react";
+import useGSAP from "@/hooks/useGSAP";
+import gsap from "gsap";
+import Link from "next/link";
+import Wave from "@/components/Wave";
+
+const servicesData = [
+  {
+    id: 1,
+    number: "01",
+    title: "تطوير التطبيقات",
+    features: [
+      "تصميم واجهات استخدام مخصصة",
+      "تطوير تطبيقات iOS و Android",
+      "ربط الواجهة مع الخوادم",
+      "استخدام أحدث التقنيات والأطر",
+    ],
+  },
+  {
+    id: 2,
+    number: "02",
+    title: "تطوير المواقع الإلكترونية",
+    features: [
+      "مواقع سريعة ومتجاوبة",
+      "تصميم عصري وتجربة مستخدم ممتازة",
+      "لوحات تحكم مخصصة",
+      "تحسين محركات البحث (SEO)",
+    ],
+  },
+  {
+    id: 3,
+    number: "03",
+    title: "التجارة الإلكترونية",
+    features: [
+      "متاجر إلكترونية متكاملة",
+      "أنظمة دفع آمنة",
+      "إدارة المنتجات والمخزون",
+      "دعم للشحن والخصومات والعروض",
+    ],
+  },
+] as const;
+
+export default function Services() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const shouldLoop = servicesData.length > 3;
+
+  useGSAP(
+    (selector) => {
+      gsap.from(selector(".service-card"), {
+        opacity: 0,
+        y: 50,
+        stagger: 0.2,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        },
+      });
+    },
+    sectionRef
+  );
+
+  return (
+    <section ref={sectionRef} id="services" className="relative py-20 overflow-hidden">
+      {/* Decorative full-width wave */}
+      <Wave variant="hero" flip />
+
+      {/* Constrained content */}
+      <div className="container mx-auto px-4 relative z-10">
+        <SectionTitle subtitle="خدماتنا الرقمية المتميزة" title="ماذا نقدم؟" />
+
+        <Swiper
+          slidesPerView="auto"
+          spaceBetween={24}
+          loop={shouldLoop}
+          autoplay={{ delay: 4500, disableOnInteraction: false }}
+          pagination={{ clickable: true }}
+          modules={[Autoplay, Pagination]}
+          breakpoints={{
+            0: { slidesPerView: 1, spaceBetween: 24 },
+            768: { slidesPerView: 2, spaceBetween: 24 },
+            1280: { slidesPerView: 3, spaceBetween: 24 },
+          }}
+          dir="rtl"
+          className="service-swiper"
+        >
+          {servicesData.map(({ id, number, title, features }) => (
+            <SwiperSlide key={id} className="p-3">
+              <article className="service-card relative overflow-hidden rounded-3xl bg-base p-8 shadow-md ring-1 ring-brand-100">
+                <div className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-brand-50" />
+                <span className="relative z-10 mb-4 block text-5xl font-black text-brand-500">
+                  {number}
+                </span>
+                <h4 className="mb-4 text-xl font-bold text-dark">{title}</h4>
+                <ul className="space-y-2">
+                  {features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm">
+                      <i className="ph ph-check text-brand-500" /> {f}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            </SwiperSlide>
+          ))}
+          <div className="swiper-pagination !bottom-0 !relative mt-12" />
+        </Swiper>
+
+        <div className="mt-16 text-center">
+          <Link
+            href="#our-projects"
+            aria-label="انتقل إلى المشاريع"
+            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+          >
+            <span>⤵ تعرف على مشاريعنا</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\components\SiteHeader.tsx ---
+// components/SiteHeader.tsx
+'use client';
+
+import React, { useState } from 'react';
+import Header from './Header';
+import Navigation from './Navigation';
+
+/**
+ * Aggregates <Header/> + <Navigation/> so they can share open state.
+ */
+const SiteHeader: React.FC = () => {
+  const [navOpen, setNavOpen] = useState(false);
+  return (
+    <>
+      <Header   navOpen={navOpen} setNavOpen={setNavOpen} />
+      <Navigation navOpen={navOpen} setNavOpen={setNavOpen} />
+    </>
+  );
+};
+
+export default SiteHeader;
+
+
+--- C:\Users\hanos\sytech\components\TeamMemberCard.tsx ---
+// components/TeamMemberCard.tsx
+'use client';
+
+import React from 'react';
+import Image from 'next/image';
+import { User } from 'lucide-react';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  photo?: string;
+}
+
+/** Accessible team‑member card with semantic <article> */
+const TeamMemberCard: React.FC<{ member: TeamMember }> = ({ member }) => (
+  <article className="flex flex-col items-center gap-2 rounded-lg bg-base p-6 text-center shadow ring-1 ring-brand-100">
+    {member.photo ? (
+      <Image
+        src={member.photo}
+        alt={`صورة ${member.name}`}
+        width={100}
+        height={100}
+        className="h-20 w-20 rounded-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
+        <User className="h-8 w-8 text-gray-400" aria-hidden />
+      </span>
+    )}
+    <h3 className="m-0 text-lg font-semibold leading-none">{member.name}</h3>
+    <p  className="m-0 text-sm text-gray-500">{member.role}</p>
+  </article>
+);
+
+export default TeamMemberCard;
+
+
+--- C:\Users\hanos\sytech\components\Wave.tsx ---
+// components/Wave.tsx
+import React from 'react';
+
+interface WaveProps {
+  /** one of 'geometric', 'hero', 'smooth' */
+  variant: 'geometric' | 'hero' | 'smooth';
+  /** true → position at top (default), false → at bottom */
+  top?: boolean;
+  /** true → rotate 180° */
+  flip?: boolean;
+  /** additional offset classes, e.g. '-top-1', '-bottom-1' */
+  offsetClass?: string;
+  /** override fill color */
+  fill?: string;
+  /** override height class */
+  height?: string;
+}
+
+const VARIANTS: Record<WaveProps['variant'], { viewBox: string; path: string; height: string }> = {
+  geometric: {
+    viewBox: '0 0 1200 40',
+    path: 'M0,40 C200,0 400,80 600,40 C800,0 1000,80 1200,40 L1200,0 L0,0 Z',
+    height: 'h-8',
+  },
+  hero: {
+    viewBox: '0 0 1200 40',
+    path: 'M0,40 C300,0 900,80 1200,40 L1200,0 L0,0 Z',
+    height: 'h-8',
+  },
+  smooth: {
+    viewBox: '0 0 1440 80',
+    path: 'M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z',
+    height: 'h-16',
+  },
+};
+
+export default function Wave({
+  variant,
+  top = true,
+  flip = false,
+  offsetClass = '',
+  fill = 'var(--accent-gold-light)',
+  height,
+}: WaveProps) {
+  const { viewBox, path, height: defaultHeight } = VARIANTS[variant];
+  const heightClass = height ?? defaultHeight;
+  const positionClass = top ? 'top-0' : 'bottom-0';
+  const rotateClass = flip ? 'rotate-180' : '';
+
+  return (
+    <div
+      className={`absolute ${positionClass} left-0 w-full overflow-hidden leading-[0] ${rotateClass} z-0 ${offsetClass}`}
+      aria-hidden
+    >
+      <svg className={`block w-full ${heightClass}`} viewBox={viewBox} preserveAspectRatio="none">
+        <path d={path} fill={fill} />
+      </svg>
+    </div>
+  );
+}
+
+
+--- C:\Users\hanos\sytech\hooks\useFormState.ts ---
+import { useState, ChangeEvent } from "react";
+
+export function useFormState(initialValues: Record<string, any>) {
+  const [values, setValues] = useState<Record<string, any>>(initialValues);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const { name, type, value, files } = e.target;
+    if (type === "file" && files) {
+      setValues((prev) => ({ ...prev, [name]: files[0] }));
+    } else {
+      setValues((prev) => ({ ...prev, [name]: value }));
+    }
+  }
+
+  return { values, errors, handleChange, setErrors };
+}
+
+
+--- C:\Users\hanos\sytech\hooks\useGSAP.ts ---
+import { useEffect, RefObject } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export type SelectorFn = (query: string) => Element[];
+
+const useGSAP = (
+  animationCallback: (selector: SelectorFn) => void,
+  scopeRef: RefObject<HTMLElement | null>
+) => {
+  useEffect(() => {
+    if (typeof window === "undefined" || !scopeRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const context = gsap.context(() => {
+      const selector: SelectorFn = (query) =>
+        Array.from(gsap.utils.selector(scopeRef.current!)(query));
+
+      animationCallback(selector);
+
+      selector(".animate-me").forEach((el) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+          },
+          y: 100,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+      });
+    }, scopeRef.current);
+
+    return () => {
+      context.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
+  }, [animationCallback, scopeRef]);
+};
+
+export default useGSAP;
+
+
+--- C:\Users\hanos\sytech\hooks\useRevealOnScroll.ts ---
+// hooks/useRevealOnScroll.ts
+import { useEffect, RefObject } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+export interface RevealOptions {
+  selector?: string;
+  stagger?: number;
+  opacityFrom?: number;
+  yFrom?: number;
+  duration?: number;
+  ease?: string;
+  scrollStart?: string;
+  scrollEnd?: string;
+  toggleActions?: string;
+}
+
+/**
+ * Hook to reveal elements within a container on scroll.
+ */
+export function useRevealOnScroll(
+  ref: RefObject<HTMLElement>,
+  {
+    selector = ".animate",
+    stagger = 0.1,
+    opacityFrom = 0,
+    yFrom = 50,
+    duration = 0.8,
+    ease = "power2.out",
+    scrollStart = "top 80%",
+    scrollEnd,
+    toggleActions = "play none none reverse",
+  }: RevealOptions = {}
+) {
+  useEffect(() => {
+    if (!ref.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const elements = ref.current.querySelectorAll(selector);
+    if (elements.length === 0) return;
+
+    const tween = gsap.from(elements, {
+      opacity: opacityFrom,
+      y: yFrom,
+      stagger,
+      duration,
+      ease,
+      scrollTrigger: {
+        trigger: ref.current,
+        start: scrollStart,
+        ...(scrollEnd ? { end: scrollEnd } : {}),
+        toggleActions,
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [ref, selector, stagger, opacityFrom, yFrom, duration, ease, scrollStart, scrollEnd, toggleActions]);
+}
+
+--- C:\Users\hanos\sytech\hooks\useSectionReveal.ts ---
+// hooks/useSectionReveal.ts
+import { useEffect, RefObject } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * Reveal elements within a container when scrolling into view.
+ * @param ref - Ref to the container element
+ * @param selector - CSS selector for child elements to animate
+ */
+export function useSectionReveal(
+  ref: RefObject<HTMLElement>,
+  selector: string = ".animate"
+) {
+  useEffect(() => {
+    if (!ref.current) return;
+    const els = ref.current.querySelectorAll(selector);
+    if (els.length === 0) return;
+
+    const tween = gsap.from(els, {
+      opacity: 0,
+      y: 50,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ref.current,
+        start: "top 80%",
+      },
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, [ref, selector]);
+}
+
+--- C:\Users\hanos\sytech\lib\constants.ts ---
+// lib/constants.ts
+
+// Maximum upload size for PDF pitches: 10 MB
+export const MAX_PDF_SIZE = 10 * 1024 * 1024;
+
+
+--- C:\Users\hanos\sytech\lib\email.ts ---
+// lib/email.ts
+import { ServerClient } from "postmark";
+
+export function sanitize(input: string): string {
+  return input
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+let client: ServerClient;
+export function getEmailClient(): ServerClient {
+  if (!client) {
+    const token = process.env.POSTMARK_SERVER_TOKEN!;
+    client = new ServerClient(token);
+  }
+  return client;
+}
+
+
+--- C:\Users\hanos\sytech\lib\seo.ts ---
+// lib/seo.ts
+export const defaultSEO = {
+  openGraph: {
+    type: "website" as const,
+    locale: "ar_SY",
+    url: "https://syriatech.co",
+    siteName: "سيرياتك",
+  },
+};
+
+--- C:\Users\hanos\sytech\lib\slugify.ts ---
+// lib/slugify.ts
+export const slugify = (str: string, { rtl = false } = {}): string =>
+  (rtl ? str.split('').reverse().join('') : str)
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w\-أ-ي]+/g, '')
+    .toLowerCase();
+
+
+--- C:\Users\hanos\sytech\lib\validation.ts ---
+// lib/validation.ts
+
+// Email must have at least one character before @, a domain, and a TLD
+export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export function isEmail(value: string): boolean {
+  return emailRegex.test(value);
+}
+
+// Phone: optional +, 7–14 digits
+export const phoneRegex = /^\+?\d{7,14}$/;
+export function isPhone(value: string): boolean {
+  return phoneRegex.test(value);
+}
+
+
+--- C:\Users\hanos\sytech\styles\globals.css ---
+/*  ================  Global styles  ================  */
+@import url('https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  --------  Design-token variables  --------  */
+:root {
+  --primary-dark:      #06332E;
+  --primary-dark-90:   #06332EE6;
+  --accent-gold:       #786329;
+  --accent-gold-light: #B9A779;
+
+  --neutral-bg:        #FAFAF9;
+  --neutral-fg:        #1A1A1A;
+
+  --deep-red:          #9C1C1F;
+  --success-green:     #006B3F;
+  --black:             #000000;
+  --white:             #FFFFFF;
+
+  --font-readex:       'Readex Pro';
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  @apply bg-neutral-bg text-neutral-fg font-readex antialiased overflow-x-hidden;
+}
+
+/*  ================  Re-usable component classes  ================  */
+@layer utilities {
+  .bg-pattern {
+    background-image: repeating-linear-gradient(
+      45deg,
+      var(--accent-gold-light) 0,
+      var(--accent-gold-light) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center
+           rounded-full text-sm font-semibold transition
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-gold
+           disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn text-white bg-primary-dark hover:bg-primary-dark-90;
+    background: linear-gradient(135deg, #06332E 0%, #0B4A41 100%);
+  }
+
+  .btn-secondary {
+    @apply btn text-primary-dark border-2 border-accent-gold hover:bg-accent-gold hover:text-white;
+    background: linear-gradient(to right, #B9A779 0%, #D6C79E 100%);
+  }
+
+  .badge-error {
+    @apply inline-block rounded-full bg-deep-red/10 px-2 py-1 text-xs font-semibold text-deep-red;
+  }
+  .badge-success {
+    @apply inline-block rounded-full bg-success-green/10 px-2 py-1 text-xs font-semibold text-success-green;
+  }
+
+  .heading-border {
+    @apply relative after:absolute after:right-0 after:bottom-0
+           after:h-1 after:w-16 after:rounded-full after:bg-accent-gold;
+  }
+
+  .scroll-link {
+    @apply inline-flex items-center justify-center 
+           rounded-full border px-5 py-2 
+           text-sm md:text-base font-medium 
+           transition opacity-90 hover:opacity-100 
+           focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2;
+  }
+
+  .scroll-link-white {
+    @apply scroll-link text-white opacity-80 border-white border-opacity-50 focus-visible:outline-[rgba(255,255,255,0.8)];
+  }
+}
+
+.section-title h4 {
+  @apply mb-1 text-sm font-semibold text-accent-gold text-opacity-80;
+}
+.section-title h2 {
+  @apply heading-border mb-2 text-3xl font-extrabold tracking-tight md:text-4xl;
+}
+
+
+--- C:\Users\hanos\sytech\types\global.ts ---
+// types/global.d.ts
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+
+declare module "shuffle-letters";
+
