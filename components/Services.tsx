@@ -69,10 +69,8 @@ export default function Services() {
 
   return (
     <section ref={sectionRef} id="services" className="relative py-20 overflow-hidden">
-      {/* Decorative full-width wave */}
       <Wave variant="hero" flip />
 
-      {/* Constrained content */}
       <div className="container mx-auto px-4 relative z-10">
         <SectionTitle subtitle="خدماتنا الرقمية المتميزة" title="ماذا نقدم؟" />
 
@@ -98,10 +96,10 @@ export default function Services() {
                 <span className="relative z-10 mb-4 block text-5xl font-black text-accent-gold">
                   {number}
                 </span>
-                <h4 className="mb-4 text-xl font-bold text-dark">{title}</h4>
+                <h4 className="mb-4 text-xl font-bold text-primary-dark">{title}</h4>
                 <ul className="space-y-2">
                   {features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm">
+                    <li key={f} className="flex items-start gap-2 text-sm text-primary-dark">
                       <i className="ph ph-check text-brand-500" /> {f}
                     </li>
                   ))}
@@ -116,7 +114,7 @@ export default function Services() {
           <Link
             href="#our-projects"
             aria-label="انتقل إلى المشاريع"
-            className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
+            className="scroll-link border-dark/10 text-primary-dark hover:bg-brand-50"
           >
             <span>⤵ تعرف على مشاريعنا</span>
           </Link>
