@@ -58,13 +58,6 @@ export default async function ProjectPage({
       <div className="py-20 px-4 text-center">
         <h2 className="text-2xl font-bold mb-4">المشروع غير موجود</h2>
         <p className="mb-6">المشروع المطلوب غير متاح.</p>
-        <Link
-          href="/projects"
-          aria-label="العودة إلى المشاريع"
-          className="scroll-link border-dark/10 text-dark hover:bg-brand-50"
-        >
-          <span>⤴ العودة إلى المشاريع</span>
-        </Link>
       </div>
     );
   }
