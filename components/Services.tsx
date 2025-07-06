@@ -95,7 +95,7 @@ export default function Services() {
             <SwiperSlide key={id} className="p-3">
               <article className="service-card relative overflow-hidden rounded-3xl bg-base p-8 shadow-md ring-1 ring-brand-100">
                 <div className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-brand-50" />
-                <span className="relative z-10 mb-4 block text-5xl font-black text-brand-500">
+                <span className="relative z-10 mb-4 block text-5xl font-black text-accent-gold">
                   {number}
                 </span>
                 <h4 className="mb-4 text-xl font-bold text-dark">{title}</h4>

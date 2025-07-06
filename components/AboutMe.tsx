@@ -9,8 +9,8 @@ export default function AboutMe() {
       <SectionTitle subtitle="كلمتين نظاف" title="تعرف علينا" />
 
       <div className="mx-auto flex max-w-6xl flex-col gap-12 lg:flex-row-reverse">
-        <div className="mx-auto w-72 shrink-0 rounded-3xl bg-base p-10 text-center shadow-lg ring-1 ring-brand-100 lg:mx-0">
-          <span className="mb-2 block text-6xl font-extrabold text-brand-500 drop-shadow-sm">
+        <div className="mx-auto w-72 shrink-0 rounded-3xl bg-base p-10 shadow-lg ring-1 ring-brand-100 lg:mx-0 flex flex-col items-center justify-center text-center">
+          <span className="mb-2 block text-6xl font-extrabold text-accent-gold drop-shadow-sm">
             10
           </span>
           <p className="font-medium tracking-wide text-dark/70">سنوات الخبرة</p>
