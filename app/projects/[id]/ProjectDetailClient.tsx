@@ -1,16 +1,16 @@
 // app/projects/[id]/ProjectDetailClient.tsx
 'use client';
 
-import React, { useRef, useCallback } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Script from "next/script";
 import Link from "next/link";
-import gsap from "gsap";
 import useGSAP, { SelectorFn } from "@/hooks/useGSAP";
 import { ChevronDown } from "lucide-react";
 import type { ProjectDetail, ContentItem } from "@/app/data/projectDetailsData";
 import TeamMemberCard from '@/components/TeamMemberCard';
 import Wave from '@/components/Wave';
+import { createScrollAnimationCallback, getLogoSrc } from '@/lib/utils';
 
 interface ProjectDetailClientProps {
   project: ProjectDetail;
@@ -18,36 +18,24 @@ interface ProjectDetailClientProps {
 
 export default function ProjectDetailClient({ project }: ProjectDetailClientProps) {
   const projectDetailRef = useRef<HTMLDivElement | null>(null);
-
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const animationCallback = useCallback(
-    (selector: SelectorFn) => {
-      if (!projectDetailRef.current) return;
-      gsap.from(selector(".animate"), {
-        opacity: 0,
-        y: 30,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: projectDetailRef.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
-      });
-    },
-    []
+  const animationCallback = createScrollAnimationCallback(
+    projectDetailRef,
+    {
+      selector: ".animate",
+      y: 30,
+      stagger: 0.1,
+      duration: 0.8,
+      ease: "power1.out",
+    }
   );
 
   useGSAP(prefersReducedMotion ? () => {} : animationCallback, projectDetailRef);
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-  const logoSrc = project.logo.startsWith("http")
-    ? project.logo
-    : `${baseUrl}${project.logo}`;
+  const logoSrc = getLogoSrc(project.logo);
 
   return (
     <>
@@ -61,28 +49,19 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             "@type": "CreativeWork",
             name: project.name,
             description: project.shortDescription,
-            url: `${baseUrl}/projects/${project.id}`,
+            url: `${getLogoSrc('')}/projects/${project.id}`,
             logo: logoSrc,
           }),
         }}
       />
 
       <div className="relative bg-neutral-bg overflow-hidden">
-        {/* Top wave */}
-        <Wave
-          viewBox="0 0 1440 80"
-          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
-          height="h-16"
-        />
-
-        {/* Background dots */}
+        <Wave viewBox="0 0 1440 80" path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z" height="h-16" />
         <div className="absolute inset-0 bg-pattern-dots opacity-5 pointer-events-none z-0" />
 
-        {/* Main content */}
         <div ref={projectDetailRef} className="relative z-10 max-w-[800px] mx-auto py-16 px-4">
           <h1 className="animate mb-6 text-center text-3xl font-bold">{project.name}</h1>
 
-          {/* Logo and description */}
           <div className="mb-12 flex flex-col items-center gap-4">
             {project.url ? (
               <a href={project.url} target="_blank" rel="noopener noreferrer">
@@ -110,7 +89,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             </p>
           </div>
 
-          {/* Sectioned content */}
           {project.sections.map((section, idx) => (
             <details
               key={section.title}
@@ -139,7 +117,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             </details>
           ))}
 
-          {/* Team members */}
           {project.team?.length ? (
             <div className="mt-16">
               <h2 className="animate mb-4 text-lg font-semibold">فريق العمل</h2>
@@ -151,7 +128,6 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
             </div>
           ) : null}
 
-          {/* Back link */}
           <div className="mt-16 text-center">
             <Link
               href="/projects"
@@ -163,14 +139,7 @@ export default function ProjectDetailClient({ project }: ProjectDetailClientProp
           </div>
         </div>
 
-        {/* Bottom wave */}
-        <Wave
-          viewBox="0 0 1440 80"
-          path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z"
-          height="h-16"
-          top={false}
-          flip
-        />
+        <Wave viewBox="0 0 1440 80" path="M0,32 C360,96 1080,0 1440,32 L1440,0 L0,0 Z" height="h-16" top={false} flip />
       </div>
     </>
   );

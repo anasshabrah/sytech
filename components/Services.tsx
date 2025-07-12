@@ -1,14 +1,14 @@
 // components/Services.tsx
 "use client";
 
+import { useRef } from "react";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
-import { useRef } from "react";
 import useGSAP from "@/hooks/useGSAP";
-import gsap from "gsap";
-import Link from "next/link";
 import Wave from "@/components/Wave";
+import Link from "next/link";
+import { createScrollAnimationCallback, shouldLoop } from "@/lib/utils";
 
 const servicesData = [
   {
@@ -105,24 +105,13 @@ const servicesData = [
 
 export default function Services() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const shouldLoop = servicesData.length > 3;
+  const loop = shouldLoop(servicesData);
 
-  useGSAP(
-    (selector) => {
-      gsap.from(selector(".service-card"), {
-        opacity: 0,
-        y: 50,
-        stagger: 0.2,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-        },
-      });
-    },
-    sectionRef
+  const animationCallback = createScrollAnimationCallback(
+    sectionRef,
+    { selector: ".service-card", y: 50, stagger: 0.2, duration: 1, ease: "power2.out" }
   );
+  useGSAP(animationCallback, sectionRef);
 
   return (
     <section ref={sectionRef} id="services" className="relative py-20 overflow-hidden">
@@ -134,7 +123,7 @@ export default function Services() {
         <Swiper
           slidesPerView="auto"
           spaceBetween={24}
-          loop={shouldLoop}
+          loop={loop}
           autoplay={{ delay: 4500, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           modules={[Autoplay, Pagination]}

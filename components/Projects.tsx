@@ -4,19 +4,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SectionTitle from "./SectionTitle";
 import useGSAP from "@/hooks/useGSAP";
 import Wave from "@/components/Wave";
+import { createScrollAnimationCallback, shouldLoop } from "@/lib/utils";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface Project {
   id: string | number;
@@ -31,24 +27,13 @@ type ProjectsProps = {
 
 export default function Projects({ projects }: ProjectsProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const shouldLoop = projects.length > 3;
+  const loop = shouldLoop(projects);
 
-  useGSAP(
-    (selector) => {
-      gsap.from(selector(".project-slide"), {
-        opacity: 0,
-        y: 60,
-        stagger: 0.15,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-        },
-      });
-    },
-    sectionRef
+  const animationCallback = createScrollAnimationCallback(
+    sectionRef,
+    { selector: ".project-slide", y: 60, stagger: 0.15, duration: 1, ease: "power3.out" }
   );
+  useGSAP(animationCallback, sectionRef);
 
   return (
     <section
@@ -56,7 +41,6 @@ export default function Projects({ projects }: ProjectsProps) {
       id="our-projects"
       className="relative py-20 bg-base overflow-hidden"
     >
-      {/* Top geometric wave */}
       <Wave variant="geometric" offsetClass="-top-1" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -65,7 +49,7 @@ export default function Projects({ projects }: ProjectsProps) {
         <Swiper
           slidesPerView="auto"
           spaceBetween={24}
-          loop={shouldLoop}
+          loop={loop}
           autoplay={{ delay: 4500, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           modules={[Autoplay, Pagination]}
@@ -90,18 +74,13 @@ export default function Projects({ projects }: ProjectsProps) {
                       className="h-20 w-20 object-contain transition group-hover:scale-110"
                     />
                   </div>
-                  <h3 className="mb-2 text-center text-lg font-semibold text-primary-dark">
-                    {name}
-                  </h3>
-                  <p className="text-center text-sm text-primary-dark/70">
-                    {shortDescription}
-                  </p>
+                  <h3 className="mb-2 text-center text-lg font-semibold text-primary-dark">{name}</h3>
+                  <p className="text-center text-sm text-primary-dark/70">{shortDescription}</p>
                 </article>
               </Link>
             </SwiperSlide>
           ))}
 
-          {/* Pagination dots container override */}
           <div className="swiper-pagination !bottom-0 !relative mt-12" />
         </Swiper>
 
@@ -116,7 +95,6 @@ export default function Projects({ projects }: ProjectsProps) {
         </div>
       </div>
 
-      {/* Bottom geometric wave */}
       <Wave variant="geometric" top={false} flip offsetClass="-bottom-1" />
     </section>
   );
