@@ -9,6 +9,8 @@ import 'swiper/css/scrollbar';
 import type { Metadata } from 'next';
 import ClientLayout from '@/components/ClientLayout';
 import BackgroundGradient from '@/components/BackgroundGradient';
+import SiteHeader from '@/components/SiteHeader';
+
 import { defaultSEO } from '@/lib/seo';
 import { Cairo } from 'next/font/google';
 
@@ -28,6 +30,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="ar" dir="rtl" className={cairo.variable}>
       <body>
         <ClientLayout>
+          <SiteHeader />
           <BackgroundGradient />
           {children}
         </ClientLayout>

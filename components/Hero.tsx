@@ -33,35 +33,7 @@ export default function Hero() {
 
   return (
     <>
-      {/* Navigation Header */}
-      <header className="fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md">
-        <div className="max-w-screen-2xl mx-auto flex items-center justify-between py-4 px-safe">
-          <Link href="/" aria-label="سيرياتك Home">
-            <Image src="/images/logo.png" alt="سيرياتك Logo" height={90} style={{ width: 'auto' }} priority />
-          </Link>
-          <button
-            onClick={() => setNavOpen(!navOpen)}
-            aria-label={navOpen ? 'إغلاق القائمة' : 'فتح القائمة'}
-            className="text-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bronze"
-          >
-            {navOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                   viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                   viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            )}
-          </button>
-        </div>
-      </header>
-
-      {/* Full-width Hero Section */}
+      {/* ——————— Hero Section (header removed) ——————— */}
       <section
         id="hero"
         className="relative mt-20 overflow-hidden bg-[radial-gradient(circle_at_80%_20%,var(--golden-bronze)_0%,transparent_70%)] py-20"
