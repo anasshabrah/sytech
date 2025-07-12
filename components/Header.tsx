@@ -12,7 +12,7 @@ const Header: FC<NavProps> = ({ navOpen, setNavOpen }) => {
       <div className="container mx-auto flex items-center justify-between py-4 px-safe">
         {/* Logo on the right for RTL */}
         <Link href="/" aria-label="سيرياتك Home">
-          <Image src="/logo.png" alt="سيرياتك Logo" width={40} height={40} />
+          <Image src="/images/logo.png" alt="سيرياتك Logo" width={40} height={40} />
         </Link>
 
         {/* Desktop inline navigation */}
