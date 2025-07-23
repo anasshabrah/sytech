@@ -6,19 +6,20 @@ import Link from 'next/link';
 import type { NavProps } from './Header.types';
 
 const links = [
-  { href: '/',              label: 'الرئيسية' },
-  { href: '#about_me',      label: 'تعرف علينا' },
-  { href: '#services',      label: 'الخدمات' },
-  { href: '#our-projects',  label: 'المشاريع' },
+  { href: '/', label: 'الرئيسية' },
+  { href: '#about_me', label: 'تعرف علينا' },
+  { href: '#services', label: 'الخدمات' },
+  { href: '#our-projects', label: 'المشاريع' },
+  { href: '/privacy-policy', label: 'سياسة الخصوصية' },
+  { href: '/terms-and-conditions', label: 'الشروط والأحكام' },
 ] as const;
 
 /**
- *  Sliding side‑drawer + page‑overlay
+ *  Sliding side-drawer + page-overlay
  *  • Closes on Esc key or overlay click
- *  • Locks body‑scroll when open
+ *  • Locks body-scroll when open
  */
 const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
-  /* ─────  Escape‑key & scroll‑lock handling  ───── */
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setNavOpen(false);
     if (navOpen) {
@@ -32,7 +33,6 @@ const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
 
   return (
     <>
-      {/* Overlay */}
       {navOpen && (
         <button
           aria-label="إغلاق القائمة"
@@ -41,7 +41,6 @@ const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
         />
       )}
 
-      {/* Side drawer */}
       <aside
         id="primary-navigation"
         className={`fixed inset-y-0 right-0 z-50 w-72 transform bg-base shadow-lg transition-transform duration-300 ${

@@ -29,6 +29,12 @@ const Header: FC<NavProps> = ({ navOpen, setNavOpen }) => {
           <Link href="#our-projects" className="text-primary-dark hover:text-accent-gold">
             مشاريعنا
           </Link>
+          <Link href="/privacy-policy" className="text-primary-dark hover:text-accent-gold">
+            سياسة الخصوصية
+          </Link>
+          <Link href="/terms-and-conditions" className="text-primary-dark hover:text-accent-gold">
+            الشروط والأحكام
+          </Link>
         </nav>
 
         {/* Hamburger (mobile only) */}
