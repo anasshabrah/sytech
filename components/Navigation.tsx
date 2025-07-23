@@ -7,11 +7,18 @@ import type { NavProps } from './Header.types';
 
 const links = [
   { href: '/', label: 'الرئيسية' },
-  { href: '/projects', label: 'المشاريع' },
+  { href: '/#about_me', label: 'تعرف علينا' },
+  { href: '/#services', label: 'الخدمات' },
+  { href: '/#our-projects', label: 'المشاريع' },
   { href: '/privacy-policy', label: 'سياسة الخصوصية' },
   { href: '/terms-and-conditions', label: 'الشروط والأحكام' },
 ] as const;
 
+/**
+ *  Sliding side-drawer + page-overlay
+ *  • Closes on Esc key or overlay click
+ *  • Locks body-scroll when open
+ */
 const Navigation: React.FC<NavProps> = ({ navOpen, setNavOpen }) => {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setNavOpen(false);

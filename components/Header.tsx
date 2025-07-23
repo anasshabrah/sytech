@@ -20,7 +20,13 @@ const Header: FC<NavProps> = ({ navOpen, setNavOpen }) => {
           <Link href="/" className="text-primary-dark hover:text-accent-gold">
             الرئيسية
           </Link>
-          <Link href="/projects" className="text-primary-dark hover:text-accent-gold">
+          <Link href="/#about_me" className="text-primary-dark hover:text-accent-gold">
+            تعرف علينا
+          </Link>
+          <Link href="/#services" className="text-primary-dark hover:text-accent-gold">
+            الخدمات
+          </Link>
+          <Link href="/#our-projects" className="text-primary-dark hover:text-accent-gold">
             المشاريع
           </Link>
           <Link href="/privacy-policy" className="text-primary-dark hover:text-accent-gold">
